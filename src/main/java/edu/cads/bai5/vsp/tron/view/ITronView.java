@@ -46,6 +46,7 @@ public interface ITronView {
      *
      * @param name name of the overlay
      * @param overlay overlay to be registered. It must be a subtype of javafx.scene.Node
+     * @param <O> subtype of javafx.scene.Node
      */
     <O extends Node>
     void registerOverlay(String name, O overlay);
