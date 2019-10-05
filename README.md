@@ -14,4 +14,7 @@ export JAVA_HOME=/usr/java/java8/
 
 # builds and installs to local maven repository at ~/.m2
 mvn install
+
+# if tests fail: a (dirty) workaround
+mvn -DskipTests install
 ```
