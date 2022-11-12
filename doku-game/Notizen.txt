@@ -2,3 +2,4 @@ Notizen fuer changes etc:
 
 
 Change: InputHandler -> Screens
+Change: Timer -> SceneChanger
