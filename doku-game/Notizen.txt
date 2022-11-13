@@ -3,3 +3,8 @@ Notizen fuer changes etc:
 
 Change: InputHandler -> Screens
 Change: Timer -> SceneChanger
+
+Change: Lobby -> Screens
+Change: GameRules <-> Lobby 
+
+Change: Timer -> GameRules
