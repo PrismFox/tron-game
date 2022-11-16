@@ -1,10 +1,32 @@
 Notizen fuer changes etc:
 
-
 Change: InputHandler -> Screens
 Change: Timer -> SceneChanger
+Change Model <-> View (register)
+Change: Initialiser zu GameManager nennen
 
 Change: Lobby -> Screens
 Change: GameRules <-> Lobby 
 
 Change: Timer -> GameRules
+
+
+
+----
+Change: PlayerControl -> Player ODER PlayerControl -> config
+
+
+--------
+Fuer Mueller
+UC-6:
+- Trigger ist UC-3 ende (startGame() zu startGameTimer())
+
+
+UC-7;
+- Trigger ist UC-3 ende (startGame() zu calculateStartPosition())
+
+--------
+Fuel Can
+UC-8: 
+- Trigger ist UC-4 ende (setNewPos() zu createShadow())
+
