@@ -1,14 +1,14 @@
 Notizen fuer changes etc:
 
-Change: InputHandler -> Screens
-Change: Timer -> SceneChanger
-Change Model <-> View (register)
-Change: Initialiser zu GameManager nennen
+Change: InputHandler -> Screens DONE
+Change: Timer -> SceneChanger DONE
+Change Model <-> View (register) DONE
+Change: Initialiser zu GameManager nennen DONE
 
-Change: Lobby -> Screens
-Change: GameRules <-> Lobby 
+Change: Lobby -> Screens DONE
+Change: GameRules <-> Lobby  DONE
 
-Change: Timer -> GameRules
+Change: Timer -> GameRules DONE
 
 
 
