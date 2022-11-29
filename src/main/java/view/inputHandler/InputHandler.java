@@ -8,7 +8,6 @@ public class InputHandler implements KeyListener {
 
     public String input;
 
-
     /**
      * Invoked when a key has been typed.
      * See the class description for {@link KeyEvent} for a definition of
@@ -86,7 +85,6 @@ public class InputHandler implements KeyListener {
 
         //hier soll eine Methode vom Controller aufgerufen werden, um den
         //player input weiterzugeben.
-
 
     }
 
