@@ -1,5 +1,7 @@
 package view.screens;
 
+import edu.cads.bai5.vsp.tron.view.ITronView;
+import edu.cads.bai5.vsp.tron.view.TronView;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -29,11 +31,24 @@ public class ScreenHandler extends Application implements IScreenHandler{
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
-        StartScreen startScreen = new StartScreen();
+        ITronView view = new TronView("view.properties");
 
-        startScreen.displayMessage("dominik", primaryStage);
+        StartScreen startScreen = new StartScreen("menu.css", view);
+        view.registerOverlay("start", startScreen);
+
+        view.init();
+        view.showOverlay("start");
+
+
+
+
+
+       // StartScreen startScreen = new StartScreen();
+
+        //startScreen.displayMessage("dominik", primaryStage);
 
         primaryStage.setTitle("Tron Game");
+        primaryStage.setScene(view.getScene());
         primaryStage.show();
 
     }
