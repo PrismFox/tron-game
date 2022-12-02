@@ -47,7 +47,39 @@ public class ScreenHandler extends Application implements IScreenHandler{
     }
 
     @Override
-    public void setCurrentScreen(int screenNumber) {
+    public void showScreen(int screenNumber) {
+
+        //int uebergeben, 1-4. 1 = startscreen etc.
+        //switch case, je nach int wird dann
+        //view.registerOverlay(SCREEN), view.init(), view.showOverlay(SCREEN)
+
+        switch (screenNumber){
+            case 1:
+                StartScreen startScreen = new StartScreen("../resources/menu.css", view);
+                view.registerOverlay("start", startScreen);
+
+                view.init();
+                view.showOverlay("start");
+                break;
+            case 2:
+                WaitingScreen waitingScreen = new WaitingScreen();
+                view.registerOverlay("waitingScreen", waitingScreen);
+
+                view.init();
+                view.showOverlay("waitingScreen");
+                break;
+            case 3:
+                GameScreen gameScreen = new GameScreen();
+                view.registerOverlay("gameScreen", gameScreen);
+
+                view.init();
+                view.showOverlay("gameScreen");
+                break;
+        }
+    }
+
+    @Override
+    public void showScreen(int screenNumber, int winningNumber) {
 
         //int uebergeben, 1-4. 1 = startscreen etc.
         //switch case, je nach int wird dann
@@ -76,16 +108,13 @@ public class ScreenHandler extends Application implements IScreenHandler{
                 view.showOverlay("gameScreen");
                 break;
             case 4:
-                EndScreen endScreen = new EndScreen();
+                EndScreen endScreen = new EndScreen("../resources/menu.css", view, winningNumber);
                 view.registerOverlay("endScreen", endScreen);
 
                 view.init();
                 view.showOverlay("endScreen");
                 break;
         }
-
-
-
     }
 
     public static void main(String[] args) {
