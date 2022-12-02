@@ -3,15 +3,8 @@ package view.screens;
 import edu.cads.bai5.vsp.tron.view.ITronView;
 import edu.cads.bai5.vsp.tron.view.TronView;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Objects;
 
 public class ScreenHandler extends Application implements IScreenHandler{
 
