@@ -2,6 +2,6 @@ package view.screens;
 
 public interface IScreenHandler {
 
-    public void setCurrentScreen();
+    public void setCurrentScreen(int screenNumber);
 
 }
