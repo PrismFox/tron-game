@@ -5,10 +5,14 @@ import model.config.IConfig;
 import model.gamemanager.IGameManager;
 
 public class SceneChangerImpl {
-    private Scene currentScene;
     private IGameManager gameManager;
     private IConfig config;
     private ITimer timer;
+    private Scene currentScene;
+
+    private void init() {
+        this.currentScene = new StartScene(this.gameManager, this.config, this.timer, (ISceneChanger) this);
+    }
 
     public boolean changeToNextScene() {
         Scene newScene = currentScene.changeToNextScene();
