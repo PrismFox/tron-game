@@ -2,6 +2,8 @@ package controller.playercontrol;
 
 import java.util.Map;
 
+import model.player.IPlayerManager;
+
 public class PlayerControllerMovementImpl implements IPlayerController {
 
     private IPlayerManager playerManager;
