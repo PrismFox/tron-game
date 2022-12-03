@@ -1,5 +1,6 @@
 package controller.scenechanger;
 
+import controller.timer.ITimer;
 import model.config.IConfig;
 import model.gamemanager.IGameManager;
 

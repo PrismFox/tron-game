@@ -1,7 +1,5 @@
 package controller.scenechanger;
 
-import controller.scenechanger.StartScene;
-
 public class LobbyScene extends Scene {
     @Override
     public Scene changeToNextScene() {
