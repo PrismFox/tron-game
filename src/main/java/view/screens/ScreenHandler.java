@@ -5,6 +5,8 @@ import edu.cads.bai5.vsp.tron.view.TronView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.util.Map;
+
 
 public class ScreenHandler extends Application implements IScreenHandler{
 
@@ -69,12 +71,8 @@ public class ScreenHandler extends Application implements IScreenHandler{
                 view.showOverlay("waitingScreen");
                 break;
             case 3:
-                GameScreen gameScreen = new GameScreen();
-                view.registerOverlay("gameScreen", gameScreen);
+                System.err.println("wrong param");
 
-                view.init();
-                view.showOverlay("gameScreen");
-                break;
         }
     }
 
@@ -101,11 +99,50 @@ public class ScreenHandler extends Application implements IScreenHandler{
                 view.showOverlay("waitingScreen");
                 break;
             case 3:
-                GameScreen gameScreen = new GameScreen();
-                view.registerOverlay("gameScreen", gameScreen);
+                System.err.println("wrong param");
+            case 4:
+                EndScreen endScreen = new EndScreen("../resources/menu.css", view, winningNumber);
+                view.registerOverlay("endScreen", endScreen);
 
                 view.init();
-                view.showOverlay("gameScreen");
+                view.showOverlay("endScreen");
+                break;
+        }
+    }
+
+
+    @Override
+    public void showScreen(int screenNumber, int winningNumber, Map<String, int[][]> bikePos) {
+
+        //int uebergeben, 1-4. 1 = startscreen etc.
+        //switch case, je nach int wird dann
+        //view.registerOverlay(SCREEN), view.init(), view.showOverlay(SCREEN)
+
+        switch (screenNumber){
+            case 1:
+                StartScreen startScreen = new StartScreen("../resources/menu.css", view);
+                view.registerOverlay("start", startScreen);
+
+                view.init();
+                view.showOverlay("start");
+                break;
+            case 2:
+                WaitingScreen waitingScreen = new WaitingScreen();
+                view.registerOverlay("waitingScreen", waitingScreen);
+
+                view.init();
+                view.showOverlay("waitingScreen");
+                break;
+            case 3:
+                //gameScreen wird erstellt, im konstruktur wird die draw() methode aufgerufen.
+                GameScreen gameScreen = new GameScreen("../resources/menu.css", view, bikePos);
+                view.hideOverlays();
+
+
+                //die overlays müssen versteckt werden
+                //view.registerOverlay("gameScreen", gameScreen);
+                //view.init();
+                //view.showOverlay("gameScreen");
                 break;
             case 4:
                 EndScreen endScreen = new EndScreen("../resources/menu.css", view, winningNumber);
