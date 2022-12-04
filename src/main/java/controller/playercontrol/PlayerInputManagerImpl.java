@@ -1,12 +1,17 @@
 package controller.playercontrol;
 
+import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import controller.scenechanger.ISceneChanger;
 
+@Component
 public class PlayerInputManagerImpl implements IPlayerInputManager {
 
+    @Autowired
     private IPlayerController playerController;
+    @Autowired
     private ISceneChanger sceneChanger;
-    private PlayerControllerFactory pControllerFactory;
 
     @Override
     public void onKeyPress(String key) {
@@ -15,10 +20,10 @@ public class PlayerInputManagerImpl implements IPlayerInputManager {
 
     public void switchPlayerController() {
         if(this.playerController instanceof PlayerControllerOnboardingImpl) {
-            this.playerController = this.pControllerFactory.createPlayerController("movement");
+            this.playerController = PlayerControllerFactory.createPlayerController("movement");
             // TODO: Register in sceneChanger?
         } else {
-            this.playerController = this.pControllerFactory.createPlayerController("onboarding");
+            this.playerController = PlayerControllerFactory.createPlayerController("onboarding");
         }
     }
 }
