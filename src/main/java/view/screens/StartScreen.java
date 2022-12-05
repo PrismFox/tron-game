@@ -1,6 +1,8 @@
 package view.screens;
 
 
+import controller.scenechanger.ISceneChanger;
+import controller.scenechanger.Scene;
 import edu.cads.bai5.vsp.tron.view.ITronView;
 import edu.cads.bai5.vsp.tron.view.ViewUtility;
 import javafx.geometry.Pos;
@@ -10,10 +12,17 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class StartScreen extends VBox implements Screen {
 
+    @Autowired
+    private ISceneChanger iSceneChanger;
+
     private final Button btnStart;
+
 
     public StartScreen(String stylesheet, ITronView view) {
         super(20.0);
@@ -29,10 +38,11 @@ public class StartScreen extends VBox implements Screen {
         //TODO onClick methode fuer die numberButtons items -> player muessen in der richtigen anzahl erzeugt werden
 
         btnStart = new Button("Start Game");
-        //TODO onClick Methode fuer den startGame button, waitingscreen muss als naechstes kommen
         btnStart.setOnAction(event -> {
             System.out.println("click!");
             view.hideOverlays();
+            //change to next scene (WaitingScreen)
+            iSceneChanger.changeToNextScene();
         });
 
         this.getChildren().add(labelReady);
