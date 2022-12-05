@@ -2,7 +2,6 @@ package view.screens;
 
 import edu.cads.bai5.vsp.tron.view.ITronView;
 import edu.cads.bai5.vsp.tron.view.TronView;
-import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.io.IOException;
