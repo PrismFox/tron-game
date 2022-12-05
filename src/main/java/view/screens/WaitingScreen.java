@@ -6,7 +6,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.control.Label;
 
-
 public class WaitingScreen extends VBox implements Screen{
 
     public WaitingScreen(String stylesheet, ITronView view){
@@ -15,7 +14,6 @@ public class WaitingScreen extends VBox implements Screen{
 
         Label labelWaiting = new Label("Waiting for other Players to join...");
         labelWaiting.setStyle("-fx-text-fill: " + ViewUtility.getHexTriplet(Color.PAPAYAWHIP.brighter()) + ";");
-
 
     }
 

@@ -43,6 +43,5 @@ public class EndScreen extends VBox implements Screen{
         winningLabel.setStyle("-fx-text-fill: " + ViewUtility.getHexTriplet(Color.PAPAYAWHIP.brighter()) + ";");
         this.getChildren().add(winningLabel);
 
-
     }
 }

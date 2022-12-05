@@ -1,10 +1,8 @@
 package view.inputHandler;
 
 import controller.playercontrol.IPlayerController;
-import controller.playercontrol.PlayerControllerMovementImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

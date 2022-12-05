@@ -11,19 +11,10 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
-
-
 
 public class StartScreen extends VBox implements Screen {
 
     private final Button btnStart;
-
-    //Parent root = FXMLLoader.load(Paths.get("/Users/dominik/Desktop/DominikMartin/UNI/Semester_5/VS/Praktikum/tron-game/src/main/resources/test.fxml").toUri().toURL());
-
-    Pane sp = new javafx.scene.layout.Pane();
-    //Scene startScene = new Scene(root, 1000,1000);
 
     public StartScreen(String stylesheet, ITronView view) {
         super(20.0);
