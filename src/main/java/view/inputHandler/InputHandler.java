@@ -67,7 +67,7 @@ public class InputHandler implements KeyListener {
     }
 
     public boolean checkInputString(String keyInput){
-
+        //TODO ArrayList mit der KeyMapping muss hier noch irgendwie rein
         //keyMapping ist die Liste aller validen eingaben, also alle "pfeil" tasten der
         //einzelnen Player
         ArrayList<String> keyMapping = new ArrayList<>();
@@ -82,7 +82,7 @@ public class InputHandler implements KeyListener {
     }
 
     public void forwardInput(String keyInput){
-
+        //TODO methode vom Controller muss aufgerufen werden
         //hier soll eine Methode vom Controller aufgerufen werden, um den
         //player input weiterzugeben.
 

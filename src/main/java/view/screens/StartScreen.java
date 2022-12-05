@@ -36,7 +36,10 @@ public class StartScreen extends VBox implements Screen {
         MenuButton numberButton = new MenuButton("Select number of Players");
         numberButton.getItems().addAll(new MenuItem("1"), new MenuItem("2"), new MenuItem("3"), new MenuItem("4"), new MenuItem("5"), new MenuItem("6"));
 
+        //TODO onClick methode fuer die numberButtons items -> player muessen in der richtigen anzahl erzeugt werden
+
         btnStart = new Button("Start Game");
+        //TODO onClick Methode fuer den startGame button, waitingscreen muss als naechstes kommen
         btnStart.setOnAction(event -> {
             System.out.println("click!");
             view.hideOverlays();
