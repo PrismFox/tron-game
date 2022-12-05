@@ -1,10 +1,19 @@
 package view.inputHandler;
 
+import controller.playercontrol.IPlayerController;
+import controller.playercontrol.PlayerControllerMovementImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
+@Component
 public class InputHandler implements KeyListener {
+    @Autowired
+    private IPlayerController playerController;
 
     public String input;
 
@@ -82,9 +91,9 @@ public class InputHandler implements KeyListener {
     }
 
     public void forwardInput(String keyInput){
-        //TODO methode vom Controller muss aufgerufen werden
-        //hier soll eine Methode vom Controller aufgerufen werden, um den
-        //player input weiterzugeben.
+        //onKeyPress from Controller
+
+        playerController.onKeyPress(keyInput);
 
     }
 
