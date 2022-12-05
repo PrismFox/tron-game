@@ -4,7 +4,6 @@ import edu.cads.bai5.vsp.tron.view.Coordinate;
 import edu.cads.bai5.vsp.tron.view.ITronView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +12,8 @@ import java.util.Map;
 public class GameScreen extends VBox implements Screen{
 
     public GameScreen(String styleSheet, ITronView view, Map<String, int[][]> bikePos){
-        super(20.0);
-        this.getStylesheets().add(styleSheet);
+//        super(20.0);
+//        this.getStylesheets().add(styleSheet);
 
         drawBikes(bikePos, view);
 
@@ -35,18 +34,4 @@ public class GameScreen extends VBox implements Screen{
         }
     }
 
-    @Override
-    public void clearMessage() {
-
-    }
-
-    @Override
-    public void displayMessage(String message, Stage primaryStage) {
-
-    }
-
-    @Override
-    public void updateView() {
-
-    }
 }

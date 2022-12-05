@@ -6,7 +6,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 public class EndScreen extends VBox implements Screen{
 
@@ -44,21 +43,6 @@ public class EndScreen extends VBox implements Screen{
         winningLabel.setStyle("-fx-text-fill: " + ViewUtility.getHexTriplet(Color.PAPAYAWHIP.brighter()) + ";");
         this.getChildren().add(winningLabel);
 
-
-    }
-
-    @Override
-    public void clearMessage() {
-
-    }
-
-    @Override
-    public void displayMessage(String message, Stage primaryStage) {
-
-    }
-
-    @Override
-    public void updateView() {
 
     }
 }

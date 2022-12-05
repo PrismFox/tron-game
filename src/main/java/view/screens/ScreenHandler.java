@@ -5,46 +5,19 @@ import edu.cads.bai5.vsp.tron.view.TronView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.Map;
 
 
-public class ScreenHandler extends Application implements IScreenHandler{
+public class ScreenHandler implements IScreenHandler{
 
-    private ITronView view;
+    private ITronView view = new TronView();
 
-    /**
-     * The main entry point for all JavaFX applications.
-     * The start method is called after the init method has returned,
-     * and after the system is ready for the application to begin running.
-     *
-     * <p>
-     * NOTE: This method is called on the JavaFX Application Thread.
-     * </p>
-     *
-     * @param primaryStage the primary stage for this application, onto which
-     *                     the application scene can be set. The primary stage will be embedded in
-     *                     the browser if the application was launched as an applet.
-     *                     Applications may create other stages, if needed, but they will not be
-     *                     primary stages and will not be embedded in the browser.
-     */
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        view = new TronView("view.properties");
+    public ScreenHandler(Stage primaryStage) throws IOException {
 
         primaryStage.setTitle("Tron Game");
         primaryStage.setScene(view.getScene());
         primaryStage.show();
-
-
-//        StartScreen startScreen = new StartScreen("../resources/menu.css", view);
-//        view.registerOverlay("start", startScreen);
-//
-//        view.init();
-//        view.showOverlay("start");
-
-       // StartScreen startScreen = new StartScreen();
-
-        //startScreen.displayMessage("dominik", primaryStage);
 
     }
 
@@ -64,7 +37,7 @@ public class ScreenHandler extends Application implements IScreenHandler{
                 view.showOverlay("start");
                 break;
             case 2:
-                WaitingScreen waitingScreen = new WaitingScreen();
+                WaitingScreen waitingScreen = new WaitingScreen("../resources/menu.css", view);
                 view.registerOverlay("waitingScreen", waitingScreen);
 
                 view.init();
@@ -92,7 +65,7 @@ public class ScreenHandler extends Application implements IScreenHandler{
                 view.showOverlay("start");
                 break;
             case 2:
-                WaitingScreen waitingScreen = new WaitingScreen();
+                WaitingScreen waitingScreen = new WaitingScreen("../resources/menu.css", view);
                 view.registerOverlay("waitingScreen", waitingScreen);
 
                 view.init();
@@ -127,7 +100,7 @@ public class ScreenHandler extends Application implements IScreenHandler{
                 view.showOverlay("start");
                 break;
             case 2:
-                WaitingScreen waitingScreen = new WaitingScreen();
+                WaitingScreen waitingScreen = new WaitingScreen("../resources/menu.css", view);
                 view.registerOverlay("waitingScreen", waitingScreen);
 
                 view.init();
@@ -135,14 +108,10 @@ public class ScreenHandler extends Application implements IScreenHandler{
                 break;
             case 3:
                 //gameScreen wird erstellt, im konstruktur wird die draw() methode aufgerufen.
-                GameScreen gameScreen = new GameScreen("../resources/menu.css", view, bikePos);
                 view.hideOverlays();
+                view.clear();
+                GameScreen gameScreen = new GameScreen("../resources/menu.css", view, bikePos);
 
-
-                //die overlays müssen versteckt werden
-                //view.registerOverlay("gameScreen", gameScreen);
-                //view.init();
-                //view.showOverlay("gameScreen");
                 break;
             case 4:
                 EndScreen endScreen = new EndScreen("../resources/menu.css", view, winningNumber);
@@ -154,7 +123,4 @@ public class ScreenHandler extends Application implements IScreenHandler{
         }
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
 }

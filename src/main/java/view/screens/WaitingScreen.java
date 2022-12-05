@@ -1,20 +1,22 @@
 package view.screens;
 
-import javafx.stage.Stage;
+import edu.cads.bai5.vsp.tron.view.ITronView;
+import edu.cads.bai5.vsp.tron.view.ViewUtility;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.control.Label;
 
-public class WaitingScreen implements Screen{
-    @Override
-    public void clearMessage() {
+
+public class WaitingScreen extends VBox implements Screen{
+
+    public WaitingScreen(String stylesheet, ITronView view){
+        super(20.0);
+        this.getStylesheets().add(stylesheet);
+
+        Label labelWaiting = new Label("Waiting for other Players to join...");
+        labelWaiting.setStyle("-fx-text-fill: " + ViewUtility.getHexTriplet(Color.PAPAYAWHIP.brighter()) + ";");
+
 
     }
 
-    @Override
-    public void displayMessage(String message, Stage primaryStage) {
-
-    }
-
-    @Override
-    public void updateView() {
-
-    }
 }

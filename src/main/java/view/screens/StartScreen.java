@@ -47,37 +47,4 @@ public class StartScreen extends VBox implements Screen {
         this.getChildren().add(btnStart);
     }
 
-    @Override
-    public void clearMessage() {
-
-    }
-
-    @Override
-    public void displayMessage(String message, Stage primaryStage) {
-
-        Text messageText = new Text();
-        messageText.setText(message);
-
-        messageText.setStyle("-fx-font: normal bold 50px 'serif' ");
-
-        //sp.getChildren().add(messageText);
-        messageText.setX(100);
-        messageText.setY(1000);
-
-        setScene(primaryStage);
-
-    }
-
-    @Override
-    public void updateView() {
-
-    }
-
-
-    public void setScene(Stage primaryStage){
-
-        //primaryStage.setScene(startScene);
-
-    }
-
 }
