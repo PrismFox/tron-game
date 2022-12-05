@@ -1,5 +1,6 @@
 package controller.playercontrol;
 
+import java.util.List;
 import java.util.Map;
 
 import model.config.IConfig;
@@ -18,6 +19,11 @@ public class PlayerControllerOnboardingImpl implements IPlayerController {
             this.gameManager.playerJoin(playerId);
         }
         
+    }
+
+    @Override
+    public List<String> getValidKeys() {
+        return null;
     }
 
     private int getPlayerForKey(String key) {

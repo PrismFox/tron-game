@@ -1,5 +1,6 @@
 package controller.playercontrol;
 
+import java.util.List;
 import java.util.Map;
 
 import model.player.IPlayerManager;
@@ -15,7 +16,12 @@ public class PlayerControllerMovementImpl implements IPlayerController {
         int direction = this.getDirectionForKey(key);
         this.playerManager.setPlayerMove(playerId, direction);
     }
-    
+
+    @Override
+    public List<String> getValidKeys() {
+        return null;
+    }
+
     private int getPlayerForKey(String key) {
         if(this.playerMappings == null) {
             this.playerMappings = this.playerManager.getPlayerMappings();
