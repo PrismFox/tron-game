@@ -2,18 +2,20 @@ package view.screens;
 
 
 import controller.scenechanger.ISceneChanger;
-import controller.scenechanger.Scene;
 import edu.cads.bai5.vsp.tron.view.ITronView;
 import edu.cads.bai5.vsp.tron.view.ViewUtility;
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class StartScreen extends VBox implements Screen {
@@ -32,10 +34,22 @@ public class StartScreen extends VBox implements Screen {
         Label labelReady = new Label("Ready?");
         labelReady.setStyle("-fx-text-fill: " + ViewUtility.getHexTriplet(Color.PAPAYAWHIP.brighter()) + ";");
 
-        MenuButton numberButton = new MenuButton("Select number of Players");
-        numberButton.getItems().addAll(new MenuItem("1"), new MenuItem("2"), new MenuItem("3"), new MenuItem("4"), new MenuItem("5"), new MenuItem("6"));
+        Label selectLabel = new Label("Please select how many Players will play from the drop down.");
+        List<Integer> playerNumberList = Arrays.asList(1,2,3,4,5,6);
+        selectLabel.setStyle("-fx-text-fill: " + ViewUtility.getHexTriplet(Color.PAPAYAWHIP.brighter()) + ";");
 
-        //TODO onClick methode fuer die numberButtons items -> player muessen in der richtigen anzahl erzeugt werden
+        ComboBox dropDownBox = new ComboBox(FXCollections.observableList(playerNumberList));
+        EventHandler<ActionEvent> dropDownEvent =
+                new EventHandler<ActionEvent>() {
+                    public void handle(ActionEvent e)
+                    {
+                        //TODO: Hier muss eine Methode aufgerufen werden vom controller, damit dieser weiß, wie viele player mitspielen.
+                        System.out.println(dropDownBox.getValue());
+                    }
+                };
+        dropDownBox.setOnAction(dropDownEvent);
+
+
 
         btnStart = new Button("Start Game");
         btnStart.setOnAction(event -> {
@@ -46,7 +60,8 @@ public class StartScreen extends VBox implements Screen {
         });
 
         this.getChildren().add(labelReady);
-        this.getChildren().add(numberButton);
+        this.getChildren().add(selectLabel);
+        this.getChildren().add(dropDownBox);
         this.getChildren().add(btnStart);
     }
 

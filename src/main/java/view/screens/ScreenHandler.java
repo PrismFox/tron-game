@@ -13,6 +13,11 @@ public class ScreenHandler implements IScreenHandler{
     private ITronView view = new TronView();
 
     public ScreenHandler(Stage primaryStage) throws IOException {
+        StartScreen startScreen = new StartScreen("../resources/menu.css", view);
+        view.registerOverlay("start", startScreen);
+
+        view.init();
+        view.showOverlay("start");
 
         primaryStage.setTitle("Tron Game");
         primaryStage.setScene(view.getScene());
