@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class InputHandler implements KeyListener {
@@ -74,10 +74,12 @@ public class InputHandler implements KeyListener {
     }
 
     public boolean checkInputString(String keyInput){
-        //TODO ArrayList mit der KeyMapping muss hier noch irgendwie rein
-        //keyMapping ist die Liste aller validen eingaben, also alle "pfeil" tasten der
-        //einzelnen Player
-        ArrayList<String> keyMapping = new ArrayList<>();
+        //get the validKeys from the controller and check if the
+        //user input is one of the valid keys
+
+        playerController.getValidKeys();
+
+        List<String> keyMapping = playerController.getValidKeys();
 
         boolean validInput = false;
 
