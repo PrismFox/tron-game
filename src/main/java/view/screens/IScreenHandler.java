@@ -25,7 +25,7 @@ public interface IScreenHandler {
     /**
      * showScreen will show the screen with the given Number
      * @param screenNumber, 1 = StartScreen, 2 = WaitingScreen, 3 = GameScreen, 4 = EndScreen
-     * @param bikePos a map with the color of the player as a string and an 2d array witht the xy coordinates as ints
+     * @param bikePos a map with the color of the player as a string and a 2d array with the xy coordinates as ints
      *
      * @author Dominik Martin
      */
