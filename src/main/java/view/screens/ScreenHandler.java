@@ -113,7 +113,7 @@ public class ScreenHandler implements IScreenHandler{
             case 3:
                 //gameScreen wird erstellt, im konstruktur wird die draw() methode aufgerufen.
                 view.hideOverlays();
-                view.clear();
+                view.clear(); // ich weiß nicht, ob man das hier braucht, da man nur die neuen werte mitschickt und nicht die kompletten werte, bzw. komplette koordinaten.
                 GameScreen gameScreen = new GameScreen("../resources/menu.css", view, bikePos);
 
                 break;
