@@ -29,6 +29,6 @@ public interface IScreenHandler {
      *
      * @author Dominik Martin
      */
-    public void showScreen(int screenNumber, int winningNumber, Map<String, int[][]> bikePos);
+    public void showScreen(int screenNumber, Map<String, int[][]> bikePos);
 
 }

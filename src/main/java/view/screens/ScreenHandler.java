@@ -77,6 +77,7 @@ public class ScreenHandler implements IScreenHandler{
                 break;
             case 3:
                 System.err.println("wrong param");
+                break;
             case 4:
                 EndScreen endScreen = new EndScreen("../resources/menu.css", view, winningNumber);
                 view.registerOverlay("endScreen", endScreen);
@@ -89,7 +90,7 @@ public class ScreenHandler implements IScreenHandler{
 
 
     @Override
-    public void showScreen(int screenNumber, int winningNumber, Map<String, int[][]> bikePos) {
+    public void showScreen(int screenNumber, Map<String, int[][]> bikePos) {
 
         //int uebergeben, 1-4. 1 = startscreen etc.
         //switch case, je nach int wird dann
@@ -118,11 +119,7 @@ public class ScreenHandler implements IScreenHandler{
 
                 break;
             case 4:
-                EndScreen endScreen = new EndScreen("../resources/menu.css", view, winningNumber);
-                view.registerOverlay("endScreen", endScreen);
-
-                view.init();
-                view.showOverlay("endScreen");
+                System.err.println("wrong param");
                 break;
         }
     }
