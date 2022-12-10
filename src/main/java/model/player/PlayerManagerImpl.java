@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,12 @@ public class PlayerManagerImpl implements PlayerManager {
 
     @Override
     public Map<Integer, List<String>> getPlayerMappings() {
-        return null;
+        Map<Integer, List<String>> mapping = new HashMap<>();
+
+        for (Player player : players) {
+            mapping.put(player.getId(), player.getMapping());
+        }
+        return mapping;
     }
 
     @Override
@@ -27,7 +33,7 @@ public class PlayerManagerImpl implements PlayerManager {
     public List<Player> getLivingPlayers() {
         List<Player> livingPlayers = new ArrayList<>();
 
-        for (Player player: players) {
+        for (Player player : players) {
             if (player.isAlive())
                 livingPlayers.add(player);
         }
