@@ -3,10 +3,7 @@ package model.player;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Data
 @Service
@@ -44,8 +41,14 @@ public class PlayerManagerImpl implements PlayerManager {
     }
 
     @Override
-    public void notifyCollisions() {
-
+    public void notifyCollisions(int[][] positions) {
+        for (Player player : players) {
+            for (int[] position : positions) {
+                if (Arrays.equals(position, player.getCurrentPosition())) {
+                    player.setAlive(false);
+                }
+            }
+        }
     }
 
     @Override

@@ -10,7 +10,7 @@ public interface PlayerManager {
 
     List<Player> getLivingPlayers();
 
-    void notifyCollisions();
+    void notifyCollisions(int[][] positions);
 
     void commitPlayerMoves();
 }
