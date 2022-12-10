@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface PlayerManager {
-    Map<Integer, String[]> getPlayerMappings();
+    Map<Integer, List<String>> getPlayerMappings();
 
     void setPlayerMove(int playerId, int direction);
 

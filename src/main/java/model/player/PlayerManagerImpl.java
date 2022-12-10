@@ -14,7 +14,7 @@ public class PlayerManagerImpl implements PlayerManager {
     private List<Player> players;
 
     @Override
-    public Map<Integer, String[]> getPlayerMappings() {
+    public Map<Integer, List<String>> getPlayerMappings() {
         return null;
     }
 
