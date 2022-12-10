@@ -1,7 +1,6 @@
 package model.player;
 
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,8 +14,8 @@ public class PlayerManagerImpl implements PlayerManager {
     private List<Player> players;
 
     @Override
-    public Map<String, Integer> getPlayerMappings() {
-        Map<String, Integer>
+    public Map<Integer, String[]> getPlayerMappings() {
+        return null;
     }
 
     @Override

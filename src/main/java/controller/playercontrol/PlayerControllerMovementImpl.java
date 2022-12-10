@@ -1,5 +1,6 @@
 package controller.playercontrol;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +11,7 @@ public class PlayerControllerMovementImpl implements IPlayerController {
 
     @Autowired
     private PlayerManager playerManager;
-    private Map<String, Integer> playerMappings;
+    private Map<Integer, String[]> playerMappings;
 
     @Override
     public void onKeyPress(String key) {
@@ -28,7 +29,14 @@ public class PlayerControllerMovementImpl implements IPlayerController {
         if(this.playerMappings == null) {
             this.playerMappings = this.playerManager.getPlayerMappings();
         }
-        Integer playerId = playerMappings.get(key);
+        Integer playerId = null;
+
+        for (Map.Entry<Integer,String[]> entry: this.playerMappings.entrySet()){
+            if (Arrays.asList(entry.getValue()).contains(key)){
+                playerId = entry.getKey();
+            }
+        }
+
         if(playerId == null) {
             playerId = -1;
         }
