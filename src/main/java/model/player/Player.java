@@ -1,6 +1,5 @@
 package model.player;
 
-import Enums.Direction;
 import lombok.Data;
 
 import java.util.List;
@@ -15,7 +14,7 @@ public class Player {
     private int[] lastPosition = new int[2];
     private List<int[]> shadows;
     private boolean alive = true;
-    private Direction intendedDirection;
+    private int intendedDirection;
     private List<String> mapping;
     private int color;
 
