@@ -34,66 +34,47 @@ public class Player {
 
     public void commitMove() {
         if (Direction.UP == Direction.values()[intendedDirection]) {
-            int[] temp = currentPosition.clone();
-            temp[1] -= 1;
-            if (!checkBackwards(temp)) {
-                lastPosition = currentPosition.clone();
-                shadows.add(lastPosition);
-                currentPosition = temp;
-
-                direction = intendedDirection;
-            }
-            intendedDirection = direction;
-            commitMove();
+            changePosition(1, 0);
         }
 
         if (Direction.Down == Direction.values()[intendedDirection]) {
-            int[] temp = currentPosition.clone();
-            temp[1] += 1;
-            if (!checkBackwards(temp)) {
-                lastPosition = currentPosition.clone();
-                shadows.add(lastPosition);
-                currentPosition = temp;
-
-                direction = intendedDirection;
-            }
-
-            intendedDirection = direction;
-            commitMove();
-
+            changePosition(1, 1);
         }
 
         if (Direction.LEFT == Direction.values()[intendedDirection]) {
-            int[] temp = currentPosition.clone();
-            temp[0] -= 1;
-            if (!checkBackwards(temp)) {
-                lastPosition = currentPosition.clone();
-                shadows.add(lastPosition);
-                currentPosition = temp;
-                direction = intendedDirection;
-            }
-
-            intendedDirection = direction;
-            commitMove();
-
+            changePosition(0, 0);
         }
 
         if (Direction.RIGHT == Direction.values()[intendedDirection]) {
-            int[] temp = currentPosition.clone();
-            temp[0] += 1;
-            if (!checkBackwards(temp)) {
-                lastPosition = currentPosition.clone();
-                shadows.add(lastPosition);
-                currentPosition = temp;
-
-                direction = intendedDirection;
-            }
-
-            intendedDirection = direction;
-            commitMove();
+            changePosition(0, 1);
         }
 
     }
+
+    private void changePosition(int index, int operation) {
+        int[] temp = currentPosition.clone();
+
+        if (operation == 0) {
+            temp[index] -= 1;
+        }
+
+        if (operation == 1) {
+            temp[index] += 1;
+        }
+
+
+        if (!checkBackwards(temp)) {
+            lastPosition = currentPosition.clone();
+            shadows.add(lastPosition);
+            currentPosition = temp;
+
+            direction = intendedDirection;
+        }
+
+        intendedDirection = direction;
+        commitMove();
+    }
+
 
     private boolean checkBackwards(int[] newPosition) {
         return Arrays.equals(newPosition, lastPosition);
