@@ -73,6 +73,9 @@ public class Player {
 
 
     private boolean checkBackwards(int[] newPosition) {
+        if (lastPosition.length == 0){
+            return false;
+        }
         return Arrays.equals(newPosition, lastPosition);
     }
 
