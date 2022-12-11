@@ -53,7 +53,9 @@ public class PlayerManagerImpl implements PlayerManager {
 
     @Override
     public void commitPlayerMoves() {
-
+        for (Player player: players){
+            player.commitMove();
+        }
 
     }
 }
