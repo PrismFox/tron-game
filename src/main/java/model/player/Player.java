@@ -28,25 +28,21 @@ public class Player {
     }
 
 
-    public void addShadow() {
-        return;
-    }
-
     public void commitMove() {
         if (Direction.UP == Direction.values()[intendedDirection]) {
-            changePosition(1, 0);
+            this.changePosition(1, 0);
         }
 
         if (Direction.Down == Direction.values()[intendedDirection]) {
-            changePosition(1, 1);
+            this.changePosition(1, 1);
         }
 
         if (Direction.LEFT == Direction.values()[intendedDirection]) {
-            changePosition(0, 0);
+            this.changePosition(0, 0);
         }
 
         if (Direction.RIGHT == Direction.values()[intendedDirection]) {
-            changePosition(0, 1);
+            this.changePosition(0, 1);
         }
 
     }
@@ -72,7 +68,7 @@ public class Player {
         }
 
         intendedDirection = direction;
-        commitMove();
+        this.commitMove();
     }
 
 
