@@ -14,6 +14,7 @@ public class WaitingScreen extends VBox implements Screen{
 
         Label labelWaiting = new Label("Waiting for other Players to join...");
         labelWaiting.setStyle("-fx-text-fill: " + ViewUtility.getHexTriplet(Color.PAPAYAWHIP.brighter()) + ";");
+        //TODO hier muss man noch einen Countdown machen, mit der Time vom Model
 
     }
 
