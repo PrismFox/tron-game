@@ -90,7 +90,7 @@ public class ScreenHandler implements IScreenHandler{
 
 
     @Override
-    public void showScreen(int screenNumber, Map<String, int[][]> bikePos) {
+    public void showScreen(int screenNumber, Map<Integer, int[][]> bikePos) {
 
         //int uebergeben, 1-4. 1 = startscreen etc.
         //switch case, je nach int wird dann

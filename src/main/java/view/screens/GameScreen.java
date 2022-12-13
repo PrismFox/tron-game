@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class GameScreen extends VBox implements Screen{
 
-    public GameScreen(String styleSheet, ITronView view, Map<String, int[][]> bikePos){
+    public GameScreen(String styleSheet, ITronView view, Map<Integer, int[][]> bikePos){
 //        super(20.0);
 //        this.getStylesheets().add(styleSheet);
 
@@ -19,9 +19,10 @@ public class GameScreen extends VBox implements Screen{
 
     }
 
-    public void drawBikes(Map<String, int[][]> bikePos, ITronView view){
-        for (Map.Entry<String, int[][]> entry : bikePos.entrySet()){
-            String color = entry.getKey();
+    public void drawBikes(Map<Integer, int[][]> bikePos, ITronView view){
+        for (Map.Entry<Integer, int[][]> entry : bikePos.entrySet()){
+            int colorNum = entry.getKey();
+            String color = getColor(colorNum);
             Color bikeColor = Color.valueOf(color);
             List<Coordinate> coordinates = new ArrayList<>();
             for(int i = 0; i < entry.getValue().length;){
@@ -32,6 +33,39 @@ public class GameScreen extends VBox implements Screen{
             }
             view.draw(coordinates, bikeColor);
         }
+    }
+
+    public String getColor(int colorNum){
+        String color = "";
+
+        switch(colorNum){
+            case 0:
+                color = "grey";
+                break;
+            case 1:
+                color = "red";
+                break;
+            case 2:
+                color = "blue";
+                break;
+            case 3:
+                color = "yellow";
+                break;
+            case 4:
+                color = "green";
+                break;
+            case 5:
+                color = "brown";
+                break;
+            case 6:
+                color = "purple";
+                break;
+
+        }
+
+        return color;
+
+
     }
 
 }
