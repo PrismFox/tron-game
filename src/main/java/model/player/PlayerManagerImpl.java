@@ -1,15 +1,18 @@
 package model.player;
 
+import Enums.Color;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-@Data
 @Service
+@Slf4j
+@Data
 public class PlayerManagerImpl implements PlayerManager {
 
-    private List<Player> players;
+    private List<Player> players = new ArrayList<>();
 
     @Override
     public Map<Integer, List<String>> getPlayerMappings() {
@@ -19,6 +22,7 @@ public class PlayerManagerImpl implements PlayerManager {
             mapping.put(player.getId(), player.getMapping());
         }
         return mapping;
+
     }
 
     @Override
@@ -53,9 +57,15 @@ public class PlayerManagerImpl implements PlayerManager {
 
     @Override
     public void commitPlayerMoves() {
-        for (Player player: players){
+        for (Player player : players) {
             player.commitMove();
         }
 
+    }
+
+    @Override
+    public void createPlayer(List<String> mapping, int color) {
+        Player newPlayer = new Player(mapping, Color.values()[color]);
+        players.add(newPlayer);
     }
 }
