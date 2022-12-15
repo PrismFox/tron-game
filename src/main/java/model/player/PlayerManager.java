@@ -1,7 +1,9 @@
 package model.player;
 
+
 import java.util.List;
 import java.util.Map;
+
 
 public interface PlayerManager {
     Map<Integer, List<String>> getPlayerMappings();
@@ -13,4 +15,6 @@ public interface PlayerManager {
     void notifyCollisions(int[][] positions);
 
     void commitPlayerMoves();
+
+    void createPlayer(List<String> mapping, int color);
 }
