@@ -1,30 +1,36 @@
 package model.player;
 
+import Enums.Color;
 import Enums.Direction;
 import lombok.Data;
+import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Data
+@Getter
 public class Player {
 
     private static final AtomicInteger nextId = new AtomicInteger();
-    private int id;
+    private final int id;
     private int[] currentPosition = new int[2];
 
     private int[] lastPosition = new int[2];
-    private List<int[]> shadows;
-    private boolean alive = true;
+    private List<int[]> shadows = new ArrayList<>();
+
+    private boolean alive;
     private int direction; //Actual direction
     private int intendedDirection; //Can change multiple times during a tick
-    private List<String> mapping;
-    private int color;
+    private final List<String> mapping;
+    private final Color color;
 
-    public Player(int color) {
+    public Player(List<String> mapping, Color color) {
         this.id = nextId.getAndIncrement();
+        this.mapping = mapping;
         this.color = color;
+        this.alive = true;
     }
 
 
@@ -73,7 +79,7 @@ public class Player {
 
 
     private boolean checkBackwards(int[] newPosition) {
-        if (lastPosition.length == 0){
+        if (lastPosition.length == 0) {
             return false;
         }
         return Arrays.equals(newPosition, lastPosition);
