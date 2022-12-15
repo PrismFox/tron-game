@@ -3,11 +3,12 @@ package view.screens;
 import edu.cads.bai5.vsp.tron.view.ITronView;
 import edu.cads.bai5.vsp.tron.view.TronView;
 import javafx.stage.Stage;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Map;
 
-
+@Component
 public class ScreenHandler implements IScreenHandler{
 
     private ITronView view = new TronView();
@@ -90,7 +91,7 @@ public class ScreenHandler implements IScreenHandler{
 
 
     @Override
-    public void showScreen(int screenNumber, Map<String, int[][]> bikePos) {
+    public void showScreen(int screenNumber, Map<Integer, int[][]> bikePos) {
 
         //int uebergeben, 1-4. 1 = startscreen etc.
         //switch case, je nach int wird dann
