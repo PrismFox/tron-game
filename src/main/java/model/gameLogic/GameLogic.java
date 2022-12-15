@@ -1,7 +1,18 @@
 package model.gameLogic;
 
-import lombok.Data;
+import java.util.List;
 
-@Data
-public class GameLogic{
+public interface GameLogic {
+
+    void startGame();
+
+    void updateTick();
+
+    List<int[]> checkCollision();
+
+    List<int[]> calculateStartPositions();
+
+    void endGame();
+
+    int[] getWinnerStatus();
 }
