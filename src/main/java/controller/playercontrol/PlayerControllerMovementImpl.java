@@ -3,12 +3,14 @@ package controller.playercontrol;
 import java.util.List;
 import java.util.Map;
 
-import model.player.IPlayerManager;
+import model.player.PlayerManager;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class PlayerControllerMovementImpl implements IPlayerController {
 
-    private IPlayerManager playerManager;
-    private Map<String, Integer> playerMappings;
+    @Autowired
+    private PlayerManager playerManager;
+    private Map<Integer, List<String>> playerMappings;
 
     @Override
     public void onKeyPress(String key) {
@@ -26,7 +28,14 @@ public class PlayerControllerMovementImpl implements IPlayerController {
         if(this.playerMappings == null) {
             this.playerMappings = this.playerManager.getPlayerMappings();
         }
-        Integer playerId = playerMappings.get(key);
+        Integer playerId = null;
+
+        for (Map.Entry<Integer,List<String>> entry: this.playerMappings.entrySet()){
+            if (entry.getValue().contains(key)){
+                playerId = entry.getKey();
+            }
+        }
+
         if(playerId == null) {
             playerId = -1;
         }
