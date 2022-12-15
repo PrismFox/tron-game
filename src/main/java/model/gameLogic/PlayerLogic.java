@@ -1,6 +1,6 @@
 package model.gameLogic;
 
-public interface ILogicPlayer {
+public interface PlayerLogic {
     public void killPlayer();
 
 }
