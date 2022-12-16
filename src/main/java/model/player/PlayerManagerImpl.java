@@ -2,16 +2,19 @@ package model.player;
 
 import Enums.Color;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
-@Service
+
 @Slf4j
 @Data
+@NoArgsConstructor
+@Service
 public class PlayerManagerImpl implements PlayerManager {
-
     private List<Player> players = new ArrayList<>();
 
     @Override
@@ -27,9 +30,12 @@ public class PlayerManagerImpl implements PlayerManager {
 
     @Override
     public void setPlayerMove(int playerId, int direction) {
-        List<Player> rightPlayer = this.players.stream().filter(player -> playerId == player.getId()).toList();
+        List<Player> rightPlayer = this.players
+                .stream().filter(player -> playerId == player.getId())
+                .collect(Collectors.toList());
         Player player = rightPlayer.get(0);
         player.setIntendedDirection(direction);
+
     }
 
     @Override
