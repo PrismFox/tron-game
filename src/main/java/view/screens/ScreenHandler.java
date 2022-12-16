@@ -55,6 +55,34 @@ public class ScreenHandler implements IScreenHandler{
     }
 
     @Override
+    public void showScreen(int screenNumber, long timeSec) {
+
+        //int uebergeben, 1-4. 1 = startscreen etc.
+        //switch case, je nach int wird dann
+        //view.registerOverlay(SCREEN), view.init(), view.showOverlay(SCREEN)
+
+        switch (screenNumber){
+            case 1:
+                StartScreen startScreen = new StartScreen("../resources/menu.css", view);
+                view.registerOverlay("start", startScreen);
+
+                view.init();
+                view.showOverlay("start");
+                break;
+            case 2:
+                WaitingScreen waitingScreen = new WaitingScreen("../resources/menu.css", view);
+                view.registerOverlay("waitingScreen", waitingScreen);
+
+                view.init();
+                view.showOverlay("waitingScreen");
+                break;
+            case 3:
+                System.err.println("wrong param");
+
+        }
+    }
+
+    @Override
     public void showScreen(int screenNumber, int winningNumber) {
 
         //int uebergeben, 1-4. 1 = startscreen etc.
