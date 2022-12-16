@@ -2,8 +2,8 @@ package model.gameLogic;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import model.player.IPlayerManager;
 import model.player.PlayerManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -12,15 +12,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class PlayerLogic implements IPlayerLogic {
 
-    @Autowired
     private PlayerManager playerManager;
+
+    public PlayerLogic(){
+        this.playerManager = new PlayerManager();
+    }
 
     @Override
     public void killPlayer() {
         System.out.println("test");
     }
 
-    public PlayerManager getPlayerManager() {
+    public IPlayerManager getPlayerManager() {
         return playerManager;
 
     }

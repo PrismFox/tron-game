@@ -1,20 +1,87 @@
 package model.player;
 
+import Enums.Color;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
-public interface PlayerManager {
-    Map<Integer, List<String>> getPlayerMappings();
+@Slf4j
+@Data
+@NoArgsConstructor
+@Service
+public class PlayerManager implements IPlayerManager {
+    private List<Player> players = new ArrayList<>();
 
-    void setPlayerMove(int playerId, int direction);
+    public List<Player> getPlayers() {
+        return players;
+    }
 
-    List<Player> getLivingPlayers();
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
 
-    void notifyCollisions(int[][] positions);
 
-    void commitPlayerMoves();
 
-    void createPlayer(List<String> mapping, int color);
+    @Override
+    public Map<Integer, List<String>> getPlayerMappings() {
+        Map<Integer, List<String>> mapping = new HashMap<>();
+
+        for (Player player : players) {
+            mapping.put(player.getId(), player.getMapping());
+        }
+        return mapping;
+
+    }
+
+    @Override
+    public void setPlayerMove(int playerId, int direction) {
+        List<Player> rightPlayer = this.players
+                .stream().filter(player -> playerId == player.getId())
+                .collect(Collectors.toList());
+        Player player = rightPlayer.get(0);
+        player.setIntendedDirection(direction);
+
+    }
+
+    @Override
+    public List<Player> getLivingPlayers() {
+        List<Player> livingPlayers = new ArrayList<>();
+
+        for (Player player : players) {
+            if (player.isAlive())
+                livingPlayers.add(player);
+        }
+
+        return livingPlayers;
+    }
+
+    @Override
+    public void notifyCollisions(int[][] positions) {
+        for (Player player : players) {
+            for (int[] position : positions) {
+                if (Arrays.equals(position, player.getCurrentPosition())) {
+                    player.setAlive(false);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void commitPlayerMoves() {
+        for (Player player : players) {
+            player.commitMove();
+        }
+
+    }
+
+    @Override
+    public void createPlayer(List<String> mapping, int color) {
+        Player newPlayer = new Player(mapping, Color.values()[color]);
+        players.add(newPlayer);
+    }
 }
