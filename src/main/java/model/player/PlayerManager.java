@@ -21,11 +21,6 @@ public class PlayerManager implements IPlayerManager {
         return players;
     }
 
-    public void setPlayers(List<Player> players) {
-        this.players = players;
-    }
-
-
 
     @Override
     public Map<Integer, List<String>> getPlayerMappings() {
@@ -83,5 +78,37 @@ public class PlayerManager implements IPlayerManager {
     public void createPlayer(List<String> mapping, int color) {
         Player newPlayer = new Player(mapping, Color.values()[color]);
         players.add(newPlayer);
+    }
+
+    @Override
+    public void setIntendedDirection(int playerId, int intendedDirection){
+        Player player = getPlayerById(playerId);
+        player.setIntendedDirection(intendedDirection);
+    }
+
+    public Player getPlayerById(int playerId){
+        Player resultPlayer = null;
+        for (Player player: players) {
+            if (player.getId() == playerId){
+                resultPlayer = player;
+            }
+        }
+        return resultPlayer;
+    }
+
+    @Override
+    public List<int[]> getPlayerPositions(int playerId){
+        Player player = getPlayerById(playerId);
+        List<int[]> allPositions = new ArrayList<>();
+        allPositions.add(player.getCurrentPosition());
+        allPositions.addAll(player.getShadows());
+
+        return allPositions;
+    }
+
+    @Override
+    public void killPlayer(int playerId){
+        Player player = getPlayerById(playerId);
+        player.setAlive(false);
     }
 }

@@ -17,4 +17,10 @@ public interface IPlayerManager {
     void commitPlayerMoves();
 
     void createPlayer(List<String> mapping, int color);
+
+    void setIntendedDirection(int playerId, int intendedDirection);
+
+    List<int[]> getPlayerPositions(int playerId);
+
+    void killPlayer(int playerId);
 }
