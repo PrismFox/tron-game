@@ -19,8 +19,8 @@ public class PlayerLogic implements IPlayerLogic {
     }
 
     @Override
-    public void killPlayer() {
-        System.out.println("test");
+    public void killPlayer(int playerId) {
+        playerManager.killPlayer(playerId);
     }
 
     public IPlayerManager getPlayerManager() {

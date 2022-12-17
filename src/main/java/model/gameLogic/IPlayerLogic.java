@@ -1,6 +1,6 @@
 package model.gameLogic;
 
 public interface IPlayerLogic {
-    void killPlayer();
+    void killPlayer(int playerId);
 
 }
