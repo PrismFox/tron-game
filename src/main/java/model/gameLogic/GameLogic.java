@@ -52,15 +52,17 @@ public class GameLogic implements IGameLogic {
         int sizeBoardXY = board.getBoardSize()[0];
         List<int[]> obstacles = board.getObstacles();
         List<int[]> collisionPositions = new ArrayList<>();
-        for (int[] obstacle: obstacles) {
-            if (obstacle[0] < 0 || obstacle[0] > (sizeBoardXY-1) || obstacle[1] < 0 || obstacle[1] > (sizeBoardXY-1)){ //Border check
-                collisionPositions.add(obstacle);
-            }
-            if (Collections.frequency(obstacles, obstacle) > 1){
-                collisionPositions.add(obstacle);
+
+        for (int[] obstacle : obstacles) {
+            if (!collisionPositions.contains(obstacle)) {
+                if (obstacle[0] < 0 || obstacle[0] > (sizeBoardXY - 1) || obstacle[1] < 0 || obstacle[1] > (sizeBoardXY - 1)) { //Border check
+                    collisionPositions.add(obstacle);
+                }
+                if (Collections.frequency(obstacles, obstacle) > 1) {
+                    collisionPositions.add(obstacle);
+                }
             }
         }
-
         return collisionPositions;
     }
 
