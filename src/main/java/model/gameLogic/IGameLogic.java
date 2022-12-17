@@ -20,4 +20,7 @@ public interface IGameLogic {
      * the player. If it's a draw the player value will be -1, otherwise it's the player id
      */
     int[] getWinnerStatus();
+
+    void initBoard();
+
 }

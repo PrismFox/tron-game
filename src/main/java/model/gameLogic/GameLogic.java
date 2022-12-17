@@ -1,19 +1,15 @@
 package model.gameLogic;
 
-import controller.scenechanger.GameScene;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import model.board.Board;
 import model.config.Config;
-import model.config.IConfig;
 import model.lobby.Lobby;
 import model.player.Player;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -44,7 +40,61 @@ public class GameLogic implements IGameLogic {
 
     @Override
     public void updateTick() {
-        System.out.println("test");
+        List<int[]> obstaclesToRemove = new ArrayList<>();
+
+        playerLogic.getPlayerManager().commitPlayerMoves();
+        updateBoard();
+        List<int[]> collisions = checkCollision();
+        List<Player> players = playerLogic.getPlayerManager().getLivingPlayers();
+
+
+        Map<Integer, int[]> playersCurrentPosition = players
+                .stream()
+                .collect(Collectors.toMap(Player::getId, Player::getCurrentPosition));
+
+        if (!collisions.isEmpty()) {
+            for (Map.Entry<Integer, int[]> entry : playersCurrentPosition.entrySet()) {
+                if (collisions.contains(entry.getValue())) {
+                    obstaclesToRemove.addAll(playerLogic.getPlayerManager().getPlayerPositions(entry.getKey()));
+                    playerLogic.killPlayer(entry.getKey());
+                }
+            }
+        }
+
+        if (players.size() <= 1)
+        {
+           int[] winningStatus = getWinnerStatus();
+           if (winningStatus[0] == 0){
+               board.updateView(4, 0);
+
+           }
+           else {
+               board.updateView(4, winningStatus[1]);
+           }
+
+            // Game loop muss interrupted werden
+        }
+
+        if (!obstaclesToRemove.isEmpty()) {
+                board.updateBoard(obstaclesToRemove, 1);
+        }
+
+        Map<Integer, int[][]> colorPositions = new HashMap<>();
+        for (Player player: players){
+            List<int[]> allPositions = playerLogic.getPlayerManager().getPlayerPositions(player.getId());
+            int[][] allPositionsArray = allPositions.toArray(new int[allPositions.size()][]);
+            colorPositions.put(player.getColor().ordinal(), allPositionsArray);
+        }
+
+        board.updateView(3, colorPositions);
+    }
+
+    private void updateBoard() {
+        List<int[]> currentPositions = playerLogic.getPlayerManager().getLivingPlayers().stream()
+                .map(Player::getCurrentPosition)
+                .collect(Collectors.toList());
+
+        board.updateBoard(currentPositions, 0);
     }
 
     @Override
@@ -83,20 +133,24 @@ public class GameLogic implements IGameLogic {
             }
         }
 
-        int xIncrement = 0;
-        int incrementValue = board.getBoardSize()[0] / half1.size();
-        for (int i = 0; i < half1.size(); i++) {
-            half1.get(i).setCurrentPosition(new int[]{xIncrement, smallMedianY});
-            xIncrement += incrementValue;
+        setStartPositions(half1, smallMedianY);
+        setStartPositions(half2, bigMedianY);
+    }
+
+    private void setStartPositions(List<Player> playerList, int yPosition) {
+        int increment = 0;
+        List<int[]> startPositions = new ArrayList<>();
+        int incrementValue = board.getBoardSize()[0] / playerList.size();
+        int[] startPosition = new int[2];
+        for (Player player : playerList) {
+            startPosition[0] = increment;
+            startPosition[1] = yPosition;
+            startPositions.add(startPosition);
+            player.setCurrentPosition(startPosition);
+            increment += incrementValue;
         }
 
-        xIncrement = 0;
-        incrementValue = board.getBoardSize()[0] / half2.size();
-        for (int i = 0; i < half1.size(); i++) {
-            half2.get(i).setCurrentPosition(new int[]{xIncrement, bigMedianY});
-            xIncrement += incrementValue;
-        }
-
+        board.updateBoard(startPositions, 0);
     }
 
     @Override
@@ -115,11 +169,15 @@ public class GameLogic implements IGameLogic {
 
         }
 
-        result[0] = 1;
-        result[1] = livingPlayers.get(0).getId();
+        if (livingPlayers.size() ==1){
+            result[0] = 1;
+            result[1] = livingPlayers.get(0).getId();
+        }
+
         return result;
     }
 
+    @Override
     public void initBoard() {
         this.board = new Board(new int[]{23, 23}, 2, new ArrayList<>());
     }
