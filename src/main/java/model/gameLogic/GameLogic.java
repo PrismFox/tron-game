@@ -84,15 +84,17 @@ public class GameLogic implements IGameLogic {
         }
 
         int xIncrement = 0;
+        int incrementValue = board.getBoardSize()[0] / half1.size();
         for (int i = 0; i < half1.size(); i++) {
             half1.get(i).setCurrentPosition(new int[]{xIncrement, smallMedianY});
-            xIncrement += board.getBoardSize()[0] / half1.size();
+            xIncrement += incrementValue;
         }
 
         xIncrement = 0;
+        incrementValue = board.getBoardSize()[0] / half2.size();
         for (int i = 0; i < half1.size(); i++) {
             half2.get(i).setCurrentPosition(new int[]{xIncrement, bigMedianY});
-            xIncrement += board.getBoardSize()[0] / half2.size();
+            xIncrement += incrementValue;
         }
 
     }
