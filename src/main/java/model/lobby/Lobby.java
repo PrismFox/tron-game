@@ -30,6 +30,9 @@ public class Lobby implements ILobbyGameLogic, IInitLobby{
 
     @Override
     public Lobby initLobby() {
+        //TODO: logik ausdenken, wie das mit dem countdown ist.
+        Long timeSec = Long.valueOf(2);
+        screenHandler.showScreen(2, timeSec);
         return null;
     }
 
