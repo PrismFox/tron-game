@@ -6,5 +6,5 @@ public interface IInitLobby {
 
     public Lobby initLobby();
 
-    public void plateJoin(Player player);
+    public void playerJoin(Player player);
 }
