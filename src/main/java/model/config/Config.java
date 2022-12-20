@@ -12,4 +12,9 @@ public class Config implements IConfig{
     public int getLobbyTimerDuration() {
         return 0;
     }
+
+    @Override
+    public int getPlayerCount() {
+        return 0;
+    }
 }

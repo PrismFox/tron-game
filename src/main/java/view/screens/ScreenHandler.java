@@ -55,7 +55,7 @@ public class ScreenHandler implements IScreenHandler{
     }
 
     @Override
-    public void showScreen(int screenNumber, long timeSec) {
+    public void showScreen(int screenNumber, int timeSec, int playerIdJoined) {
 
         //int uebergeben, 1-4. 1 = startscreen etc.
         //switch case, je nach int wird dann
