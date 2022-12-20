@@ -50,7 +50,7 @@ public class Lobby implements ILobbyGameLogic, IInitLobby{
 
     public int setPlayerCount(){
         //TODO hier muss ich von Config die playeranzahl raus holen die erlaubt ist, und diese zurueck geben
-
+        //public int getPlayerCount(); muss in config sein.
         return 0;
     }
 }
