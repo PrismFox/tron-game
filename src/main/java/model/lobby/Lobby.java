@@ -2,6 +2,7 @@ package model.lobby;
 
 import model.gameLogic.GameLogic;
 import model.gameLogic.IGameLogic;
+import model.player.IPlayerManager;
 import model.player.Player;
 import view.screens.IScreenHandler;
 
@@ -9,6 +10,7 @@ public class Lobby implements ILobbyGameLogic, IInitLobby{
 
     IGameLogic gameLogic;
     IScreenHandler screenHandler;
+    IPlayerManager playerManager;
 
     @Override
     public void endGame() {
@@ -37,7 +39,12 @@ public class Lobby implements ILobbyGameLogic, IInitLobby{
     }
 
     @Override
-    public void playerJoin(Player player) {
+    public void playerJoin(int playerId) {
+        //TODO: Logik ausdenken, was genau passieren soll, wenn player da ist
+        //Was soll in der view geupdatet werden?
+        //wo bekomme ich das mapping fuer den Player her?
+        //playerManager.createPlayer();
+
 
     }
 
