@@ -1,6 +1,7 @@
 package Enums;
 
 public enum Color {
+    Grey,
     RED,
     BLUE,
     GREEN,
