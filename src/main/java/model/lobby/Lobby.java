@@ -1,5 +1,6 @@
 package model.lobby;
 
+import model.config.IConfig;
 import model.gameLogic.GameLogic;
 import model.gameLogic.IGameLogic;
 import model.player.IPlayerManager;
@@ -11,6 +12,7 @@ public class Lobby implements ILobbyGameLogic, IInitLobby{
     IGameLogic gameLogic;
     IScreenHandler screenHandler;
     IPlayerManager playerManager;
+    IConfig config;
 
     @Override
     public void endGame() {
@@ -49,8 +51,7 @@ public class Lobby implements ILobbyGameLogic, IInitLobby{
     }
 
     public int setPlayerCount(){
-        //TODO hier muss ich von Config die playeranzahl raus holen die erlaubt ist, und diese zurueck geben
-        //public int getPlayerCount(); muss in config sein.
-        return 0;
+        int playerCount = config.getPlayerCount();
+        return playerCount;
     }
 }
