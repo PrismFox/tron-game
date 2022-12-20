@@ -64,7 +64,7 @@ public class Board implements IBoard {
 
     @Override
     public void remainingTime(int remainingTime) {
-
+        screenHandler.showScreen(3, remainingTime);
     }
 
     @Override
