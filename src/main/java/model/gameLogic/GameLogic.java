@@ -46,47 +46,43 @@ public class GameLogic implements IGameLogic {
         updateBoard();
         List<int[]> collisions = checkCollision();
         List<Player> players = playerLogic.getPlayerManager().getLivingPlayers();
-
-
-        Map<Integer, int[]> playersCurrentPosition = players
-                .stream()
-                .collect(Collectors.toMap(Player::getId, Player::getCurrentPosition));
+        Map<Integer, int[][]> viewStuff = new HashMap<>();
 
         if (!collisions.isEmpty()) {
-            for (Map.Entry<Integer, int[]> entry : playersCurrentPosition.entrySet()) {
-                if (collisions.contains(entry.getValue())) {
-                    obstaclesToRemove.addAll(playerLogic.getPlayerManager().getPlayerPositions(entry.getKey()));
-                    playerLogic.killPlayer(entry.getKey());
+            for (int i = 0; i < players.size(); i++) {
+                Player player = players.get(i);
+                int[] currentPosition = player.getCurrentPosition();
+                if (collisions.contains(currentPosition)) {
+                    obstaclesToRemove.addAll(playerLogic.getPlayerManager().getPlayerPositions(player.getId()));
+                    playerLogic.killPlayer(player.getId());
+                    players.remove(player);
+                }else{
+                    viewStuff.put(player.getColor().ordinal(), new int[][]{currentPosition});
                 }
             }
         }
 
-        if (players.size() <= 1)
-        {
-           int[] winningStatus = getWinnerStatus();
-           if (winningStatus[0] == 0){
-               board.updateView(4, 0);
 
-           }
-           else {
-               board.updateView(4, winningStatus[1]);
-           }
+        int[][] allPositionsArray = obstaclesToRemove.toArray(new int[obstaclesToRemove.size()][]);
+        viewStuff.put(0, allPositionsArray );
+
+        if (players.size() <= 1) {
+            int[] winningStatus = getWinnerStatus();
+            if (winningStatus[0] == 0) {
+                board.updateView(4, 0);
+
+            } else {
+                board.updateView(4, winningStatus[1]);
+            }
 
             // Game loop muss interrupted werden
         }
 
         if (!obstaclesToRemove.isEmpty()) {
-                board.updateBoard(obstaclesToRemove, 1);
+            board.updateBoard(obstaclesToRemove, 1);
         }
 
-        Map<Integer, int[][]> colorPositions = new HashMap<>();
-        for (Player player: players){
-            List<int[]> allPositions = playerLogic.getPlayerManager().getPlayerPositions(player.getId());
-            int[][] allPositionsArray = allPositions.toArray(new int[allPositions.size()][]);
-            colorPositions.put(player.getColor().ordinal(), allPositionsArray);
-        }
-
-        board.updateView(3, colorPositions);
+        board.updateView(3, viewStuff);
     }
 
     private void updateBoard() {
@@ -169,7 +165,7 @@ public class GameLogic implements IGameLogic {
 
         }
 
-        if (livingPlayers.size() ==1){
+        if (livingPlayers.size() == 1) {
             result[0] = 1;
             result[1] = livingPlayers.get(0).getId();
         }
