@@ -19,7 +19,7 @@ public interface IScreenHandler {
      *
      * @author Dominik Martin
      */
-    public void showScreen(int screenNumber, long timeSec);
+    public void showScreen(int screenNumber, int timeSec, int playerIdJoined);
 
 
         /**

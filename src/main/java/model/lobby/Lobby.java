@@ -11,6 +11,7 @@ public class Lobby implements ILobbyGameLogic, IInitLobby{
     IScreenHandler screenHandler;
     IPlayerManager playerManager;
     IConfig config;
+    int playerIdJoined = 0;
 
     @Override
     public void endGame() {
@@ -33,17 +34,18 @@ public class Lobby implements ILobbyGameLogic, IInitLobby{
     @Override
     public Lobby initLobby() {
         //TODO: logik ausdenken, wie das mit dem countdown ist.
-        Long timeSec = Long.valueOf(2); //die timer zeit muss irgendwo herkommen. Timer? Config?
-        screenHandler.showScreen(2, timeSec);
+        int timeSec = 2; //die timer zeit muss irgendwo herkommen. Timer? Config?
+        screenHandler.showScreen(2, timeSec, 0);
         return null;
     }
 
     @Override
     public void playerJoin(int playerId) {
         //TODO: Logik ausdenken, was genau passieren soll, wenn player da ist
-        //Was soll in der view geupdatet werden?
         //wo bekomme ich das mapping fuer den Player her?
         //playerManager.createPlayer();
+        playerIdJoined++;
+        screenHandler.showScreen(2, 2, playerIdJoined);
     }
 
     public int setPlayerCount(){
