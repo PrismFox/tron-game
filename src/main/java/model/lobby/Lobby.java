@@ -1,4 +1,4 @@
 package model.lobby;
 
-public class Lobby {
+public class Lobby implements ILobbyGameLogic, IInitLobby{
 }
