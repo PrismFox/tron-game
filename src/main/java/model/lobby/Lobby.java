@@ -1,10 +1,8 @@
 package model.lobby;
 
 import model.config.IConfig;
-import model.gameLogic.GameLogic;
 import model.gameLogic.IGameLogic;
 import model.player.IPlayerManager;
-import model.player.Player;
 import view.screens.IScreenHandler;
 
 public class Lobby implements ILobbyGameLogic, IInitLobby{
@@ -35,7 +33,7 @@ public class Lobby implements ILobbyGameLogic, IInitLobby{
     @Override
     public Lobby initLobby() {
         //TODO: logik ausdenken, wie das mit dem countdown ist.
-        Long timeSec = Long.valueOf(2);
+        Long timeSec = Long.valueOf(2); //die timer zeit muss irgendwo herkommen. Timer? Config?
         screenHandler.showScreen(2, timeSec);
         return null;
     }
@@ -46,8 +44,6 @@ public class Lobby implements ILobbyGameLogic, IInitLobby{
         //Was soll in der view geupdatet werden?
         //wo bekomme ich das mapping fuer den Player her?
         //playerManager.createPlayer();
-
-
     }
 
     public int setPlayerCount(){
