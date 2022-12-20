@@ -12,7 +12,7 @@ public class Lobby implements ILobbyGameLogic, IInitLobby{
 
     @Override
     public void endGame() {
-
+        createWinnerScreen();
     }
 
     @Override
