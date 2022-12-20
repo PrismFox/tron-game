@@ -23,4 +23,6 @@ public interface IPlayerManager {
     List<int[]> getPlayerPositions(int playerId);
 
     void killPlayer(int playerId);
+
+    Player getPlayerById(int playerId);
 }
