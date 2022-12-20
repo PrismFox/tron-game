@@ -3,13 +3,13 @@ package controller.playercontrol;
 import java.util.List;
 import java.util.Map;
 
-import model.player.PlayerManager;
+import model.player.IPlayerManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class PlayerControllerMovementImpl implements IPlayerController {
 
     @Autowired
-    private PlayerManager playerManager;
+    private IPlayerManager playerManager;
     private Map<Integer, List<String>> playerMappings;
 
     @Override

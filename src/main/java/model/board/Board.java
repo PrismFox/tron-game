@@ -6,6 +6,7 @@ import view.screens.IScreenHandler;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.OptionalInt;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
@@ -69,5 +70,16 @@ public class Board implements IBoard {
     @Override
     public Board initBoard() {
         return null;
+    }
+
+
+    @Override
+    public void updateView(int screenNumber, int winningNumber){
+        screenHandler.showScreen(screenNumber, winningNumber);
+    }
+
+    @Override
+    public void updateView(int screenNumber, Map<Integer, int[][]> bikePos){
+        screenHandler.showScreen(screenNumber, bikePos);
     }
 }

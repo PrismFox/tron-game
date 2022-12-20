@@ -1,6 +1,7 @@
 package model.board;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IBoard {
 
@@ -14,4 +15,8 @@ public interface IBoard {
     void remainingTime(int remainingTime);
 
     Board initBoard();
+
+    void updateView(int screenNumber, int winningNumber);
+
+    void updateView(int screenNumber, Map<Integer, int[][]> bikePos);
 }
