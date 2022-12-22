@@ -8,6 +8,7 @@ public class ThreadedTimerImpl implements ITimer {
 
     @Override
     public void startLobbyTimer(int duration, Runnable callback) {
+        //TODO: Replace with runnable
         new TimerThread(duration, callback).start();
     }
 
