@@ -14,6 +14,8 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 
+import middleware.annotation.RPC;
+
 @SupportedAnnotationTypes("middleware.annotation.RemoteMethod")
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
 public class MiddlewareProcessor extends AbstractProcessor {
@@ -24,14 +26,14 @@ public class MiddlewareProcessor extends AbstractProcessor {
             Set<? extends Element> annotatedElements = roundEnv.getElementsAnnotatedWith(annotation);
             Map<Boolean, List<Element>> annotatedMethods = annotatedElements.stream().collect(
                 Collectors.partitioningBy(element -> 
-                    element.getEnclosingElement().getKind().isInterface()
+                    element.getEnclosingElement().getKind().isInterface() && (element.getEnclosingElement().getAnnotation(RPC.class) != null)
                 )
             );
 
             List<Element> interfaceMethods = annotatedMethods.get(true);
             List<Element> otherMethods = annotatedMethods.get(false);
             otherMethods.forEach(element -> 
-                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "RemoteMethod may only be applied to a method inside an interface", element)
+                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "RemoteMethod may only be applied to a method inside an interface with an @RPC annotation.", element)
             );
 
             
