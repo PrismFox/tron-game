@@ -17,4 +17,13 @@ public class Config implements IConfig{
     public int getPlayerCount() {
         return 0;
     }
+
+    @Override
+    public int[] getBoardSize(){
+        return new int[]{16,16};
+    }
+
+    public int getCellSize(){
+        return 5;
+    }
 }
