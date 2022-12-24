@@ -1,16 +1,19 @@
 package model.lobby;
 
+import lombok.RequiredArgsConstructor;
 import model.config.IConfig;
 import model.gameLogic.IGameLogic;
 import model.player.IPlayerManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import view.screens.IScreenHandler;
 
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class Lobby implements ILobbyGameLogic, IInitLobby{
 
-    IGameLogic gameLogic;
-    IScreenHandler screenHandler;
-    IPlayerManager playerManager;
-    IConfig config;
+    private final IGameLogic gameLogic;
+    private IScreenHandler screenHandler;
+    private final IPlayerManager playerManager;
+    private IConfig config;
     int playerIdJoined = 0;
 
     @Override
@@ -23,7 +26,7 @@ public class Lobby implements ILobbyGameLogic, IInitLobby{
         //getWinnerStatus aufrufen
         //int[] mit winnerStatus. wenn [0,-1], dann ist es unentschieden
 
-        int[] winnerStatus = gameLogic.getWinnerStatus();
+        int[] winnerStatus = gameLogic.getPlayerLogic().getWinnerStatus();
         if(winnerStatus[0] == 0){
             screenHandler.showScreen(4, 0);
         }else{
@@ -42,7 +45,7 @@ public class Lobby implements ILobbyGameLogic, IInitLobby{
     @Override
     public void playerJoin(int playerId) {
         //TODO: Logik ausdenken, was genau passieren soll, wenn player da ist
-        //wo bekomme ich das mapping fuer den Player her?
+        //wo bekomme ich das mapping fuer den Player her? Aus der Config
         //playerManager.createPlayer();
         playerIdJoined++;
         screenHandler.showScreen(2, 2, playerIdJoined);
