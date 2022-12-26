@@ -1,11 +1,10 @@
-package model.gameLogic;
+package model.gamelogic;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import model.player.IPlayerManager;
 import model.player.Player;
-import model.player.PlayerManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,15 +19,9 @@ public class PlayerLogic implements IPlayerLogic {
 
     private final IPlayerManager playerManager;
 
-
-
     @Override
     public void killPlayer(int playerId) {
         playerManager.killPlayer(playerId);
-    }
-
-    public IPlayerManager getPlayerManager() {
-        return playerManager;
     }
 
     @Override

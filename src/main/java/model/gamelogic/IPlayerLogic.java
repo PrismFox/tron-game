@@ -1,4 +1,4 @@
-package model.gameLogic;
+package model.gamelogic;
 
 import model.player.IPlayerManager;
 
