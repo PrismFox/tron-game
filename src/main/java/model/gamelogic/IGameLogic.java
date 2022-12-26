@@ -1,4 +1,4 @@
-package model.gameLogic;
+package model.gamelogic;
 
 import java.util.List;
 
@@ -12,10 +12,5 @@ public interface IGameLogic {
 
     void calculateStartPositions();
 
-    void endGame();
-
     IPlayerLogic getPlayerLogic();
-
-    void initBoard();
-
 }
