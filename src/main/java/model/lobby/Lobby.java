@@ -2,7 +2,7 @@ package model.lobby;
 
 import lombok.RequiredArgsConstructor;
 import model.config.IConfig;
-import model.gameLogic.IGameLogic;
+import model.gamelogic.IGameLogic;
 import model.player.IPlayerManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import view.screens.IScreenHandler;
@@ -11,9 +11,9 @@ import view.screens.IScreenHandler;
 public class Lobby implements ILobbyGameLogic, IInitLobby{
 
     private final IGameLogic gameLogic;
-    private IScreenHandler screenHandler;
+    private final IScreenHandler screenHandler;
     private final IPlayerManager playerManager;
-    private IConfig config;
+    private final IConfig config;
     int playerIdJoined = 0;
 
     @Override
