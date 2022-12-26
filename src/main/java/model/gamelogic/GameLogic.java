@@ -1,11 +1,10 @@
-package model.gameLogic;
+package model.gamelogic;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import model.board.Board;
-import model.config.Config;
-import model.lobby.Lobby;
+import model.board.IBoard;
+import model.lobby.ILobbyGameLogic;
 import model.player.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,15 +20,14 @@ public class GameLogic implements IGameLogic {
 
     private final IPlayerLogic playerLogic;
 
-    private Board board;
+    private final IBoard board;
 
-    private Config config;
-
-    private Lobby lobby;
+    private final ILobbyGameLogic lobby;
 
     @Override
     public void startGame() {
-        System.out.println("test");
+        log.debug("Start of Game");
+        this.calculateStartPositions();
     }
 
     @Override
@@ -61,14 +59,8 @@ public class GameLogic implements IGameLogic {
         viewStuff.put(0, allPositionsArray );
 
         if (players.size() <= 1) {
-            int[] winningStatus = getPlayerLogic().getWinnerStatus();
-            if (winningStatus[0] == 0) {
-                board.updateView(4, 0);
-
-            } else {
-                board.updateView(4, winningStatus[1]);
-            }
-
+           lobby.endGame();
+           log.debug("End of Game");
             // Game loop muss interrupted werden
         }
 
@@ -95,7 +87,8 @@ public class GameLogic implements IGameLogic {
 
         for (int[] obstacle : obstacles) {
             if (!collisionPositions.contains(obstacle)) {
-                if (obstacle[0] < 0 || obstacle[0] > (sizeBoardXY - 1) || obstacle[1] < 0 || obstacle[1] > (sizeBoardXY - 1)) { //Border check
+                if (obstacle[0] < 0 || obstacle[0] > (sizeBoardXY - 1) || obstacle[1] < 0 ||
+                        obstacle[1] > (sizeBoardXY - 1)) { // Border check
                     collisionPositions.add(obstacle);
                     log.debug(String.format("Collision detected at x: %d, y: %d", obstacle[0], obstacle[1]));
                 }
@@ -146,20 +139,4 @@ public class GameLogic implements IGameLogic {
 
         board.updateBoard(startPositions, 0);
     }
-
-    @Override
-    public void endGame() {
-        System.out.println("test");
-        log.debug("Game has ended");
-    }
-
-
-    @Override
-    public void initBoard() {
-        int[] boardSize = getConfig().getBoardSize();
-        int cellSize = getConfig().getCellSize();
-        this.board = new Board(boardSize, cellSize, new ArrayList<>());
-        log.debug("Board was initialized");
-    }
-
 }
