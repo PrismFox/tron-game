@@ -1,12 +1,15 @@
 package nameServer;
 
+import netscape.javascript.JSObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class NameServer {
 
@@ -33,9 +36,42 @@ public class NameServer {
             try {
                 udpReceivePacket = new DatagramPacket(receivedData, UDP_PACKET_SIZE);
                 socket.receive(udpReceivePacket);
+
                 receivedIPAddress = udpReceivePacket.getAddress();
                 receivedPort = udpReceivePacket.getPort();
+
                 String received = new String(udpReceivePacket.getData(), 0, udpReceivePacket.getLength());
+
+                String jsonArrayIdentifier = null;
+                String registerIdentifier = "register";
+                String queryIdentifier = "query";
+
+                JSONObject requestJson = new JSONObject(received);
+
+                if (requestJson.has(registerIdentifier)){
+                    jsonArrayIdentifier = registerIdentifier;
+                }
+                if (requestJson.has(queryIdentifier))
+                {
+                    jsonArrayIdentifier = queryIdentifier;
+                }
+
+                try {
+                    JSONArray jsonArray = requestJson.getJSONArray(jsonArrayIdentifier);
+
+                    String methodName = jsonArray.getString(0);
+                    if ("register".equals(jsonArrayIdentifier)) {
+                        List<String> ip = Arrays.asList(receivedIPAddress.toString(), String.valueOf(receivedPort));
+                        register(methodName, ip);
+                    } else {
+                        query(methodName, receivedIPAddress, receivedPort);
+                    }
+
+                } catch (JSONException e) {
+                    System.err.println("Unknown request");
+                    continue;
+                }
+
 
             } catch (IOException e) {
                 System.err.println("Error while Receiving");
@@ -47,13 +83,19 @@ public class NameServer {
 
     }
 
-    private void registry(String methodName, List<String> parameters) {
+    private void register(String methodName, List<String> ip) {
+        methodIps.put(methodName, ip);
     }
 
-    private List<String> query(String methodName, List<String> parameters) {
+    private void query(String methodName, InetAddress ipAddress, int port) {
         List<String> ip = methodIps.get(methodName);
-        return null;
 
+        JSONObject ipResponse = new JSONObject();
+        ipResponse.put("ip", ip.get(0));
+        ipResponse.put("port", ip.get(1));
+
+        byte[] ipReponseBytes = ipResponse.toString().getBytes();
+        sendPacket(ipReponseBytes, ipReponseBytes.length, ipAddress, port);
     }
 
     private void sendPacket(byte[] content, int length, InetAddress ipAddress, int port) {
