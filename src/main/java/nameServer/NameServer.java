@@ -33,19 +33,23 @@ public class NameServer {
         socket = new DatagramSocket(SERVER_PORT);
 
         while (running) {
+            String methodType = null;
+            String methodName = null;
             try {
                 udpReceivePacket = new DatagramPacket(receivedData, UDP_PACKET_SIZE);
                 socket.receive(udpReceivePacket);
 
                 receivedIPAddress = udpReceivePacket.getAddress();
+
                 receivedPort = udpReceivePacket.getPort();
 
                 String received = new String(udpReceivePacket.getData(), 0, udpReceivePacket.getLength());
 
                 JSONObject requestJson = new JSONObject(received);
+                System.out.println(requestJson);
 
-                String methodType = requestJson.getString("methodType");
-                String methodName = requestJson.getString("methodName");
+                methodType = requestJson.getString("methodType");
+                methodName = requestJson.getString("methodName");
 
                 if ("register".equals(methodType)) {
                     List<String> ip = Arrays.asList(receivedIPAddress.toString(), String.valueOf(receivedPort));
@@ -56,11 +60,13 @@ public class NameServer {
                 }
 
             } catch (IOException e) {
-                System.err.println("Error while Receiving");
+                System.err.println(String.format("Error while Receiving. Methodtype: %s, Methodname: %s",methodType, methodName));
+                e.printStackTrace();
                 running = false;
             }
-            socket.close();
+
         }
+        socket.close();
     }
 
     private void register(String methodName, List<String> ip) {
