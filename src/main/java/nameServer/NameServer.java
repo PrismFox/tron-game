@@ -42,36 +42,18 @@ public class NameServer {
 
                 String received = new String(udpReceivePacket.getData(), 0, udpReceivePacket.getLength());
 
-                String jsonArrayIdentifier = null;
-                String registerIdentifier = "register";
-                String queryIdentifier = "query";
-
                 JSONObject requestJson = new JSONObject(received);
 
-                if (requestJson.has(registerIdentifier)){
-                    jsonArrayIdentifier = registerIdentifier;
+                String methodType = requestJson.getString("methodType");
+                String methodName = requestJson.getString("methodName");
+
+                if ("register".equals(methodType)) {
+                    List<String> ip = Arrays.asList(receivedIPAddress.toString(), String.valueOf(receivedPort));
+                    register(methodName, ip);
                 }
-                if (requestJson.has(queryIdentifier))
-                {
-                    jsonArrayIdentifier = queryIdentifier;
+                if ("query".equals(methodType)) {
+                    query(methodName, receivedIPAddress, receivedPort);
                 }
-
-                try {
-                    JSONArray jsonArray = requestJson.getJSONArray(jsonArrayIdentifier);
-
-                    String methodName = jsonArray.getString(0);
-                    if ("register".equals(jsonArrayIdentifier)) {
-                        List<String> ip = Arrays.asList(receivedIPAddress.toString(), String.valueOf(receivedPort));
-                        register(methodName, ip);
-                    } else {
-                        query(methodName, receivedIPAddress, receivedPort);
-                    }
-
-                } catch (JSONException e) {
-                    System.err.println("Unknown request");
-                    continue;
-                }
-
 
             } catch (IOException e) {
                 System.err.println("Error while Receiving");
@@ -79,8 +61,6 @@ public class NameServer {
             }
             socket.close();
         }
-
-
     }
 
     private void register(String methodName, List<String> ip) {
