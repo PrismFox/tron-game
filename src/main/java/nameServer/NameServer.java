@@ -40,19 +40,19 @@ public class NameServer {
                 socket.receive(udpReceivePacket);
 
                 receivedIPAddress = udpReceivePacket.getAddress();
+                System.out.println(receivedIPAddress.getHostAddress());
 
                 receivedPort = udpReceivePacket.getPort();
 
                 String received = new String(udpReceivePacket.getData(), 0, udpReceivePacket.getLength());
 
                 JSONObject requestJson = new JSONObject(received);
-                System.out.println(requestJson);
 
                 methodType = requestJson.getString("methodType");
                 methodName = requestJson.getString("methodName");
 
                 if ("register".equals(methodType)) {
-                    List<String> ip = Arrays.asList(receivedIPAddress.toString(), String.valueOf(receivedPort));
+                    List<String> ip = Arrays.asList(receivedIPAddress.getHostAddress(), String.valueOf(receivedPort));
                     register(methodName, ip);
                 }
                 if ("query".equals(methodType)) {
