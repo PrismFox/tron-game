@@ -12,7 +12,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class ClientStub implements IClientStub{
+public class ClientStub implements IClientStub {
 
     String nameServerIp = "192.0.0.1";
     int port = 5549;
@@ -35,16 +35,25 @@ public class ClientStub implements IClientStub{
     }
 
     @Override
-    public void invokeAsynchron(String methodName, TransportType transportType, Object... args) {
+    public void invokeAsynchron(String methodName, TransportType transportType,
+                                Class<?> classType, Object... args) throws UnknownHostException {
+        StringBuilder nameServerindentifier = new StringBuilder(String.format("%s %s", classType.getName(), methodName));
+
+        for (int i = 0; i < args.length; i++){
+            nameServerindentifier.append(" ");
+            nameServerindentifier.append(args[i].getClass().getName());
+        }
+
+        List<String> address = lookUp(nameServerindentifier.toString());
 
     }
 
     public void initTCPSocket(String host, int port) throws IOException {
         try {
             tcpSocket = new Socket(host, port);
-        }catch (IOException excep){
-           log.error(String.format("Couldn't connect to a socket with host: %s and port: %d", host, port));
-            throw  excep;
+        } catch (IOException excep) {
+            log.error(String.format("Couldn't connect to a socket with host: %s and port: %d", host, port));
+            throw excep;
         }
     }
 
@@ -71,22 +80,20 @@ public class ClientStub implements IClientStub{
         }
     }
 
-    private String receiveUDPPacket(){
+    private String receiveUDPPacket() {
         String response = null;
         try {
             byte[] receivedData = new byte[UDP_PACKET_SIZE];
             udpReceivePacket = new DatagramPacket(receivedData, UDP_PACKET_SIZE);
             udpSocket.receive(udpReceivePacket);
-            response =  new String(udpReceivePacket.getData(), 0, udpReceivePacket.getLength());
+            response = new String(udpReceivePacket.getData(), 0, udpReceivePacket.getLength());
 
         } catch (Exception ex) {
             System.out.println(ex);
         }
 
-       return response;
+        return response;
     }
-
-
 
 
 }
