@@ -4,17 +4,24 @@ import Enums.Color;
 import model.config.IConfig;
 import model.gameLogic.IGameLogic;
 import model.player.IPlayerManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import view.screens.IScreenHandler;
 
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class Lobby implements ILobbyGameLogic, IInitLobby{
-
+    @Autowired
     IGameLogic gameLogic;
+    @Autowired
     IScreenHandler screenHandler;
+    @Autowired
     IPlayerManager playerManager;
+    @Autowired
     IConfig config;
+
     int playerCounter = 0;
     boolean maxPlayerJoined = false;
     int maxPlayer;
