@@ -1,10 +1,11 @@
 package model.config;
 
+import java.util.List;
 import java.util.Map;
 
 public class Config implements IConfig{
     @Override
-    public Map<String, Integer> getPlayerMappings() {
+    public Map<Integer, List<String>> getPlayerMappings() {
         return null;
     }
 

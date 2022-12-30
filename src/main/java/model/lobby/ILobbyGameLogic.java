@@ -2,7 +2,7 @@ package model.lobby;
 
 public interface ILobbyGameLogic {
 
-    public void endGame();
+    public void endGame() throws InterruptedException;
 
-    public void  createWinnerScreen();
+    public void  createWinnerScreen() throws InterruptedException;
 }
