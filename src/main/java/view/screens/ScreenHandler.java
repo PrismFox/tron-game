@@ -42,20 +42,19 @@ public class ScreenHandler implements IScreenHandler{
                 view.showOverlay("start");
                 break;
             case 2:
-                WaitingScreen waitingScreen = new WaitingScreen("../resources/menu.css", view);
-                view.registerOverlay("waitingScreen", waitingScreen);
-
-                view.init();
-                view.showOverlay("waitingScreen");
+                System.err.println("wrong param");
                 break;
             case 3:
                 System.err.println("wrong param");
-
+                break;
+            case 4:
+                System.err.println("wrong param");
+                break;
         }
     }
 
     @Override
-    public void showScreen(int screenNumber, int timeSec, int playerIdJoined) {
+    public void showScreen(int screenNumber, int timeSec, int playerCounter, boolean maxPlayerJoined) {
 
         //int uebergeben, 1-4. 1 = startscreen etc.
         //switch case, je nach int wird dann
@@ -70,7 +69,7 @@ public class ScreenHandler implements IScreenHandler{
                 view.showOverlay("start");
                 break;
             case 2:
-                WaitingScreen waitingScreen = new WaitingScreen("../resources/menu.css", view);
+                WaitingScreen waitingScreen = new WaitingScreen("../resources/menu.css", timeSec, playerCounter, maxPlayerJoined, view);
                 view.registerOverlay("waitingScreen", waitingScreen);
 
                 view.init();
@@ -78,6 +77,10 @@ public class ScreenHandler implements IScreenHandler{
                 break;
             case 3:
                 System.err.println("wrong param");
+                break;
+            case 4:
+                System.err.println("wrong param");
+                break;
 
         }
     }
@@ -98,11 +101,7 @@ public class ScreenHandler implements IScreenHandler{
                 view.showOverlay("start");
                 break;
             case 2:
-                WaitingScreen waitingScreen = new WaitingScreen("../resources/menu.css", view);
-                view.registerOverlay("waitingScreen", waitingScreen);
-
-                view.init();
-                view.showOverlay("waitingScreen");
+                System.err.println("wrong param");
                 break;
             case 3:
                 System.err.println("wrong param");
@@ -134,11 +133,7 @@ public class ScreenHandler implements IScreenHandler{
                 view.showOverlay("start");
                 break;
             case 2:
-                WaitingScreen waitingScreen = new WaitingScreen("../resources/menu.css", view);
-                view.registerOverlay("waitingScreen", waitingScreen);
-
-                view.init();
-                view.showOverlay("waitingScreen");
+                System.err.println("wrong param");
                 break;
             case 3:
                 //gameScreen wird erstellt, im konstruktur wird die draw() methode aufgerufen.

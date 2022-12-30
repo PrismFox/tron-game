@@ -1,17 +1,22 @@
 package view.screens;
 
+import controller.scenechanger.ISceneChanger;
 import edu.cads.bai5.vsp.tron.view.ITronView;
 import edu.cads.bai5.vsp.tron.view.ViewUtility;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class EndScreen extends VBox implements Screen{
 
+
+    @Autowired
+    private ISceneChanger iSceneChanger;
     private Label winningLabel;
 
-    public EndScreen(String stylesheet, ITronView view, int winningNumber){
+    public EndScreen(String stylesheet, ITronView view, int winningNumber) throws InterruptedException {
         super(20.0);
         this.getStylesheets().add(stylesheet);
         this.setAlignment(Pos.CENTER);
@@ -42,6 +47,10 @@ public class EndScreen extends VBox implements Screen{
 
         winningLabel.setStyle("-fx-text-fill: " + ViewUtility.getHexTriplet(Color.PAPAYAWHIP.brighter()) + ";");
         this.getChildren().add(winningLabel);
+
+        //waits 30 sec and then changes to the next scene
+        Thread.sleep(30000);
+        iSceneChanger.changeToNextScene();
 
     }
 }

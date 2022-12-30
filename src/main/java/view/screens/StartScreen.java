@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class StartScreen extends VBox implements Screen {
@@ -39,11 +40,14 @@ public class StartScreen extends VBox implements Screen {
         selectLabel.setStyle("-fx-text-fill: " + ViewUtility.getHexTriplet(Color.PAPAYAWHIP.brighter()) + ";");
 
         ComboBox dropDownBox = new ComboBox(FXCollections.observableList(playerNumberList));
+        dropDownBox.setStyle("-fx-font-family: 'Arial';");
+
+        final Integer[] playerNum = {0};
         EventHandler<ActionEvent> dropDownEvent =
                 new EventHandler<ActionEvent>() {
                     public void handle(ActionEvent e)
                     {
-                        //TODO: Hier muss eine Methode aufgerufen werden vom controller, damit dieser weiß, wie viele player mitspielen.
+                        playerNum[0] = (Integer) dropDownBox.getValue();
                         System.out.println(dropDownBox.getValue());
                     }
                 };
@@ -56,6 +60,8 @@ public class StartScreen extends VBox implements Screen {
             System.out.println("click!");
             view.hideOverlays();
             //change to next scene (WaitingScreen)
+            //TODO: Hier muss eine Methode aufgerufen werden vom controller, damit dieser weiß, wie viele player mitspielen.
+            //playerNum[0]
             iSceneChanger.changeToNextScene();
         });
 
