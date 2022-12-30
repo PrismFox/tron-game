@@ -9,9 +9,8 @@ import controller.scenechanger.ISceneChanger;
 public class PlayerInputManagerImpl implements IPlayerInputManager {
 
     @Autowired
-    private IPlayerController playerController;
-    @Autowired
     private ISceneChanger sceneChanger;
+    private IPlayerController playerController;
 
     @Override
     public void onKeyPress(String key) {
