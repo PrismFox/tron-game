@@ -28,11 +28,11 @@ public class GameLogicTest {
 public void calculateStartPositionsTest(){
     Mockito.when(board.getObstacles()).thenReturn(new ArrayList<>());
     Mockito.when(board.getBoardSize()).thenReturn(new int[]{16,16});
-    Mockito.when(gameLogic.getPlayerLogic().getPlayerManager().getLivingPlayers()).thenReturn(new ArrayList<>
+   /* Mockito.when(gameLogic.getPlayerManager().getLivingPlayers()).thenReturn(new ArrayList<>
                 (Arrays.asList(new Player(new ArrayList<>(Arrays.asList("test", "test")), Color.BLUE),
                         new Player(new ArrayList<>(Arrays.asList("test", "test")), Color.GREEN),
                         new Player(new ArrayList<>(Arrays.asList("test", "test")), Color.GREEN),
-                        new Player(new ArrayList<>(Arrays.asList("test", "test")), Color.RED) )));
+                        new Player(new ArrayList<>(Arrays.asList("test", "test")), Color.RED) )));*/
     gameLogic.calculateStartPositions();
 
 
