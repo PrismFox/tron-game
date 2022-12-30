@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import model.board.IBoard;
 import model.lobby.ILobbyGameLogic;
+import model.player.IPlayerManager;
 import model.player.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class GameLogic implements IGameLogic {
 
-    private final IPlayerLogic playerLogic;
+    private final IPlayerManager playerManager;
 
     private final IBoard board;
 
@@ -31,13 +32,13 @@ public class GameLogic implements IGameLogic {
     }
 
     @Override
-    public void updateTick() {
+    public boolean updateTick() throws InterruptedException {
         List<int[]> obstaclesToRemove = new ArrayList<>();
 
-        playerLogic.getPlayerManager().commitPlayerMoves();
+        playerManager.commitPlayerMoves();
         updateBoard();
         List<int[]> collisions = checkCollision();
-        List<Player> players = playerLogic.getPlayerManager().getLivingPlayers();
+        List<Player> players = playerManager.getLivingPlayers();
         Map<Integer, int[][]> viewStuff = new HashMap<>();
 
         if (!collisions.isEmpty()) {
@@ -45,8 +46,8 @@ public class GameLogic implements IGameLogic {
                 Player player = players.get(i);
                 int[] currentPosition = player.getCurrentPosition();
                 if (collisions.contains(currentPosition)) {
-                    obstaclesToRemove.addAll(playerLogic.getPlayerManager().getPlayerPositions(player.getId()));
-                    playerLogic.killPlayer(player.getId());
+                    obstaclesToRemove.addAll(playerManager.getPlayerPositions(player.getId()));
+                    killPlayer(player.getId());
                     players.remove(player);
                 }else{
                     viewStuff.put(player.getColor().ordinal(), new int[][]{currentPosition});
@@ -61,6 +62,7 @@ public class GameLogic implements IGameLogic {
         if (players.size() <= 1) {
            lobby.endGame();
            log.debug("End of Game");
+           return false;
             // Game loop muss interrupted werden
         }
 
@@ -69,10 +71,11 @@ public class GameLogic implements IGameLogic {
         }
 
         board.updateView(3, viewStuff);
+        return true;
     }
 
     private void updateBoard() {
-        List<int[]> currentPositions = playerLogic.getPlayerManager().getLivingPlayers().stream()
+        List<int[]> currentPositions = playerManager.getLivingPlayers().stream()
                 .map(Player::getCurrentPosition)
                 .collect(Collectors.toList());
 
@@ -103,7 +106,7 @@ public class GameLogic implements IGameLogic {
 
     @Override
     public void calculateStartPositions() {
-        List<Player> players = getPlayerLogic().getPlayerManager().getLivingPlayers();
+        List<Player> players = playerManager.getLivingPlayers();
         int median = board.getBoardSize()[1] / 2;
         int smallMedianY = median / 2;
         int bigMedianY = median + (median / 2);
@@ -138,5 +141,30 @@ public class GameLogic implements IGameLogic {
         }
 
         board.updateBoard(startPositions, 0);
+    }
+
+
+    @Override
+    public void killPlayer(int playerId) {
+        playerManager.killPlayer(playerId);
+    }
+
+    @Override
+    public int[] getWinnerStatus() {
+        List<Player> livingPlayers = getPlayerManager().getLivingPlayers();
+        int[] result = new int[2];
+
+        if (livingPlayers.isEmpty()) {
+
+            result[1] = -1;
+
+        }
+
+        if (livingPlayers.size() == 1) {
+            result[0] = 1;
+            result[1] = livingPlayers.get(0).getId();
+        }
+
+        return result;
     }
 }
