@@ -19,4 +19,8 @@ public interface IBoard {
     void updateView(int screenNumber, int winningNumber);
 
     void updateView(int screenNumber, Map<Integer, int[][]> bikePos);
+
+    List<int[]> getObstacles();
+
+    int[] getBoardSize();
 }
