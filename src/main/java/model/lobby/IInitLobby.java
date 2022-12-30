@@ -4,7 +4,7 @@ import model.player.Player;
 
 public interface IInitLobby {
 
-    public Lobby initLobby();
+    public void initLobby();
 
-    public void playerJoin(int playerId);
+    public void playerJoin(int playerNumber);
 }
