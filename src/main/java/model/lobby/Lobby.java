@@ -1,54 +1,86 @@
 package model.lobby;
 
+import lombok.Data;
 import model.config.IConfig;
-import model.gameLogic.IGameLogic;
+import model.gamelogic.IGameLogic;
 import model.player.IPlayerManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import view.screens.IScreenHandler;
 
-public class Lobby implements ILobbyGameLogic, IInitLobby{
+import java.util.List;
+import java.util.Map;
 
-    IGameLogic gameLogic;
-    IScreenHandler screenHandler;
-    IPlayerManager playerManager;
-    IConfig config;
-    int playerIdJoined = 0;
+@Component
+@Data
+public class Lobby implements ILobbyGameLogic, IInitLobby {
+
+    private final IGameLogic gameLogic;
+
+    private final IScreenHandler screenHandler;
+
+    private final IPlayerManager playerManager;
+
+    private final IConfig config;
+
+    private Map<Integer, List<String>> playerMapping;
+    private int playerCounter = 0;
+    private boolean maxPlayerJoined = false;
+    private int maxPlayer;
+
+
+    @Autowired
+    public Lobby(IGameLogic gameLogic, IScreenHandler screenHandler, IPlayerManager playerManager, IConfig config) {
+        this.gameLogic = gameLogic;
+        this.screenHandler = screenHandler;
+        this.playerManager = playerManager;
+        this.config = config;
+        maxPlayer = this.config.getPlayerCount();
+        playerMapping = this.config.getPlayerMappings();
+    }
 
     @Override
-    public void endGame() {
+    public void endGame() throws InterruptedException {
         createWinnerScreen();
     }
 
     @Override
-    public void createWinnerScreen() {
+    public void createWinnerScreen() throws InterruptedException {
         //getWinnerStatus aufrufen
         //int[] mit winnerStatus. wenn [0,-1], dann ist es unentschieden
 
         int[] winnerStatus = gameLogic.getWinnerStatus();
-        if(winnerStatus[0] == 0){
+        if (winnerStatus[0] == 0) {
             screenHandler.showScreen(4, 0);
-        }else{
+        } else {
             screenHandler.showScreen(4, winnerStatus[1]);
         }
     }
 
     @Override
-    public Lobby initLobby() {
-        //TODO: logik ausdenken, wie das mit dem countdown ist.
-        int timeSec = 2; //die timer zeit muss irgendwo herkommen. Timer? Config?
-        screenHandler.showScreen(2, timeSec, 0);
-        return null;
+    public void initLobby() {
+        int timeSec = config.getLobbyTimerDuration();
+        screenHandler.showScreen(2, timeSec, 0, maxPlayerJoined);
     }
 
     @Override
-    public void playerJoin(int playerId) {
-        //TODO: Logik ausdenken, was genau passieren soll, wenn player da ist
-        //wo bekomme ich das mapping fuer den Player her?
-        //playerManager.createPlayer();
-        playerIdJoined++;
-        screenHandler.showScreen(2, 2, playerIdJoined);
+    public void playerJoin(int playerNumber) {
+        playerCounter++;
+        for (Map.Entry<Integer, List<String>> entry : playerMapping.entrySet()) {
+            if (entry.getKey() == playerCounter) {
+                playerManager.createPlayer(entry.getValue(), playerCounter);
+            }
+        }
+
+        if (playerCounter == maxPlayer || playerCounter == playerNumber) {
+            maxPlayerJoined = true;
+        }
+
+        int timeSec = config.getLobbyTimerDuration();
+        screenHandler.showScreen(2, timeSec, playerCounter, maxPlayerJoined);
     }
 
-    public int setPlayerCount(){
+    public int setPlayerCount() {
         int playerCount = config.getPlayerCount();
         return playerCount;
     }
