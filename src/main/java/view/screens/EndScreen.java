@@ -9,7 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class EndScreen extends VBox implements Screen{
+public class EndScreen extends VBox {
 
 
     @Autowired

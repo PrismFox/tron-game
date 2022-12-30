@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class GameScreen extends VBox implements Screen{
+public class GameScreen extends VBox {
 
     public GameScreen(String styleSheet, ITronView view, Map<Integer, int[][]> bikePos){
 //        super(20.0);

@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class WaitingScreen extends VBox implements Screen{
+public class WaitingScreen extends VBox {
 
     @Autowired
     private ISceneChanger iSceneChanger;

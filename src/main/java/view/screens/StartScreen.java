@@ -16,10 +16,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
-public class StartScreen extends VBox implements Screen {
+public class StartScreen extends VBox {
 
     @Autowired
     private ISceneChanger iSceneChanger;
