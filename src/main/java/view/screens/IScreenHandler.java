@@ -32,7 +32,7 @@ public interface IScreenHandler {
          *
          * @author Dominik Martin
          */
-    public void showScreen(int screenNumber, int winningNumber);
+    public void showScreen(int screenNumber, int winningNumber) throws InterruptedException;
 
     /**
      * showScreen will show the screen with the given Number
