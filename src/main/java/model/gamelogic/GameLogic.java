@@ -1,51 +1,44 @@
-package model.gameLogic;
+package model.gamelogic;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import model.board.Board;
-import model.config.Config;
-import model.lobby.Lobby;
+import model.board.IBoard;
+import model.lobby.ILobbyGameLogic;
+import model.player.IPlayerManager;
 import model.player.Player;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Service
+@Component
 @Slf4j
 @Data
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class GameLogic implements IGameLogic {
 
-    private Board board;
+    private final IPlayerManager playerManager;
 
-    private Config config;
+    private final IBoard board;
 
-
-    private PlayerLogic playerLogic;
-
-    private Lobby lobby;
-
-    public GameLogic() {
-        this.playerLogic = new PlayerLogic();
-        this.config = new Config();
-        this.lobby = new Lobby();
-        initBoard();
-    }
-
+    private final ILobbyGameLogic lobby;
 
     @Override
     public void startGame() {
-        System.out.println("test");
+        log.debug("Start of Game");
+        this.calculateStartPositions();
     }
 
     @Override
-    public void updateTick() {
+    public boolean updateTick() throws InterruptedException {
         List<int[]> obstaclesToRemove = new ArrayList<>();
 
-        playerLogic.getPlayerManager().commitPlayerMoves();
+        playerManager.commitPlayerMoves();
         updateBoard();
         List<int[]> collisions = checkCollision();
-        List<Player> players = playerLogic.getPlayerManager().getLivingPlayers();
+        List<Player> players = playerManager.getLivingPlayers();
         Map<Integer, int[][]> viewStuff = new HashMap<>();
 
         if (!collisions.isEmpty()) {
@@ -53,8 +46,8 @@ public class GameLogic implements IGameLogic {
                 Player player = players.get(i);
                 int[] currentPosition = player.getCurrentPosition();
                 if (collisions.contains(currentPosition)) {
-                    obstaclesToRemove.addAll(playerLogic.getPlayerManager().getPlayerPositions(player.getId()));
-                    playerLogic.killPlayer(player.getId());
+                    obstaclesToRemove.addAll(playerManager.getPlayerPositions(player.getId()));
+                    killPlayer(player.getId());
                     players.remove(player);
                 }else{
                     viewStuff.put(player.getColor().ordinal(), new int[][]{currentPosition});
@@ -67,14 +60,9 @@ public class GameLogic implements IGameLogic {
         viewStuff.put(0, allPositionsArray );
 
         if (players.size() <= 1) {
-            int[] winningStatus = getWinnerStatus();
-            if (winningStatus[0] == 0) {
-                board.updateView(4, 0);
-
-            } else {
-                board.updateView(4, winningStatus[1]);
-            }
-
+           lobby.endGame();
+           log.debug("End of Game");
+           return false;
             // Game loop muss interrupted werden
         }
 
@@ -83,10 +71,11 @@ public class GameLogic implements IGameLogic {
         }
 
         board.updateView(3, viewStuff);
+        return true;
     }
 
     private void updateBoard() {
-        List<int[]> currentPositions = playerLogic.getPlayerManager().getLivingPlayers().stream()
+        List<int[]> currentPositions = playerManager.getLivingPlayers().stream()
                 .map(Player::getCurrentPosition)
                 .collect(Collectors.toList());
 
@@ -101,11 +90,14 @@ public class GameLogic implements IGameLogic {
 
         for (int[] obstacle : obstacles) {
             if (!collisionPositions.contains(obstacle)) {
-                if (obstacle[0] < 0 || obstacle[0] > (sizeBoardXY - 1) || obstacle[1] < 0 || obstacle[1] > (sizeBoardXY - 1)) { //Border check
+                if (obstacle[0] < 0 || obstacle[0] > (sizeBoardXY - 1) || obstacle[1] < 0 ||
+                        obstacle[1] > (sizeBoardXY - 1)) { // Border check
                     collisionPositions.add(obstacle);
+                    log.debug(String.format("Collision detected at x: %d, y: %d", obstacle[0], obstacle[1]));
                 }
                 if (Collections.frequency(obstacles, obstacle) > 1) {
                     collisionPositions.add(obstacle);
+                    log.debug(String.format("Collision detected at x: %d, y: %d", obstacle[0], obstacle[1]));
                 }
             }
         }
@@ -114,7 +106,7 @@ public class GameLogic implements IGameLogic {
 
     @Override
     public void calculateStartPositions() {
-        List<Player> players = getPlayerLogic().getPlayerManager().getLivingPlayers();
+        List<Player> players = playerManager.getLivingPlayers();
         int median = board.getBoardSize()[1] / 2;
         int smallMedianY = median / 2;
         int bigMedianY = median + (median / 2);
@@ -137,10 +129,12 @@ public class GameLogic implements IGameLogic {
         int increment = 0;
         List<int[]> startPositions = new ArrayList<>();
         int incrementValue = board.getBoardSize()[0] / playerList.size();
+
         int[] startPosition = new int[2];
+        startPosition[1] = yPosition;
+
         for (Player player : playerList) {
             startPosition[0] = increment;
-            startPosition[1] = yPosition;
             startPositions.add(startPosition);
             player.setCurrentPosition(startPosition);
             increment += incrementValue;
@@ -149,17 +143,18 @@ public class GameLogic implements IGameLogic {
         board.updateBoard(startPositions, 0);
     }
 
+
     @Override
-    public void endGame() {
-        System.out.println("test");
+    public void killPlayer(int playerId) {
+        playerManager.killPlayer(playerId);
     }
 
     @Override
     public int[] getWinnerStatus() {
-        List<Player> livingPlayers = getPlayerLogic().getPlayerManager().getLivingPlayers();
+        List<Player> livingPlayers = getPlayerManager().getLivingPlayers();
         int[] result = new int[2];
 
-        if (livingPlayers.size() == 0) {
+        if (livingPlayers.isEmpty()) {
 
             result[1] = -1;
 
@@ -172,10 +167,4 @@ public class GameLogic implements IGameLogic {
 
         return result;
     }
-
-    @Override
-    public void initBoard() {
-        this.board = new Board(new int[]{23, 23}, 2, new ArrayList<>());
-    }
-
 }
