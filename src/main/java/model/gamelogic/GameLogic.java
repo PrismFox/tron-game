@@ -31,6 +31,7 @@ public class GameLogic implements IGameLogic {
         this.calculateStartPositions();
     }
 
+    // todo exceptions sollten innerhalb der selben Komponente behandelt werden
     @Override
     public boolean updateTick() throws InterruptedException {
         List<int[]> obstaclesToRemove = new ArrayList<>();
@@ -41,6 +42,8 @@ public class GameLogic implements IGameLogic {
         List<Player> players = playerManager.getLivingPlayers();
         Map<Integer, int[][]> viewStuff = new HashMap<>();
 
+
+        // todo den folgenden Part mit der Iterieung über die Player in PlayerManager auslagern
         if (!collisions.isEmpty()) {
             for (int i = 0; i < players.size(); i++) {
                 Player player = players.get(i);
