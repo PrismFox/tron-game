@@ -28,7 +28,6 @@ public class WaitingScreen extends VBox {
         Label labelWaiting = new Label("Waiting for other Players to join...");
         labelWaiting.setStyle("-fx-text-fill: " + ViewUtility.getHexTriplet(Color.PAPAYAWHIP.brighter()) + ";");
 
-        if(maxPlayerJoined == false){
 
             //liste um gejointe spieler anzeigen zu lassen
             Label ListLabel = new Label("Following Players Already joined ");
@@ -61,8 +60,8 @@ public class WaitingScreen extends VBox {
 
             this.getChildren().add(ListLabel);
             this.getChildren().add(playerList);
-        } else {
-            //countdown anzeigen lassen soabld alle Spieler da sind
+
+           /* //countdown anzeigen lassen soabld alle Spieler da sind
             // Create a label to display the time remaining
             Label timeLabel = new Label();
 
@@ -76,7 +75,7 @@ public class WaitingScreen extends VBox {
                 timeLabel.setText(String.valueOf(timeRemaining.get()));
                 if (timeRemaining.get() <= 0 ) {
                     timeline.stop();
-
+                    //TODO Kompletter Countdown kann erstmal raus und hier soll kein changeToNextScene Aufgerufen werden
                     view.hideOverlays();
                     //change to next scene (GameScreen)
                     iSceneChanger.changeToNextScene();
@@ -88,8 +87,8 @@ public class WaitingScreen extends VBox {
             timeline.play();
 
             this.getChildren().add(timeLabel);
+*/
 
-        }
         this.getChildren().add(labelWaiting);
     }
 }

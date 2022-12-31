@@ -1,5 +1,7 @@
 package controller.playercontrol;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +12,7 @@ public class PlayerControllerOnboardingImpl implements IPlayerController {
 
     private IConfig config;
     private IGameManager gameManager;
-    private Map<String, Integer> playerMappings;
+    private Map<String, Integer> playerIdKeyMap;
 
     @Override
     public void onKeyPress(String key) {
@@ -23,14 +25,20 @@ public class PlayerControllerOnboardingImpl implements IPlayerController {
 
     @Override
     public List<String> getValidKeys() {
-        return null;
+        return new ArrayList<>(this.playerIdKeyMap.keySet());
     }
 
     private int getPlayerForKey(String key) {
-        if(this.playerMappings == null) {
-            this.playerMappings = this.config.getPlayerMappings();
+        if(this.playerIdKeyMap == null) {
+            this.playerIdKeyMap = new HashMap<>();
+            Map<Integer, List<String>> playerMappings = this.config.getPlayerMappings();
+            playerMappings.entrySet().stream().forEach(
+                e -> e.getValue().forEach(
+                    v -> this.playerIdKeyMap.put(v, e.getKey())
+                )
+            );
         }
-        Integer playerId = playerMappings.get(key);
+        Integer playerId = playerIdKeyMap.get(key);
         if(playerId == null) {
             playerId = -1;
         }

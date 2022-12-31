@@ -75,12 +75,12 @@ public class Lobby implements ILobbyGameLogic, IInitLobby {
         if (playerCounter == maxPlayer || playerCounter == playerNumber) {
             maxPlayerJoined = true;
         }
-
+        //TODO timesec wieder raus nehmen
         int timeSec = config.getLobbyTimerDuration();
         screenHandler.showScreen(2, timeSec, playerCounter, maxPlayerJoined);
     }
 
-    public int setPlayerCount() {
+    public int getPlayerCount() {
         int playerCount = config.getPlayerCount();
         return playerCount;
     }

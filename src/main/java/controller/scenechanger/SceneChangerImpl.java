@@ -1,15 +1,19 @@
 package controller.scenechanger;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import controller.timer.ITimer;
 import model.config.IConfig;
+import model.gamelogic.IGameLogic;
 import model.gamemanager.IGameManager;
 
 @Component
-public class SceneChangerImpl {
+public class SceneChangerImpl implements ISceneChanger {
     @Autowired
     private IGameManager gameManager;
     @Autowired
@@ -18,26 +22,98 @@ public class SceneChangerImpl {
     private ITimer timer;
     private Scene currentScene;
 
+    @Autowired
+    private IGameLogic gameLogic;
+
+    private List<Runnable> previousSceneCallbacks = new ArrayList<>();;
+    private List<Runnable> nextSceneCallbacks = new ArrayList<>();
+
     @PostConstruct
     private void init() {
         this.currentScene = new StartScene(this.gameManager, this.config, this.timer, (ISceneChanger) this);
+
+        Runnable gameRunnable = () -> {
+            init();
+        };
+        Runnable lobbyRunnable = () -> {
+            registerNextSceneCallback(gameRunnable);
+        };
+        Runnable lobbyFailedRunnable = () -> {
+            init();
+        };
+        Runnable startRunnable = () -> {
+            int lobbyTimerDuration = config.getLobbyTimerDuration();
+
+            timer.startLobbyTimer(lobbyTimerDuration, () -> {
+                if(gameManager.isReadyToPlay()) {
+                    gameManager.startGame();
+                    changeToNextScene();
+                    timer.startGameTimer(1, () -> {
+                        updateTick();
+                    });
+                } else {
+                    // TODO: Do something here?
+                    changeToPreviousScene();
+                }
+            });
+
+            this.gameManager.loadLobby();
+            registerNextSceneCallback(lobbyRunnable);
+            registerPreviousSceneCallback(lobbyFailedRunnable);
+        };
+        registerNextSceneCallback(startRunnable);
     }
 
+
+    private void updateTick() {
+        if(!gameLogic.updateTick()) {
+            timer.stopGameTimer();
+        }
+    }
+
+    @Override
     public boolean changeToNextScene() {
         Scene newScene = currentScene.changeToNextScene();
+
         if(newScene != null) {
             this.currentScene = newScene;
+            
+            List<Runnable> callbacks = new ArrayList<>(this.nextSceneCallbacks);
+            this.previousSceneCallbacks.clear();
+            this.nextSceneCallbacks.clear();
+
+            callbacks.forEach(callback -> callback.run());
+    
             return true;
         }
         return false;
     }
 
+    @Override
     public boolean changeToPreviousScene() {
         Scene newScene = currentScene.changeToPreviousScene();
+        
         if(newScene != null) {
             this.currentScene = newScene;
+
+            List<Runnable> callbacks = new ArrayList<>(this.previousSceneCallbacks);
+            this.previousSceneCallbacks.clear();
+            this.nextSceneCallbacks.clear();
+
+            callbacks.forEach(callback -> callback.run());
+    
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void registerNextSceneCallback(Runnable callback) {
+        this.nextSceneCallbacks.add(callback);
+    }
+
+    @Override
+    public void registerPreviousSceneCallback(Runnable callback) {
+        this.previousSceneCallbacks.add(callback);
     }
 }
