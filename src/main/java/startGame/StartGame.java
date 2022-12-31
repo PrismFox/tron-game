@@ -1,13 +1,17 @@
 package startGame;
 
-import edu.cads.bai5.vsp.tron.view.TronView;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import view.screens.ScreenHandler;
 
+@SpringBootApplication
 public class StartGame extends Application {
 
     public static void main(String[] args) {
+        SpringApplication.run(StartGame.class, args);
+
         launch(args);
     }
 

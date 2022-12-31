@@ -2,6 +2,7 @@ package controller.playercontrol;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import model.player.IPlayerManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class PlayerControllerMovementImpl implements IPlayerController {
 
     @Override
     public List<String> getValidKeys() {
-        return playerMappings.values().stream().flatMap(List::stream).toList();
+        return playerMappings.values().stream().flatMap(List::stream).collect(Collectors.toList());
     }
 
     private int getPlayerForKey(String key) {

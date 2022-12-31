@@ -66,9 +66,14 @@ public class SceneChangerImpl implements ISceneChanger {
 
 
     private void updateTick() {
-        if(!gameLogic.updateTick()) {
-            timer.stopGameTimer();
+        try {
+            if(!gameLogic.updateTick()) {
+                timer.stopGameTimer();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 
     @Override

@@ -39,7 +39,7 @@ public class StartScreen extends VBox {
         selectLabel.setStyle("-fx-text-fill: " + ViewUtility.getHexTriplet(Color.PAPAYAWHIP.brighter()) + ";");
 
         ComboBox dropDownBox = new ComboBox(FXCollections.observableList(playerNumberList));
-        dropDownBox.setStyle("-fx-font-family: 'Arial';");
+        dropDownBox.setStyle("-fx-font-family: 'Times New Roman';");
 
         final Integer[] playerNum = {0};
         EventHandler<ActionEvent> dropDownEvent =

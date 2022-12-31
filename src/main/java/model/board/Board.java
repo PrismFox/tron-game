@@ -64,7 +64,12 @@ public class Board implements IBoard {
 
     @Override
     public void remainingTime(int remainingTime) {
-        screenHandler.showScreen(3, remainingTime);
+        try {
+            screenHandler.showScreen(3, remainingTime);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -75,7 +80,11 @@ public class Board implements IBoard {
 
     @Override
     public void updateView(int screenNumber, int winningNumber){
-        screenHandler.showScreen(screenNumber, winningNumber);
+        try {
+            screenHandler.showScreen(screenNumber, winningNumber);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

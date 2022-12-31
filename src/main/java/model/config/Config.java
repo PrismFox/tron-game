@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 public class Config implements IConfig {
 
@@ -46,7 +47,7 @@ public class Config implements IConfig {
                 if(keys == null) {
                     //TODO: handle error
                 }
-                List<String> keyList = Arrays.asList(keys.split(",")).stream().map(k -> k.strip()).toList();
+                List<String> keyList = Arrays.asList(keys.split(",")).stream().map(k -> k.strip()).collect(Collectors.toList());
                 if(keyList.size() != 1) {
                     //TODO: handle error
                 }

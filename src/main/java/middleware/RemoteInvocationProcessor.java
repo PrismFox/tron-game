@@ -23,7 +23,7 @@ import javax.tools.JavaFileObject;
 
 
 @SupportedAnnotationTypes("middleware.annotation.RemoteInterface")
-@SupportedSourceVersion(SourceVersion.RELEASE_17)
+@SupportedSourceVersion(SourceVersion.RELEASE_11)
 public class RemoteInvocationProcessor extends AbstractProcessor {
 
     @Override
@@ -55,7 +55,7 @@ public class RemoteInvocationProcessor extends AbstractProcessor {
                     method -> Stream.concat(
                             Stream.of(((ExecutableType) method.asType()).getReturnType().toString()), 
                             ((ExecutableType) method.asType()).getParameterTypes().stream().map(e -> e.toString())
-                        ).toList()
+                        ).collect(Collectors.toList())
                 ));
             try {
                 writeRPCInvokerFile(className, methodMap);
