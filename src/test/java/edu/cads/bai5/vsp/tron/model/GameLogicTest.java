@@ -1,9 +1,7 @@
 package edu.cads.bai5.vsp.tron.model;
 
-import Enums.Color;
-import model.board.IBoard;
-import model.gamelogic.IGameLogic;
-import model.player.Player;
+import de.haw.vsp.tron.model.board.IBoard;
+import de.haw.vsp.tron.model.gamelogic.IGameLogic;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -11,7 +9,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GameLogicTest {
