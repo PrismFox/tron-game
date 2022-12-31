@@ -80,7 +80,7 @@ public class Lobby implements ILobbyGameLogic, IInitLobby {
         screenHandler.showScreen(2, timeSec, playerCounter, maxPlayerJoined);
     }
 
-    public int setPlayerCount() {
+    public int getPlayerCount() {
         int playerCount = config.getPlayerCount();
         return playerCount;
     }

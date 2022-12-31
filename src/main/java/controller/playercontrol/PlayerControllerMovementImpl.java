@@ -21,7 +21,7 @@ public class PlayerControllerMovementImpl implements IPlayerController {
 
     @Override
     public List<String> getValidKeys() {
-        return null;
+        return playerMappings.values().stream().flatMap(List::stream).toList();
     }
 
     private int getPlayerForKey(String key) {

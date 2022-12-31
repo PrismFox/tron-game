@@ -5,5 +5,4 @@ public interface IGameManager {
     public void loadLobby();
     public boolean isReadyToPlay();
     public void startGame();
-    public void updateCountdown(String msg);
 }

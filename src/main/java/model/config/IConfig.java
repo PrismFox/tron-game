@@ -10,6 +10,8 @@ public interface IConfig {
     //PlayerCount = wie viele Spieler erlaubt sind
     public int getPlayerCount();
 
+    public void setPlayerCount(int playerCount);
+
     int[] getBoardSize();
 
     int getCellSize();
