@@ -11,6 +11,7 @@ public class PlayerControllerMovementImpl implements IPlayerController {
     @Autowired
     private IPlayerManager playerManager;
     private Map<Integer, List<String>> playerMappings;
+    private Map<String, Integer> playerKeyIdMap;
 
     @Override
     public void onKeyPress(String key) {
@@ -43,7 +44,14 @@ public class PlayerControllerMovementImpl implements IPlayerController {
     }
 
     private int getDirectionForKey(String key) {
-        //TODO: Unimplemented method stub
-        return 0;
+        if(this.playerMappings == null) {
+            this.playerMappings = this.playerManager.getPlayerMappings();
+        }
+        for (Map.Entry<Integer, List<String>> entry: this.playerMappings.entrySet()) {
+            if(entry.getValue().contains(key)) {
+                return entry.getKey();
+            }
+        }
+        return -1;
     }
 } 

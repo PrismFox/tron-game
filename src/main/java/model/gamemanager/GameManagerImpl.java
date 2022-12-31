@@ -3,6 +3,7 @@ package model.gamemanager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import model.board.IBoard;
 import model.config.IConfig;
 import model.lobby.IInitLobby;
 
@@ -14,6 +15,9 @@ public class GameManagerImpl implements IGameManager {
 
     @Autowired
     private IConfig config;
+
+    @Autowired
+    private IBoard board;
 
     @Override
     public void playerJoin(int id) {
@@ -35,14 +39,8 @@ public class GameManagerImpl implements IGameManager {
 
     @Override
     public void startGame() {
-        // TODO Auto-generated method stub
-        
+        board.initBoard();
     }
 
-    @Override
-    public void updateCountdown(String msg) {
-        // TODO Auto-generated method stub
-        
-    }
     
 }
