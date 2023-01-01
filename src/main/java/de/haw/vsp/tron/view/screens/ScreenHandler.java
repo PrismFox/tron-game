@@ -2,6 +2,7 @@ package de.haw.vsp.tron.view.screens;
 
 import edu.cads.bai5.vsp.tron.view.ITronView;
 import edu.cads.bai5.vsp.tron.view.TronView;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
@@ -37,10 +38,12 @@ public class ScreenHandler implements IScreenHandler{
         switch (screenNumber){
             case 1:
                 StartScreen startScreen = new StartScreen("menu.css", view);
-                view.registerOverlay("start", startScreen);
-
-                view.init();
-                view.showOverlay("start");
+                Platform.runLater(() -> {
+                    view.registerOverlay("start", startScreen);
+                    
+                    view.init();
+                    view.showOverlay("start");
+                });
                 break;
             case 2:
                 System.err.println("wrong param");
@@ -64,17 +67,22 @@ public class ScreenHandler implements IScreenHandler{
         switch (screenNumber){
             case 1:
                 StartScreen startScreen = new StartScreen("menu.css", view);
-                view.registerOverlay("start", startScreen);
-
-                view.init();
-                view.showOverlay("start");
+                Platform.runLater(() -> {
+                    view.registerOverlay("start", startScreen);
+                    
+                    view.init();
+                    view.showOverlay("start");
+                });
                 break;
             case 2:
                 WaitingScreen waitingScreen = new WaitingScreen("menu.css", timeSec, playerCounter, maxPlayerJoined, view);
-                view.registerOverlay("waitingScreen", waitingScreen);
+                Platform.runLater(() -> {
 
-                view.init();
-                view.showOverlay("waitingScreen");
+                    view.registerOverlay("waitingScreen", waitingScreen);
+                    
+                    view.init();
+                    view.showOverlay("waitingScreen");
+                });
                 break;
             case 3:
                 System.err.println("wrong param");
@@ -96,10 +104,13 @@ public class ScreenHandler implements IScreenHandler{
         switch (screenNumber){
             case 1:
                 StartScreen startScreen = new StartScreen("menu.css", view);
-                view.registerOverlay("start", startScreen);
+                Platform.runLater(() -> {
 
-                view.init();
-                view.showOverlay("start");
+                    view.registerOverlay("start", startScreen);
+                    
+                    view.init();
+                    view.showOverlay("start");
+                });
                 break;
             case 2:
                 System.err.println("wrong param");
@@ -109,10 +120,12 @@ public class ScreenHandler implements IScreenHandler{
                 break;
             case 4:
                 EndScreen endScreen = new EndScreen("menu.css", view, winningNumber);
-                view.registerOverlay("endScreen", endScreen);
-
-                view.init();
-                view.showOverlay("endScreen");
+                Platform.runLater(() -> {
+                    view.registerOverlay("endScreen", endScreen);
+                    
+                    view.init();
+                    view.showOverlay("endScreen");
+                });
                 break;
         }
     }
@@ -128,21 +141,26 @@ public class ScreenHandler implements IScreenHandler{
         switch (screenNumber){
             case 1:
                 StartScreen startScreen = new StartScreen("menu.css", view);
-                view.registerOverlay("start", startScreen);
-
-                view.init();
-                view.showOverlay("start");
+                Platform.runLater(() -> {
+                    view.registerOverlay("start", startScreen);
+                    
+                    view.init();
+                    view.showOverlay("start");
+                });
                 break;
             case 2:
                 System.err.println("wrong param");
                 break;
             case 3:
-                //gameScreen wird erstellt, im konstruktur wird die draw() methode aufgerufen.
-                view.hideOverlays();
-                view.clear(); // ich weiß nicht, ob man das hier braucht, da man nur die neuen werte mitschickt und nicht die kompletten werte, bzw. komplette koordinaten.
-                GameScreen gameScreen = new GameScreen("menu.css", view, bikePos);
+                Platform.runLater(() -> {
 
-                break;
+                    //gameScreen wird erstellt, im konstruktur wird die draw() methode aufgerufen.
+                    view.hideOverlays();
+                    view.clear(); // ich weiß nicht, ob man das hier braucht, da man nur die neuen werte mitschickt und nicht die kompletten werte, bzw. komplette koordinaten.
+                    GameScreen gameScreen = new GameScreen("menu.css", view, bikePos);
+                    
+                });
+                    break;
             case 4:
                 System.err.println("wrong param");
                 break;
