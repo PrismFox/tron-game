@@ -43,12 +43,12 @@ public class Lobby implements ILobbyGameLogic, IInitLobby {
     }
 
     @Override
-    public void endGame() throws InterruptedException {
+    public void endGame() {
         createWinnerScreen();
     }
 
     @Override
-    public void createWinnerScreen() throws InterruptedException {
+    public void createWinnerScreen() {
         //getWinnerStatus aufrufen
         //int[] mit winnerStatus. wenn [0,-1], dann ist es unentschieden
 
