@@ -16,7 +16,7 @@ public class ScreenHandler implements IScreenHandler{
     public ScreenHandler() throws IOException {}
 
     public void init(Stage primaryStage){
-        StartScreen startScreen = new StartScreen("../resources/menu.css", view);
+        StartScreen startScreen = new StartScreen("menu.css", view);
         view.registerOverlay("start", startScreen);
 
         view.init();
@@ -36,7 +36,7 @@ public class ScreenHandler implements IScreenHandler{
 
         switch (screenNumber){
             case 1:
-                StartScreen startScreen = new StartScreen("../resources/menu.css", view);
+                StartScreen startScreen = new StartScreen("menu.css", view);
                 view.registerOverlay("start", startScreen);
 
                 view.init();
@@ -63,14 +63,14 @@ public class ScreenHandler implements IScreenHandler{
 
         switch (screenNumber){
             case 1:
-                StartScreen startScreen = new StartScreen("../resources/menu.css", view);
+                StartScreen startScreen = new StartScreen("menu.css", view);
                 view.registerOverlay("start", startScreen);
 
                 view.init();
                 view.showOverlay("start");
                 break;
             case 2:
-                WaitingScreen waitingScreen = new WaitingScreen("../resources/menu.css", timeSec, playerCounter, maxPlayerJoined, view);
+                WaitingScreen waitingScreen = new WaitingScreen("menu.css", timeSec, playerCounter, maxPlayerJoined, view);
                 view.registerOverlay("waitingScreen", waitingScreen);
 
                 view.init();
@@ -95,7 +95,7 @@ public class ScreenHandler implements IScreenHandler{
 
         switch (screenNumber){
             case 1:
-                StartScreen startScreen = new StartScreen("../resources/menu.css", view);
+                StartScreen startScreen = new StartScreen("menu.css", view);
                 view.registerOverlay("start", startScreen);
 
                 view.init();
@@ -108,7 +108,7 @@ public class ScreenHandler implements IScreenHandler{
                 System.err.println("wrong param");
                 break;
             case 4:
-                EndScreen endScreen = new EndScreen("../resources/menu.css", view, winningNumber);
+                EndScreen endScreen = new EndScreen("menu.css", view, winningNumber);
                 view.registerOverlay("endScreen", endScreen);
 
                 view.init();
@@ -127,7 +127,7 @@ public class ScreenHandler implements IScreenHandler{
 
         switch (screenNumber){
             case 1:
-                StartScreen startScreen = new StartScreen("../resources/menu.css", view);
+                StartScreen startScreen = new StartScreen("menu.css", view);
                 view.registerOverlay("start", startScreen);
 
                 view.init();
@@ -140,7 +140,7 @@ public class ScreenHandler implements IScreenHandler{
                 //gameScreen wird erstellt, im konstruktur wird die draw() methode aufgerufen.
                 view.hideOverlays();
                 view.clear(); // ich weiß nicht, ob man das hier braucht, da man nur die neuen werte mitschickt und nicht die kompletten werte, bzw. komplette koordinaten.
-                GameScreen gameScreen = new GameScreen("../resources/menu.css", view, bikePos);
+                GameScreen gameScreen = new GameScreen("menu.css", view, bikePos);
 
                 break;
             case 4:

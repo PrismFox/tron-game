@@ -1,10 +1,10 @@
 .label {
-    -fx-font: bold 20px 'TimesNewRoman';
+    -fx-font: bold 20px 'Arial';
     -fx-text-fill: #ffefd5;
 }
 
 .button {
-    -fx-font: bold 14px 'TimesNewRoman';
+    -fx-font: bold 14px 'Arial';
     -fx-text-fill: #ffefd5;
     -fx-border-color: #ffefd5;
     -fx-border-width: 2px;
