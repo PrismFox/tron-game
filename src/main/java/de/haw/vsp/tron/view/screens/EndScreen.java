@@ -23,7 +23,7 @@ public class EndScreen extends VBox {
 
     private Label winningLabel;
 
-    public EndScreen(String stylesheet, ITronView view, int winningNumber) throws InterruptedException {
+    public EndScreen(String stylesheet, ITronView view, int winningNumber) {
         super(20.0);
         this.getStylesheets().add(stylesheet);
         this.setAlignment(Pos.CENTER);
@@ -55,9 +55,14 @@ public class EndScreen extends VBox {
         winningLabel.setStyle("-fx-text-fill: " + ViewUtility.getHexTriplet(Color.PAPAYAWHIP.brighter()) + ";");
         this.getChildren().add(winningLabel);
 
-        //waits 30 sec and then changes to the next scene
-        Thread.sleep(30000);
-        iSceneChanger.changeToNextScene();
+        try {
+            //waits 30 sec and then changes to the next scene
+            Thread.sleep(30000);
+            iSceneChanger.changeToNextScene();
+        }catch (InterruptedException e ){
+            e.printStackTrace();
+        }
+
 
     }
 }
