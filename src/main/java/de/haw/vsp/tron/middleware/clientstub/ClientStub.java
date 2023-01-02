@@ -1,8 +1,8 @@
-package middleware.clientstub;
+package de.haw.vsp.tron.middleware.clientstub;
 
-import Enums.TransportType;
+import de.haw.vsp.tron.Enums.TransportType;
 import lombok.extern.slf4j.Slf4j;
-import middleware.marshaler.INameServerMarshaler;
+import de.haw.vsp.tron.middleware.marshaler.INameServerMarshaler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +16,7 @@ public class ClientStub implements IClientStub {
 
     String nameServerIp = "192.0.0.1";
     int port = 5549;
-    public final static int UDP_PACKET_SIZE = 1024;
+    public static final int UDP_PACKET_SIZE = 1024;
 
     private DatagramSocket udpSocket;
     private Socket tcpSocket;
