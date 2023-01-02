@@ -1,6 +1,7 @@
 package de.haw.vsp.tron.middleware.clientstub;
 
 import de.haw.vsp.tron.Enums.TransportType;
+import de.haw.vsp.tron.middleware.marshaler.IMarshaler;
 import lombok.extern.slf4j.Slf4j;
 import de.haw.vsp.tron.middleware.marshaler.INameServerMarshaler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,29 +23,42 @@ public class ClientStub implements IClientStub {
     private Socket tcpSocket;
     private INameServerMarshaler nameServerMarshaler;
     private DatagramPacket udpReceivePacket;
+    private IMarshaler marshaler;
 
     @Autowired
-    public ClientStub(INameServerMarshaler nameServerMarshaler) throws SocketException {
+    public ClientStub(INameServerMarshaler nameServerMarshaler, IMarshaler marshaler) throws SocketException {
         this.nameServerMarshaler = nameServerMarshaler;
+        this.marshaler = marshaler;
         udpSocket = new DatagramSocket();
     }
 
     @Override
-    public Object invokeSynchronously(String methodName, Class<?> returnType, Object... args) {
+    public Object invokeSynchronously(String methodName, Object... args) {
         return null;
     }
 
     @Override
     public void invokeAsynchron(String methodName, TransportType transportType,
-                                Class<?> classType, Object... args) throws UnknownHostException {
-        StringBuilder nameServerindentifier = new StringBuilder(String.format("%s %s", classType.getName(), methodName));
+                                Object... args) throws UnknownHostException {
+        List<String> address = lookUp(methodName);
+        String ip = address.get(0);
+        int port = Integer.parseInt(address.get(1));
 
-        for (int i = 0; i < args.length; i++){
-            nameServerindentifier.append(" ");
-            nameServerindentifier.append(args[i].getClass().getName());
+        String rpcMessage = marshaler.marshal(methodName, "2", args);
+
+
+        if (transportType.equals(TransportType.TCP)){
+            try {
+                initTCPSocket(ip, port);
+            } catch (IOException e) {
+                log.error(String.format("Couldn't send Message to IP: %s and Port: %d  over TCP", address.get(0), port));
+            }
+
+        }else {
+            byte[] rpcMessageBytes = rpcMessage.getBytes();
+            sendUDPPacket(rpcMessageBytes, rpcMessageBytes.length, ip, port);
+            String responseMessage = receiveUDPPacket();
         }
-
-        List<String> address = lookUp(nameServerindentifier.toString());
 
     }
 
@@ -57,12 +71,11 @@ public class ClientStub implements IClientStub {
         }
     }
 
-    private List<String> lookUp(String methodName) throws UnknownHostException {
+    private List<String> lookUp(String methodName){
         String queryJson = nameServerMarshaler.marshalQueryRequest(methodName);
 
         byte[] queryJsonBytes = queryJson.getBytes();
-        InetAddress ip = InetAddress.getByName(nameServerIp);
-        sendUDPPacket(queryJsonBytes, queryJsonBytes.length, ip, port);
+        sendUDPPacket(queryJsonBytes, queryJsonBytes.length, nameServerIp, port);
 
         String reponseString = receiveUDPPacket();
 
@@ -70,12 +83,13 @@ public class ClientStub implements IClientStub {
 
     }
 
-    private void sendUDPPacket(byte[] content, int length, InetAddress ipAddress, int port) {
-        DatagramPacket packet = new DatagramPacket(content, length, ipAddress, port);
+    private void sendUDPPacket(byte[] content, int length, String ipAddress, int port) {
         try {
+            InetAddress targetAddress = InetAddress.getByName(ipAddress);
+            DatagramPacket packet = new DatagramPacket(content, length, targetAddress, port);
             udpSocket.send(packet);
         } catch (IOException e) {
-            log.error(String.format("Packet couldn't be sent to address: %s with port: %d", ipAddress.getHostAddress(), port));
+            log.error(String.format("Packet couldn't be sent to address: %s with port: %d", ipAddress, port));
             e.printStackTrace();
         }
     }
