@@ -1,4 +1,4 @@
-package middleware.marshaler;
+package de.haw.vsp.tron.middleware.marshaler;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package middleware.marshaler;
+package de.haw.vsp.tron.middleware.marshaler;
 
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
