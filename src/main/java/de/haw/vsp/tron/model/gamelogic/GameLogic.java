@@ -51,8 +51,9 @@ public class GameLogic implements IGameLogic {
         List<Player> currentLivingPlayers = playerManager.getLivingPlayers();
 
         if (currentLivingPlayers.size() <= 1) {
-            System.out.println("currentplayers <= 1");
+
             try {
+                System.out.println("currentplayers <= 1");
                 lobby.endGame();
                 log.debug("End of Game");
             } catch (InterruptedException exception) {

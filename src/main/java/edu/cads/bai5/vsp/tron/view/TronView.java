@@ -8,7 +8,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import java.awt.*;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -104,6 +103,8 @@ public class TronView implements ITronView {
             g.setFill(color); //Color.PAPAYAWHIP);
             g.fillRect(pos.x*WIDTH/COLUMNS, pos.y*HEIGHT/ROWS, WIDTH/COLUMNS, HEIGHT/ROWS);
         }
+        System.out.println("in draw bikes - in der TronView von Becke am ende der Methode");
+
     }
 
     @Override
@@ -134,10 +135,10 @@ public class TronView implements ITronView {
     }
 
     @Override
-    public void highlightCell(Coordinate cell) {
+    public void highlightCell(Coordinate cell, Color bikeColor) {
         // highlight last bike position
         GraphicsContext g = gameBoard.getGraphicsContext2D();
-        g.setFill(Color.RED.darker());
+        g.setFill(bikeColor);
         g.fillRect(cell.x*WIDTH/COLUMNS, cell.y*HEIGHT/ROWS, WIDTH/COLUMNS, HEIGHT/ROWS);
     }
 }

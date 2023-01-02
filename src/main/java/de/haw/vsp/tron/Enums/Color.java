@@ -1,7 +1,7 @@
 package de.haw.vsp.tron.Enums;
 
 public enum Color {
-    Grey,
+    GRAY,
     RED,
     BLUE,
     GREEN,

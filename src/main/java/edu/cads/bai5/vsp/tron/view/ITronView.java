@@ -68,6 +68,7 @@ public interface ITronView {
      * Highlights a specified cell in the color red
      *
      * @param cell the cell to be highlighted
+     * @param bikeColor
      */
-    void highlightCell(Coordinate cell);
+    void highlightCell(Coordinate cell, Color bikeColor);
 }
