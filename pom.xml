@@ -217,5 +217,12 @@
         <artifactId>spring-context-support</artifactId>
         <version>${org.springframework.version}</version>
     </dependency>
+    <!-- If user uses m-series from apple
+    <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-controls</artifactId>
+        <version>18.0.2</version>
+        <classifier>mac-aarch64</classifier>
+    </dependency>-->
 </dependencies>
 </project>
