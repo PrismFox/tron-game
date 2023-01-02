@@ -1,9 +1,12 @@
 package de.haw.vsp.tron.view.screens;
 
+import de.haw.vsp.tron.view.inputHandler.InputHandler;
 import edu.cads.bai5.vsp.tron.view.ITronView;
 import edu.cads.bai5.vsp.tron.view.TronView;
 import javafx.application.Platform;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -12,11 +15,20 @@ import java.util.Map;
 @Component
 public class ScreenHandler implements IScreenHandler{
 
-    private ITronView view = new TronView();
+    private ITronView view;
 
-    public ScreenHandler() throws IOException {}
+    @Autowired
+    private InputHandler inputHandler1;
 
-    public void init(Stage primaryStage){
+    public ScreenHandler() {}
+
+    public void init(Stage primaryStage) {
+        try {
+            view = new TronView();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         StartScreen startScreen = new StartScreen("menu.css", view);
         view.registerOverlay("start", startScreen);
 
@@ -26,6 +38,10 @@ public class ScreenHandler implements IScreenHandler{
         primaryStage.setTitle("Tron Game");
         primaryStage.setScene(view.getScene());
         primaryStage.show();
+
+        Scene scene = view.getScene();
+        scene.setOnKeyPressed(inputHandler1);
+
     }
 
     @Override
@@ -121,6 +137,8 @@ public class ScreenHandler implements IScreenHandler{
             case 4:
                 EndScreen endScreen = new EndScreen("menu.css", view, winningNumber);
                 Platform.runLater(() -> {
+                    //view.hideOverlays();
+                    //view.clear();
                     view.registerOverlay("endScreen", endScreen);
                     
                     view.init();
@@ -155,8 +173,8 @@ public class ScreenHandler implements IScreenHandler{
                 Platform.runLater(() -> {
 
                     //gameScreen wird erstellt, im konstruktur wird die draw() methode aufgerufen.
-                    view.hideOverlays();
-                    view.clear(); // ich weiß nicht, ob man das hier braucht, da man nur die neuen werte mitschickt und nicht die kompletten werte, bzw. komplette koordinaten.
+                    //view.hideOverlays();
+                    //view.clear(); // ich weiß nicht, ob man das hier braucht, da man nur die neuen werte mitschickt und nicht die kompletten werte, bzw. komplette koordinaten.
                     GameScreen gameScreen = new GameScreen("menu.css", view, bikePos);
                     
                 });

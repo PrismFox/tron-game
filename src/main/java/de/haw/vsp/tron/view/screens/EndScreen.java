@@ -30,6 +30,7 @@ public class EndScreen extends VBox {
         switch(winningNumber){
             case 0:
                 winningLabel = new Label("Tie");
+                System.out.println("endscreen tie");
                 break;
             case 1:
                 winningLabel = new Label("Player 1 Won!!!");

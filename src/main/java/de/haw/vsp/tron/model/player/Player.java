@@ -34,6 +34,7 @@ public class Player {
 
 
     public void commitMove() {
+        System.out.println("commit move wird aufgerufen");
         if (Direction.UP == Direction.values()[intendedDirection]) {
             this.changePosition(1, 0);
         }
@@ -68,12 +69,16 @@ public class Player {
             lastPosition = currentPosition.clone();
             shadows.add(lastPosition);
             currentPosition = temp;
-
             direction = intendedDirection;
+
+        }else{
+            intendedDirection = direction;
+            this.commitMove();
         }
 
-        intendedDirection = direction;
-        this.commitMove();
+
+        System.out.println("change position ruft commit move auf gleich");
+
     }
 
 

@@ -69,6 +69,7 @@ public class PlayerManager implements IPlayerManager {
     @Override
     public void commitPlayerMoves() {
         for (Player player : players) {
+            System.out.println("commit player moves for player ");
             player.commitMove();
         }
 

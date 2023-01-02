@@ -46,12 +46,14 @@ public class SceneChangerImpl implements ISceneChanger {
         };
         Runnable startRunnable = () -> {
             int lobbyTimerDuration = config.getLobbyTimerDuration();
-
+            System.out.println(lobbyTimerDuration);
             timer.startLobbyTimer(lobbyTimerDuration, () -> {
                 if(gameManager.isReadyToPlay()) {
                     gameManager.startGame();
+                    gameLogic.startGame();
                     changeToNextScene();
-                    timer.startGameTimer(1, () -> {
+                    timer.startGameTimer(1000, () -> {
+                        System.out.println("update tick wird aufgerufen");
                         updateTick();
                     });
                 } else {

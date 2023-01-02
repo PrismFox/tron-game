@@ -26,7 +26,7 @@ public class WaitingScreen extends VBox {
             //liste um gejointe spieler anzeigen zu lassen
             Label ListLabel = new Label("Following Players Already joined ");
             ListView<String> playerList = new ListView<>();
-            playerList.setPrefSize(100, 100);
+            playerList.setPrefSize(100, 190);
             switch (playerCounter){
                 case 0: break;
                 case 1:
@@ -49,7 +49,7 @@ public class WaitingScreen extends VBox {
                     break;
             }
 
-            playerList.setStyle("-fx-font-size: 12pt; -fx-font-family: 'Sans'; -fx-font-weight: bold; -fx-text-fill: blue; " +
+            playerList.setStyle("-fx-font-size: 12pt; -fx-font-family: 'Arial'; -fx-font-weight: bold; -fx-text-fill: blue; " +
                     "-fx-background-color: lightgray; -fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 10");
 
             this.getChildren().add(ListLabel);

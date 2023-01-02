@@ -42,6 +42,7 @@ public class GameManagerImpl implements IGameManager {
     @Override
     public void startGame() {
         board.initBoard();
+
     }
 
     
