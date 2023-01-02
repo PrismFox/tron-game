@@ -12,11 +12,17 @@ import java.util.Map;
 @Component
 public class ScreenHandler implements IScreenHandler{
 
-    private ITronView view = new TronView();
+    private ITronView view;
 
-    public ScreenHandler() throws IOException {}
+    public ScreenHandler() {}
 
-    public void init(Stage primaryStage){
+    public void init(Stage primaryStage) {
+        try {
+            view = new TronView();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         StartScreen startScreen = new StartScreen("menu.css", view);
         view.registerOverlay("start", startScreen);
 
