@@ -38,38 +38,25 @@ public class GameLogic implements IGameLogic {
     // todo exceptions sollten innerhalb der selben Komponente behandelt werden
     @Override
     public boolean updateTick() throws InterruptedException {
-        List<int[]> obstaclesToRemove = new ArrayList<>();
-
         playerManager.commitPlayerMoves();
         updateBoard();
         List<int[]> collisions = checkCollision();
-        List<Player> players = playerManager.getLivingPlayers();
-        Map<Integer, int[][]> viewStuff = new HashMap<>();
 
+        Map<Integer, int[][]> colorPositionsMap = playerManager.checkPlayerCollision(collisions);
+        int[][] obstaclesToRemoveArray = colorPositionsMap.get(0);
+        List<int[]> obstaclesToRemove = Arrays.asList(obstaclesToRemoveArray);
+        List<Player> currentLivingPlayers = playerManager.getLivingPlayers();
 
-        // todo den folgenden Part mit der Iterieung über die Player in PlayerManager auslagern
-        if (!collisions.isEmpty()) {
-            for (int i = 0; i < players.size(); i++) {
-                Player player = players.get(i);
-                int[] currentPosition = player.getCurrentPosition();
-                if (collisions.contains(currentPosition)) {
-                    obstaclesToRemove.addAll(playerManager.getPlayerPositions(player.getId()));
-                    killPlayer(player.getId());
-                    players.remove(player);
-                }else{
-                    viewStuff.put(player.getColor().ordinal(), new int[][]{currentPosition});
-                }
+        if (currentLivingPlayers.size() <= 1) {
+            try {
+                lobby.endGame();
+                log.debug("End of Game");
+            } catch (InterruptedException exception) {
+                log.error("Lobby couldn't end the Game");
+                throw exception;
             }
-        }
 
-
-        int[][] allPositionsArray = obstaclesToRemove.toArray(new int[obstaclesToRemove.size()][]);
-        viewStuff.put(0, allPositionsArray );
-
-        if (players.size() <= 1) {
-           lobby.endGame();
-           log.debug("End of Game");
-           return false;
+            return false;
             // Game loop muss interrupted werden
         }
 
@@ -77,7 +64,7 @@ public class GameLogic implements IGameLogic {
             board.updateBoard(obstaclesToRemove, 1);
         }
 
-        board.updateView(3, viewStuff);
+        board.updateView(3, colorPositionsMap);
         return true;
     }
 
@@ -148,12 +135,6 @@ public class GameLogic implements IGameLogic {
         }
 
         board.updateBoard(startPositions, 0);
-    }
-
-
-    @Override
-    public void killPlayer(int playerId) {
-        playerManager.killPlayer(playerId);
     }
 
     @Override

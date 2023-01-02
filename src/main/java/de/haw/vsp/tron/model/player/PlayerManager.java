@@ -81,16 +81,16 @@ public class PlayerManager implements IPlayerManager {
     }
 
     @Override
-    public void setIntendedDirection(int playerId, int intendedDirection){
+    public void setIntendedDirection(int playerId, int intendedDirection) {
         Player player = getPlayerById(playerId);
         player.setIntendedDirection(intendedDirection);
     }
 
     @Override
-    public Player getPlayerById(int playerId){
+    public Player getPlayerById(int playerId) {
         Player resultPlayer = null;
-        for (Player player: players) {
-            if (player.getId() == playerId){
+        for (Player player : players) {
+            if (player.getId() == playerId) {
                 resultPlayer = player;
             }
         }
@@ -98,7 +98,7 @@ public class PlayerManager implements IPlayerManager {
     }
 
     @Override
-    public List<int[]> getPlayerPositions(int playerId){
+    public List<int[]> getPlayerPositions(int playerId) {
         Player player = getPlayerById(playerId);
         List<int[]> allPositions = new ArrayList<>();
         allPositions.add(player.getCurrentPosition());
@@ -108,8 +108,33 @@ public class PlayerManager implements IPlayerManager {
     }
 
     @Override
-    public void killPlayer(int playerId){
+    public void killPlayer(int playerId) {
         Player player = getPlayerById(playerId);
         player.setAlive(false);
+    }
+
+    public Map<Integer, int[][]> checkPlayerCollision(List<int[]> collisions) {
+        List<int[]> obstaclesToRemove = new ArrayList<>();
+        Map<Integer, int[][]> colorPositions = new HashMap<>();
+        List<Player> livingPlayers = getLivingPlayers();
+
+        if (!collisions.isEmpty()) {
+            for (int i = 0; i < livingPlayers.size(); i++) {
+                Player player = livingPlayers.get(i);
+                int[] currentPosition = player.getCurrentPosition();
+                if (collisions.contains(currentPosition)) {
+                    obstaclesToRemove.addAll(getPlayerPositions(player.getId()));
+                    killPlayer(player.getId());
+                } else {
+                    colorPositions.put(player.getColor().ordinal(), new int[][]{currentPosition});
+                }
+            }
+        }
+
+
+        int[][] allPositionsArray = obstaclesToRemove.toArray(new int[obstaclesToRemove.size()][]);
+        colorPositions.put(0, allPositionsArray);
+
+        return colorPositions;
     }
 }
