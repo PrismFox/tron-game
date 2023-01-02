@@ -1,83 +1,47 @@
 package de.haw.vsp.tron.view.inputHandler;
 
-import de.haw.vsp.tron.controller.playercontrol.IPlayerController;
 import de.haw.vsp.tron.controller.playercontrol.IPlayerInputManager;
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.List;
 
 @Component
-public class InputHandler implements KeyListener {
+public
+class InputHandler implements EventHandler<KeyEvent> {
+
     @Autowired
     private IPlayerInputManager playerController;
 
-    public String input;
+    String input;
 
-    /**
-     * Invoked when a key has been typed.
-     * See the class description for {@link KeyEvent} for a definition of
-     * a key typed event.
-     *
-     * @param e the event to be processed
-     */
     @Override
-    public void keyTyped(KeyEvent e) {
-        char key = e.getKeyChar();
-        input = "" +key;
+    public void handle(KeyEvent event) {
+        if (KeyEvent.KEY_PRESSED.equals(event.getEventType())) {
 
-        if(checkInputString(input)){
-            forwardInput(input);
-        }else{
-            System.out.println("invalid Key Input. Key typed: " + key);
+            //soll hier dann der aufruf zum controller? oder in der unteren methode?
+            //valid Keys?
+            KeyCode key = event.getCode();
+            input = key.getName();
+
+            if(checkInputString(input)){
+                forwardInput(input);
+            }else{
+                System.out.println("invalid Key Input. Key typed: " + key);
+            }
         }
     }
 
-    /**
-     * Invoked when a key has been pressed.
-     * See the class description for {@link KeyEvent} for a definition of
-     * a key pressed event.
-     *
-     * @param e the event to be processed
-     */
-    @Override
-    public void keyPressed(KeyEvent e) {
-        char key = e.getKeyChar();
-        input = "" +key;
 
-        if(checkInputString(input)){
-            forwardInput(input);
-        }else{
-            System.out.println("invalid Key Input. Key pressed: " + key);
-        }
-
-    }
-
-    /**
-     * Invoked when a key has been released.
-     * See the class description for {@link KeyEvent} for a definition of
-     * a key released event.
-     *
-     * @param e the event to be processed
-     */
-    @Override
-    public void keyReleased(KeyEvent e) {
-        char key = e.getKeyChar();
-        input = "" +key;
-
-        if(checkInputString(input)){
-            forwardInput(input);
-        }else{
-            System.out.println("invalid Key Input. Key released: " + key);
-        }
-    }
 
     public boolean checkInputString(String keyInput){
         //get the validKeys from the controller and check if the
         //user input is one of the valid keys
 
+        //TODO keys irgendwo speichern
         playerController.getValidKeys();
 
         List<String> keyMapping = playerController.getValidKeys();
@@ -97,5 +61,4 @@ public class InputHandler implements KeyListener {
         playerController.onKeyPress(keyInput);
 
     }
-
 }

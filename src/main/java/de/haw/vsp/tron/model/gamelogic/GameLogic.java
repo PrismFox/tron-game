@@ -38,7 +38,10 @@ public class GameLogic implements IGameLogic {
     // todo exceptions sollten innerhalb der selben Komponente behandelt werden
     @Override
     public boolean updateTick() throws InterruptedException {
+        System.out.println("updatetick in update tick anfang");
+
         playerManager.commitPlayerMoves();
+        System.out.println("updatetick in commit moves");
         updateBoard();
         List<int[]> collisions = checkCollision();
 
@@ -48,6 +51,7 @@ public class GameLogic implements IGameLogic {
         List<Player> currentLivingPlayers = playerManager.getLivingPlayers();
 
         if (currentLivingPlayers.size() <= 1) {
+            System.out.println("currentplayers <= 1");
             try {
                 lobby.endGame();
                 log.debug("End of Game");
@@ -63,7 +67,7 @@ public class GameLogic implements IGameLogic {
         if (!obstaclesToRemove.isEmpty()) {
             board.updateBoard(obstaclesToRemove, 1);
         }
-
+        System.out.println("view screen 3 aufgerufen");
         board.updateView(3, colorPositionsMap);
         return true;
     }
@@ -100,6 +104,7 @@ public class GameLogic implements IGameLogic {
 
     @Override
     public void calculateStartPositions() {
+        System.out.println("calculate Start position");
         List<Player> players = playerManager.getLivingPlayers();
         int median = board.getBoardSize()[1] / 2;
         int smallMedianY = median / 2;

@@ -1,20 +1,24 @@
 package de.haw.vsp.tron.controller.playercontrol;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
+@Lazy
 public class PlayerControllerFactory {
 
     @Autowired
-    private static PlayerControllerOnboardingImpl playerControllerOnboarding;
+    private PlayerControllerOnboardingImpl playerControllerOnboarding;
 
     @Autowired
-    private static PlayerControllerMovementImpl playerControllerMovement;
+    private PlayerControllerMovementImpl playerControllerMovement;
 
-    public static IPlayerController createPlayerController(String impl) {
+    public IPlayerController createPlayerController(String impl) {
         switch(impl) {
-            case "onboarding": return playerControllerOnboarding;
+            case "onboarding":
+                System.out.println("onboarding player controller was created");
+                return playerControllerOnboarding;
             case "movement": return playerControllerMovement;
             default: throw new IllegalArgumentException("Implementation '" + impl + "' is not supported.");
         }

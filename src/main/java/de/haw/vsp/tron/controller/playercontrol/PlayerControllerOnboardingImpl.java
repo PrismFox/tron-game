@@ -32,6 +32,16 @@ public class PlayerControllerOnboardingImpl implements IPlayerController {
 
     @Override
     public List<String> getValidKeys() {
+
+        if(this.playerIdKeyMap == null) {
+            this.playerIdKeyMap = new HashMap<>();
+            Map<Integer, List<String>> playerMappings = this.config.getPlayerMappings();
+            playerMappings.entrySet().stream().forEach(
+                    e -> e.getValue().forEach(
+                            v -> this.playerIdKeyMap.put(v, e.getKey())
+                    )
+            );
+        }
         return new ArrayList<>(this.playerIdKeyMap.keySet());
     }
 
