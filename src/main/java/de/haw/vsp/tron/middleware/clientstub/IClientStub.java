@@ -6,7 +6,7 @@ import java.net.UnknownHostException;
 
 public interface IClientStub {
     
-    Object invokeSynchronously(String methodName, Class<?> returnType, Object... args);
+    Object invokeSynchronously(String methodName, Object... args);
 
-    void invokeAsynchron(String methodName, TransportType transportType, Class<?> classType, Object... args) throws UnknownHostException;
+    void invokeAsynchron(String methodName, TransportType transportType, Object... args) throws UnknownHostException;
 }
