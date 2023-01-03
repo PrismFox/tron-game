@@ -120,7 +120,7 @@ public class PlayerManager implements IPlayerManager {
         Map<Integer, int[][]> colorPositions = new HashMap<>();
         List<Player> livingPlayers = getLivingPlayers();
 
-        if (!collisions.isEmpty()) {
+        //if (!collisions.isEmpty()) {
             for (int i = 0; i < livingPlayers.size(); i++) {
                 Player player = livingPlayers.get(i);
                 int[] currentPosition = player.getCurrentPosition();
@@ -131,7 +131,7 @@ public class PlayerManager implements IPlayerManager {
                     colorPositions.put(player.getColor().ordinal(), new int[][]{currentPosition});
                 }
             }
-        }
+        //}
 
 
         int[][] allPositionsArray = obstaclesToRemove.toArray(new int[obstaclesToRemove.size()][]);

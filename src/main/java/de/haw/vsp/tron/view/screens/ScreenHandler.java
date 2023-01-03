@@ -211,17 +211,23 @@ public class ScreenHandler implements IScreenHandler{
         //System.out.println("in draw bikes");
         for (Map.Entry<Integer, int[][]> entry : bikePos.entrySet()) {
             int colorNum = entry.getKey();
-            //System.out.println("Color num : " + colorNum);
+            System.out.println("Color num : " + colorNum);
             String color = de.haw.vsp.tron.Enums.Color.values()[colorNum].toString();
-            //System.out.println(color);
+            System.out.println(color);
             Color bikeColor = Color.valueOf(color);
             List<Coordinate> coordinates = new ArrayList<>();
-            //System.out.println("entrty value .length " + entry.getValue().length);
+            System.out.println("entrty value .length " + entry.getValue().length);
             for (int i = 0; i < entry.getValue().length; i++) {
                 //System.out.println("entry value: ");
+                int x = entry.getValue()[i][0];
+                int y = entry.getValue()[i][1];
+                // TODO: x oder y > maxValue
+                if(x < 0 || y < 0) {
+                    continue;
+                }
 
-                //System.out.println("entry value: " + entry.getValue()[i][0]);
-                Coordinate coordinate = new Coordinate(entry.getValue()[i][0], entry.getValue()[i][1]);
+                System.out.println("entry value: " + x);
+                Coordinate coordinate = new Coordinate(x, y);
                 coordinates.add(coordinate);
 
 
