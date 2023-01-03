@@ -31,6 +31,7 @@ public class PlayerInputManagerImpl implements IPlayerInputManager {
 
     @Override
     public void onKeyPress(String key) {
+        System.out.println(this.playerController.getClass());
         this.playerController.onKeyPress(key);
     }
 
@@ -40,7 +41,7 @@ public class PlayerInputManagerImpl implements IPlayerInputManager {
     }
 
     public void switchPlayerController() {
-        System.out.println("im switch player controller");
+        System.out.println("Switch Player Controller");
         if(this.playerController instanceof PlayerControllerOnboardingImpl) {
             this.playerController = playerControllerFactory.createPlayerController("movement");
             sceneChanger.registerNextSceneCallback(() -> switchPlayerController());

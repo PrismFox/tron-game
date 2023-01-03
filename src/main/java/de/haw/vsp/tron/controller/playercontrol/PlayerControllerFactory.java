@@ -17,7 +17,6 @@ public class PlayerControllerFactory {
     public IPlayerController createPlayerController(String impl) {
         switch(impl) {
             case "onboarding":
-                System.out.println("onboarding player controller was created");
                 return playerControllerOnboarding;
             case "movement": return playerControllerMovement;
             default: throw new IllegalArgumentException("Implementation '" + impl + "' is not supported.");

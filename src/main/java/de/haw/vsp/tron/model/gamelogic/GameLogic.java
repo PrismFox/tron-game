@@ -38,10 +38,8 @@ public class GameLogic implements IGameLogic {
     // todo exceptions sollten innerhalb der selben Komponente behandelt werden
     @Override
     public boolean updateTick() throws InterruptedException {
-        System.out.println("updatetick in update tick anfang");
 
         playerManager.commitPlayerMoves();
-        System.out.println("updatetick in commit moves");
         updateBoard();
         List<int[]> collisions = checkCollision();
 
@@ -51,8 +49,9 @@ public class GameLogic implements IGameLogic {
         List<Player> currentLivingPlayers = playerManager.getLivingPlayers();
 
         if (currentLivingPlayers.size() <= 1) {
-            System.out.println("currentplayers <= 1");
+
             try {
+                System.out.println("currentplayers <= 1");
                 lobby.endGame();
                 log.debug("End of Game");
             } catch (InterruptedException exception) {
@@ -87,17 +86,17 @@ public class GameLogic implements IGameLogic {
         List<int[]> collisionPositions = new ArrayList<>();
 
         for (int[] obstacle : obstacles) {
-            if (!collisionPositions.contains(obstacle)) {
+            //if (!collisionPositions.stream().anyMatch(collision -> Arrays.equals(collision, obstacle))) {
                 if (obstacle[0] < 0 || obstacle[0] > (sizeBoardXY - 1) || obstacle[1] < 0 ||
                         obstacle[1] > (sizeBoardXY - 1)) { // Border check
                     collisionPositions.add(obstacle);
                     log.debug(String.format("Collision detected at x: %d, y: %d", obstacle[0], obstacle[1]));
                 }
-                if (Collections.frequency(obstacles, obstacle) > 1) {
+                if (obstacles.stream().filter(o -> Arrays.equals(o, obstacle)).count() > 1) {
                     collisionPositions.add(obstacle);
                     log.debug(String.format("Collision detected at x: %d, y: %d", obstacle[0], obstacle[1]));
                 }
-            }
+            //}
         }
         return collisionPositions;
     }
@@ -129,12 +128,13 @@ public class GameLogic implements IGameLogic {
         List<int[]> startPositions = new ArrayList<>();
         int incrementValue = board.getBoardSize()[0] / playerList.size();
 
-        int[] startPosition = new int[2];
-        startPosition[1] = yPosition;
-
         for (Player player : playerList) {
+            int[] startPosition = new int[2];
+            startPosition[1] = yPosition;
+
             startPosition[0] = increment;
             startPositions.add(startPosition);
+            System.out.println(increment);
             player.setCurrentPosition(startPosition);
             increment += incrementValue;
         }

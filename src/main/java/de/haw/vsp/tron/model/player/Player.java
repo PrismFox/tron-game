@@ -34,7 +34,6 @@ public class Player {
 
 
     public void commitMove() {
-        System.out.println("commit move wird aufgerufen");
         if (Direction.UP == Direction.values()[intendedDirection]) {
             this.changePosition(1, 0);
         }
@@ -50,6 +49,7 @@ public class Player {
         if (Direction.RIGHT == Direction.values()[intendedDirection]) {
             this.changePosition(0, 1);
         }
+        System.out.println("----- Player " + this.id + " Direction: " + Direction.values()[intendedDirection].toString() + " --------");
 
     }
 
@@ -77,7 +77,6 @@ public class Player {
         }
 
 
-        System.out.println("change position ruft commit move auf gleich");
 
     }
 

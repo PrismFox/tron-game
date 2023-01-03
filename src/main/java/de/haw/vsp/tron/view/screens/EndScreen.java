@@ -26,7 +26,7 @@ public class EndScreen extends VBox {
         super(20.0);
         this.getStylesheets().add(stylesheet);
         this.setAlignment(Pos.CENTER);
-
+        winningLabel = new Label("Unkown");
         switch(winningNumber){
             case 0:
                 winningLabel = new Label("Tie");
@@ -52,12 +52,12 @@ public class EndScreen extends VBox {
                 break;
         }
 
-        winningLabel.setStyle("-fx-text-fill: " + ViewUtility.getHexTriplet(Color.PAPAYAWHIP.brighter()) + ";");
+        winningLabel.setStyle("-fx-text-fill: " + ViewUtility.getHexTriplet(Color.PAPAYAWHIP.brighter()) + ";"+ "-fx-font-size: 12pt; -fx-font-family: 'Arial';");
         this.getChildren().add(winningLabel);
 
         try {
             //waits 30 sec and then changes to the next scene
-            Thread.sleep(30000);
+            Thread.sleep(10000);
             iSceneChanger.changeToNextScene();
         }catch (InterruptedException e ){
             e.printStackTrace();

@@ -23,6 +23,7 @@ public class Board implements IBoard {
 
     private int cellSize = 0;
 
+    //TODO: obstacles als int[x][y] mit Anzahl der Obstacles auf dem jeweiligen Feld wäre performanter
     private List<int[]> obstacles; // x, y for each obstacle array
 
     @Autowired
@@ -51,7 +52,6 @@ public class Board implements IBoard {
 
     private void addObstacles(List<int[]> obstaclesA) {
         this.obstacles.addAll(obstaclesA);
-
     }
 
     private void removeObstacles(List<int[]> obstaclesR) {

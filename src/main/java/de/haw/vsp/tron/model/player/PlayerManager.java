@@ -35,11 +35,12 @@ public class PlayerManager implements IPlayerManager {
 
     @Override
     public void setPlayerMove(int playerId, int direction) {
-        List<Player> rightPlayer = this.players
-                .stream().filter(player -> playerId == player.getId())
-                .collect(Collectors.toList());
-        Player player = rightPlayer.get(0);
-        player.setIntendedDirection(direction);
+        setIntendedDirection(playerId, direction);
+        //ist<Player> rightPlayer = this.players
+        //        .stream().filter(player -> playerId == player.getId())
+        //        .collect(Collectors.toList());
+        //Player player = rightPlayer.get(0);
+        //player.setIntendedDirection(direction);
 
     }
 
@@ -69,7 +70,6 @@ public class PlayerManager implements IPlayerManager {
     @Override
     public void commitPlayerMoves() {
         for (Player player : players) {
-            System.out.println("commit player moves for player ");
             player.commitMove();
         }
 
@@ -85,6 +85,7 @@ public class PlayerManager implements IPlayerManager {
     public void setIntendedDirection(int playerId, int intendedDirection) {
         Player player = getPlayerById(playerId);
         player.setIntendedDirection(intendedDirection);
+        System.out.println("Player " + playerId + " Direction " + intendedDirection);
     }
 
     @Override
@@ -119,7 +120,7 @@ public class PlayerManager implements IPlayerManager {
         Map<Integer, int[][]> colorPositions = new HashMap<>();
         List<Player> livingPlayers = getLivingPlayers();
 
-        if (!collisions.isEmpty()) {
+        //if (!collisions.isEmpty()) {
             for (int i = 0; i < livingPlayers.size(); i++) {
                 Player player = livingPlayers.get(i);
                 int[] currentPosition = player.getCurrentPosition();
@@ -130,7 +131,7 @@ public class PlayerManager implements IPlayerManager {
                     colorPositions.put(player.getColor().ordinal(), new int[][]{currentPosition});
                 }
             }
-        }
+        //}
 
 
         int[][] allPositionsArray = obstaclesToRemove.toArray(new int[obstaclesToRemove.size()][]);

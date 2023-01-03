@@ -23,7 +23,6 @@ public class TimerThread extends Thread {
                 return;
             }
             try {
-                System.out.println(duration);
                 Thread.sleep(this.duration);
             } catch(InterruptedException e) {
                 return;
