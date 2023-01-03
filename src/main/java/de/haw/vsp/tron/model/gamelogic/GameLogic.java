@@ -87,15 +87,15 @@ public class GameLogic implements IGameLogic {
 
         for (int[] obstacle : obstacles) {
             //if (!collisionPositions.stream().anyMatch(collision -> Arrays.equals(collision, obstacle))) {
-                if (obstacle[0] < 0 || obstacle[0] > (sizeBoardXY - 1) || obstacle[1] < 0 ||
-                        obstacle[1] > (sizeBoardXY - 1)) { // Border check
-                    collisionPositions.add(obstacle);
-                    log.debug(String.format("Collision detected at x: %d, y: %d", obstacle[0], obstacle[1]));
-                }
-                if (obstacles.stream().filter(o -> Arrays.equals(o, obstacle)).count() > 1) {
-                    collisionPositions.add(obstacle);
-                    log.debug(String.format("Collision detected at x: %d, y: %d", obstacle[0], obstacle[1]));
-                }
+            if (obstacle[0] < 0 || obstacle[0] > (sizeBoardXY - 1) || obstacle[1] < 0 ||
+                    obstacle[1] > (sizeBoardXY - 1)) { // Border check
+                collisionPositions.add(obstacle);
+                log.debug(String.format("Collision detected at x: %d, y: %d", obstacle[0], obstacle[1]));
+            }
+            if (obstacles.stream().filter(o -> Arrays.equals(o, obstacle)).count() > 1) {
+                collisionPositions.add(obstacle);
+                log.debug(String.format("Collision detected at x: %d, y: %d", obstacle[0], obstacle[1]));
+            }
             //}
         }
         return collisionPositions;
@@ -124,19 +124,21 @@ public class GameLogic implements IGameLogic {
     }
 
     private void setStartPositions(List<Player> playerList, int yPosition) {
-        int increment = 0;
+        int previous = 0;
         List<int[]> startPositions = new ArrayList<>();
         log.debug("Divide Board size{} by playersize {}", board.getBoardSize()[0], playerList.size());
-        int incrementValue = board.getBoardSize()[0] / playerList.size();
+        int incrementValue = board.getBoardSize()[0] / (playerList.size() + 1);
+        int increment = incrementValue;
 
         for (Player player : playerList) {
+            int temp = Math.abs(previous - increment);
             int[] startPosition = new int[2];
             startPosition[1] = yPosition;
 
-            startPosition[0] = increment;
+            startPosition[0] = previous + temp;
             startPositions.add(startPosition);
-            System.out.println(increment);
             player.setCurrentPosition(startPosition);
+            previous = increment;
             increment += incrementValue;
         }
 
@@ -157,7 +159,7 @@ public class GameLogic implements IGameLogic {
         if (livingPlayers.size() == 1) {
             System.out.println("livinplayers == 1");
             result[0] = 1;
-            System.out.println("result von 0 in livinplayers"+result[0]);
+            System.out.println("result von 0 in livinplayers" + result[0]);
             result[1] = livingPlayers.get(0).getId();
         }
 
