@@ -74,7 +74,7 @@ public class Lobby implements ILobbyGameLogic, IInitLobby {
         for (Map.Entry<Integer, List<String>> entry : playerMapping.entrySet()) {
             if (entry.getKey() == playerCounter) {
                 playerManager.createPlayer(entry.getValue(), playerCounter);
-                log.info("Create Player {}", playerCounter);
+                System.out.println(String.format("Create Player %d", playerCounter));
             }
         }
 
@@ -87,7 +87,6 @@ public class Lobby implements ILobbyGameLogic, IInitLobby {
     }
 
     public int getPlayerCount() {
-        int playerCount = config.getPlayerCount();
-        return playerCount;
+        return playerCounter;
     }
 }
