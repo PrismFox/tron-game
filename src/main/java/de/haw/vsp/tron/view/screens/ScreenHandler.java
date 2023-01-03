@@ -22,7 +22,7 @@ public class ScreenHandler implements IScreenHandler{
     private ITronView view;
 
     @Autowired
-    private InputHandler inputHandler1;
+    private InputHandler inputHandler;
 
     public ScreenHandler() {}
 
@@ -44,7 +44,7 @@ public class ScreenHandler implements IScreenHandler{
         primaryStage.show();
 
         Scene scene = view.getScene();
-        scene.setOnKeyPressed(inputHandler1);
+        scene.setOnKeyPressed(inputHandler);
 
 
     }

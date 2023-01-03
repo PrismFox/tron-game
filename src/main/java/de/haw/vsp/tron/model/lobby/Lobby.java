@@ -32,7 +32,7 @@ public class Lobby implements ILobbyGameLogic, IInitLobby {
     private final IConfig config;
 
     private Map<Integer, List<String>> playerMapping;
-    private int playerCounter = 0;
+    private int currentPlayerCount = 0;
     private boolean maxPlayerJoined = false;
     private int maxPlayer = 0;
 
@@ -69,24 +69,31 @@ public class Lobby implements ILobbyGameLogic, IInitLobby {
     }
 
     @Override
+    public void updateView(int screenNumber) {
+        screenHandler.showScreen(screenNumber);
+    }
+
+    @Override
     public void playerJoin(int playerNumber) {
-        playerCounter++;
+        currentPlayerCount++;
         for (Map.Entry<Integer, List<String>> entry : playerMapping.entrySet()) {
-            if (entry.getKey() == playerCounter) {
-                playerManager.createPlayer(entry.getValue(), playerCounter);
-                System.out.println(String.format("Create Player %d", playerCounter));
+            if (entry.getKey() == currentPlayerCount) {
+                playerManager.createPlayer(entry.getValue(), currentPlayerCount);
+
+                System.out.println(String.format("Create Player %d", currentPlayerCount));
             }
         }
 
-        if (playerCounter == maxPlayer || playerCounter == playerNumber) {
+        if (currentPlayerCount == maxPlayer || currentPlayerCount == playerNumber) {
             maxPlayerJoined = true;
         }
         //TODO timesec wieder raus nehmen
         int timeSec = config.getLobbyTimerDuration();
-        screenHandler.showScreen(2, timeSec, playerCounter, maxPlayerJoined);
+        screenHandler.showScreen(2, timeSec, currentPlayerCount, maxPlayerJoined);
     }
 
-    public int getPlayerCount() {
-        return playerCounter;
+    public int getCurrentPlayerCount() {
+        System.out.println("PlayerCounter aus lobby" + currentPlayerCount);
+        return currentPlayerCount;
     }
 }

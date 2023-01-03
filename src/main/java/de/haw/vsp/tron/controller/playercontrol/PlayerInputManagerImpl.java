@@ -25,8 +25,8 @@ public class PlayerInputManagerImpl implements IPlayerInputManager {
     
     @PostConstruct
     private void init() {
-        playerController = playerControllerFactory.createPlayerController("onboarding");
-        sceneChanger.registerNextSceneCallback(() -> sceneChanger.registerNextSceneCallback(() -> switchPlayerController()));
+        playerController = playerControllerFactory.createPlayerController("disabled");
+        sceneChanger.registerNextSceneCallback(() -> switchPlayerController());
     }
 
     @Override
@@ -45,10 +45,14 @@ public class PlayerInputManagerImpl implements IPlayerInputManager {
         if(this.playerController instanceof PlayerControllerOnboardingImpl) {
             this.playerController = playerControllerFactory.createPlayerController("movement");
             sceneChanger.registerNextSceneCallback(() -> switchPlayerController());
-        } else {
+        } else if(this.playerController instanceof PlayerControllerDisabledImpl) {
             this.playerController = playerControllerFactory.createPlayerController("onboarding");
             //TODO: What happens when we return from the lobby?
-            sceneChanger.registerNextSceneCallback(() -> sceneChanger.registerNextSceneCallback(() -> switchPlayerController()));
+            sceneChanger.registerNextSceneCallback(() -> switchPlayerController());
+        }else{
+            this.playerController = playerControllerFactory.createPlayerController("disabled");
+            sceneChanger.registerNextSceneCallback(() -> switchPlayerController());
+
         }
     }
 }

@@ -56,6 +56,7 @@ public class SceneChangerImpl implements ISceneChanger {
                     });
                 } else {
                     // TODO: Do something here?
+                    gameManager.updateView(1);
                     changeToPreviousScene();
                 }
             });
@@ -95,6 +96,12 @@ public class SceneChangerImpl implements ISceneChanger {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean changeToNextScene(int startPlayerCounter) {
+        config.setPlayerCount(startPlayerCounter);
+        return changeToNextScene();
     }
 
     @Override

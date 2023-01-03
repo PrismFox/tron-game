@@ -19,6 +19,7 @@ public class PlayerControllerFactory {
             case "onboarding":
                 return playerControllerOnboarding;
             case "movement": return playerControllerMovement;
+            case "disabled": return new PlayerControllerDisabledImpl();
             default: throw new IllegalArgumentException("Implementation '" + impl + "' is not supported.");
         }
     }
