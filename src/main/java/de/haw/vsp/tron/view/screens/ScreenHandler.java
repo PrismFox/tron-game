@@ -22,7 +22,7 @@ public class ScreenHandler implements IScreenHandler{
     private ITronView view;
 
     @Autowired
-    private InputHandler inputHandler1;
+    private InputHandler inputHandler;
 
     public ScreenHandler() {}
 
@@ -44,7 +44,7 @@ public class ScreenHandler implements IScreenHandler{
         primaryStage.show();
 
         Scene scene = view.getScene();
-        scene.setOnKeyPressed(inputHandler1);
+        scene.setOnKeyPressed(inputHandler);
 
 
     }
@@ -144,9 +144,9 @@ public class ScreenHandler implements IScreenHandler{
             case 4:
                 /*view.hideOverlays();
                 view.clear();*/
-                EndScreen endScreen = new EndScreen("menu.css", view, winningNumber);
 
                 Platform.runLater(() -> {
+                    EndScreen endScreen = new EndScreen("menu.css", view, winningNumber);
 
                     System.out.println("endscreen wird erstellt");
                     view.hideOverlays();

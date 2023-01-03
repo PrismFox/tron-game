@@ -33,7 +33,7 @@ public class GameManagerImpl implements IGameManager {
 
     @Override
     public boolean isReadyToPlay() {
-        if(lobbyInitializer.getPlayerCount() == config.getPlayerCount()) {
+        if(lobbyInitializer.getCurrentPlayerCount() > 1 && lobbyInitializer.getCurrentPlayerCount() <= config.getPlayerCount()) {
             return true;
         }
         return false;
@@ -43,6 +43,11 @@ public class GameManagerImpl implements IGameManager {
     public void startGame() {
         board.initBoard();
 
+    }
+
+    @Override
+    public void updateView(int screenNumber){
+        lobbyInitializer.updateView(screenNumber);
     }
 
     

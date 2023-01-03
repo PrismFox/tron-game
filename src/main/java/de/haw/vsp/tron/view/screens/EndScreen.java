@@ -28,7 +28,7 @@ public class EndScreen extends VBox {
         this.setAlignment(Pos.CENTER);
         winningLabel = new Label("Unkown");
         switch(winningNumber){
-            case 0:
+            case -1:
                 winningLabel = new Label("Tie");
                 System.out.println("endscreen tie");
                 break;

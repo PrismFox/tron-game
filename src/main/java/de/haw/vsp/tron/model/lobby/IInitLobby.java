@@ -7,5 +7,8 @@ public interface IInitLobby {
 
     public void playerJoin(int playerNumber);
 
-    public int getPlayerCount();
-}
+    public int getCurrentPlayerCount();
+
+    public void updateView(int screenNumber);
+
+    }

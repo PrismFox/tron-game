@@ -45,7 +45,7 @@ public class StartScreen extends VBox {
         labelReady.setStyle("-fx-text-fill: " + ViewUtility.getHexTriplet(Color.PAPAYAWHIP.brighter()) + ";");
 
         Label selectLabel = new Label("Please select how many Players will play from the drop down.");
-        List<Integer> playerNumberList = Arrays.asList(1,2,3,4,5,6);
+        List<Integer> playerNumberList = Arrays.asList(2,3,4,5,6);
         selectLabel.setStyle("-fx-text-fill: " + ViewUtility.getHexTriplet(Color.PAPAYAWHIP.brighter()) + ";");
 
         ComboBox dropDownBox = new ComboBox(FXCollections.observableList(playerNumberList));
@@ -68,10 +68,8 @@ public class StartScreen extends VBox {
         btnStart.setOnAction(event -> {
             System.out.println("click!");
             view.hideOverlays();
-            //change to next scene (WaitingScreen)
-            //TODO: Hier muss eine Methode aufgerufen werden vom controller, damit dieser weiß, wie viele player mitspielen.
-            //playerNum[0]
-            iSceneChanger.changeToNextScene();
+
+            iSceneChanger.changeToNextScene(playerNum[0]);
         });
 
         this.getChildren().add(labelReady);

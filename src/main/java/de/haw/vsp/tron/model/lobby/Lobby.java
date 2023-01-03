@@ -4,6 +4,7 @@ import de.haw.vsp.tron.model.gamelogic.IGameLogic;
 import lombok.Data;
 import de.haw.vsp.tron.model.config.IConfig;
 import de.haw.vsp.tron.model.player.IPlayerManager;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import java.util.Map;
 @Component
 @Data
 @Lazy
+@Slf4j
 public class Lobby implements ILobbyGameLogic, IInitLobby {
 
     @Autowired
@@ -30,7 +32,7 @@ public class Lobby implements ILobbyGameLogic, IInitLobby {
     private final IConfig config;
 
     private Map<Integer, List<String>> playerMapping;
-    private int playerCounter = 0;
+    private int currentPlayerCount = 0;
     private boolean maxPlayerJoined = false;
     private int maxPlayer = 0;
 
@@ -53,9 +55,10 @@ public class Lobby implements ILobbyGameLogic, IInitLobby {
         //int[] mit winnerStatus. wenn [0,-1], dann ist es unentschieden
 
         int[] winnerStatus = gameLogic.getWinnerStatus();
-        if (winnerStatus[0] == 0) {
-            screenHandler.showScreen(4, 0);
+        if (winnerStatus[0] == -1) {
+            screenHandler.showScreen(4, -1);
         } else {
+            System.out.println("winner status ist " + winnerStatus[1]);
             screenHandler.showScreen(4, winnerStatus[1]);
         }
     }
@@ -67,24 +70,31 @@ public class Lobby implements ILobbyGameLogic, IInitLobby {
     }
 
     @Override
+    public void updateView(int screenNumber) {
+        screenHandler.showScreen(screenNumber);
+    }
+
+    @Override
     public void playerJoin(int playerNumber) {
-        playerCounter++;
+        currentPlayerCount++;
         for (Map.Entry<Integer, List<String>> entry : playerMapping.entrySet()) {
-            if (entry.getKey() == playerCounter) {
-                playerManager.createPlayer(entry.getValue(), playerCounter);
+            if (entry.getKey() == currentPlayerCount) {
+                playerManager.createPlayer(entry.getValue(), currentPlayerCount);
+
+                System.out.println(String.format("Create Player %d", currentPlayerCount));
             }
         }
 
-        if (playerCounter == maxPlayer || playerCounter == playerNumber) {
+        if (currentPlayerCount == maxPlayer || currentPlayerCount == playerNumber) {
             maxPlayerJoined = true;
         }
         //TODO timesec wieder raus nehmen
         int timeSec = config.getLobbyTimerDuration();
-        screenHandler.showScreen(2, timeSec, playerCounter, maxPlayerJoined);
+        screenHandler.showScreen(2, timeSec, currentPlayerCount, maxPlayerJoined);
     }
 
-    public int getPlayerCount() {
-        int playerCount = config.getPlayerCount();
-        return playerCount;
+    public int getCurrentPlayerCount() {
+        System.out.println("PlayerCounter aus lobby" + currentPlayerCount);
+        return currentPlayerCount;
     }
 }
