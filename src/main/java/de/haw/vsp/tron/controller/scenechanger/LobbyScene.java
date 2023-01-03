@@ -16,10 +16,10 @@ public class LobbyScene extends Scene {
         this.config = config;
         this.timer = timer;
         this.sceneChanger = sceneChanger;
-        this.initLobby();
+        //this.initLobby();
     }
 
-    private void initLobby() {
+/*    private void initLobby() {
         this.gameManager.loadLobby();
         int duration = config.getLobbyTimerDuration();
         timer.startLobbyTimer(duration, () -> onCountdownEnd());
@@ -31,7 +31,7 @@ public class LobbyScene extends Scene {
         } else {
             this.sceneChanger.changeToPreviousScene();
         }
-    }
+    }*/
 
     @Override
     public Scene changeToNextScene() {
