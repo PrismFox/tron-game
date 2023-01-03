@@ -144,9 +144,9 @@ public class ScreenHandler implements IScreenHandler{
             case 4:
                 /*view.hideOverlays();
                 view.clear();*/
-                EndScreen endScreen = new EndScreen("menu.css", view, winningNumber);
 
                 Platform.runLater(() -> {
+                    EndScreen endScreen = new EndScreen("menu.css", view, winningNumber);
 
                     System.out.println("endscreen wird erstellt");
                     view.hideOverlays();

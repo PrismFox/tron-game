@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Data
 public class Player {
 
-    private static final AtomicInteger nextId = new AtomicInteger();
+    private static final AtomicInteger nextId = new AtomicInteger(1);
     private final int id;
     private int[] currentPosition = new int[2];
 

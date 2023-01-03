@@ -149,13 +149,15 @@ public class GameLogic implements IGameLogic {
         int[] result = new int[2];
 
         if (livingPlayers.isEmpty()) {
-
+            result[0] = -1;
             result[1] = -1;
 
         }
 
         if (livingPlayers.size() == 1) {
+            System.out.println("livinplayers == 1");
             result[0] = 1;
+            System.out.println("result von 0 in livinplayers"+result[0]);
             result[1] = livingPlayers.get(0).getId();
         }
 

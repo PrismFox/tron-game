@@ -40,9 +40,16 @@ public class PlayerInputManagerImpl implements IPlayerInputManager {
         return playerController.getValidKeys();
     }
 
+    //disabled -> onboarding
+    //onboarding -> movement
+    //onboarding -> disabled
+    //movement -> disabled
+
     public void switchPlayerController() {
         System.out.println("Switch Player Controller");
         if(this.playerController instanceof PlayerControllerOnboardingImpl) {
+            //onboarding -> movement
+            //onboarding -> disabled
             this.playerController = playerControllerFactory.createPlayerController("movement");
             sceneChanger.registerNextSceneCallback(() -> switchPlayerController());
         } else if(this.playerController instanceof PlayerControllerDisabledImpl) {

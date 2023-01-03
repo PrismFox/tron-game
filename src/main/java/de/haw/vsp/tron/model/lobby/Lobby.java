@@ -55,9 +55,10 @@ public class Lobby implements ILobbyGameLogic, IInitLobby {
         //int[] mit winnerStatus. wenn [0,-1], dann ist es unentschieden
 
         int[] winnerStatus = gameLogic.getWinnerStatus();
-        if (winnerStatus[0] == 0) {
-            screenHandler.showScreen(4, 0);
+        if (winnerStatus[0] == -1) {
+            screenHandler.showScreen(4, -1);
         } else {
+            System.out.println("winner status ist " + winnerStatus[1]);
             screenHandler.showScreen(4, winnerStatus[1]);
         }
     }
