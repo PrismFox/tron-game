@@ -4,6 +4,7 @@ import de.haw.vsp.tron.model.gamelogic.IGameLogic;
 import lombok.Data;
 import de.haw.vsp.tron.model.config.IConfig;
 import de.haw.vsp.tron.model.player.IPlayerManager;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import java.util.Map;
 @Component
 @Data
 @Lazy
+@Slf4j
 public class Lobby implements ILobbyGameLogic, IInitLobby {
 
     @Autowired
@@ -72,6 +74,7 @@ public class Lobby implements ILobbyGameLogic, IInitLobby {
         for (Map.Entry<Integer, List<String>> entry : playerMapping.entrySet()) {
             if (entry.getKey() == playerCounter) {
                 playerManager.createPlayer(entry.getValue(), playerCounter);
+                log.info("Create Player {}", playerCounter);
             }
         }
 

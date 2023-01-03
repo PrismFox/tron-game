@@ -31,7 +31,7 @@ public class GameLogic implements IGameLogic {
 
     @Override
     public void startGame() {
-        log.debug("Start of Game");
+        log.info("Start of Game");
         this.calculateStartPositions();
     }
 
@@ -126,6 +126,7 @@ public class GameLogic implements IGameLogic {
     private void setStartPositions(List<Player> playerList, int yPosition) {
         int increment = 0;
         List<int[]> startPositions = new ArrayList<>();
+        log.debug("Divide Board size{} by playersize {}", board.getBoardSize()[0], playerList.size());
         int incrementValue = board.getBoardSize()[0] / playerList.size();
 
         for (Player player : playerList) {
