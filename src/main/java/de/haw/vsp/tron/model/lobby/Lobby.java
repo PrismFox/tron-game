@@ -93,8 +93,14 @@ public class Lobby implements ILobbyGameLogic, IInitLobby {
         screenHandler.showScreen(2, timeSec, currentPlayerCount, maxPlayerJoined);
     }
 
+    @Override
     public int getCurrentPlayerCount() {
         System.out.println("PlayerCounter aus lobby" + currentPlayerCount);
         return currentPlayerCount;
+    }
+
+    public void setCurrentPlayerCount(int currentPlayerCount) {
+        this.currentPlayerCount = currentPlayerCount;
+
     }
 }

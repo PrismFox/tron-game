@@ -6,4 +6,5 @@ public interface IGameManager {
     public boolean isReadyToPlay();
     public void startGame();
     public void updateView(int screenNumber);
+    public void removePlayers();
 }

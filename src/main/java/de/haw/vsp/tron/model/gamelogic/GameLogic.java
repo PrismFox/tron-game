@@ -163,4 +163,10 @@ public class GameLogic implements IGameLogic {
 
         return result;
     }
+
+    @Override
+    public void removePlayers(){
+        playerManager.killPlayers();
+    }
+
 }

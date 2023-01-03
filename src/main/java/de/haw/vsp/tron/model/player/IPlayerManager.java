@@ -27,4 +27,6 @@ public interface IPlayerManager {
     Player getPlayerById(int playerId);
 
     Map<Integer, int[][]> checkPlayerCollision(List<int[]> collisions);
+
+    void killPlayers();
 }

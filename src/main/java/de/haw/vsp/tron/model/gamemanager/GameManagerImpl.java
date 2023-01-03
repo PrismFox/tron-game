@@ -50,5 +50,10 @@ public class GameManagerImpl implements IGameManager {
         lobbyInitializer.updateView(screenNumber);
     }
 
+    @Override
+    public void removePlayers(){
+        lobbyInitializer.setCurrentPlayerCount(0);
+    }
+
     
 }

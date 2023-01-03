@@ -9,6 +9,8 @@ public interface IInitLobby {
 
     public int getCurrentPlayerCount();
 
+    public void setCurrentPlayerCount(int currentPlayerCount);
+
     public void updateView(int screenNumber);
 
     }
