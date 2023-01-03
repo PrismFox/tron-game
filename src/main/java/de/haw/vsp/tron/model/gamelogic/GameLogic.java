@@ -38,10 +38,8 @@ public class GameLogic implements IGameLogic {
     // todo exceptions sollten innerhalb der selben Komponente behandelt werden
     @Override
     public boolean updateTick() throws InterruptedException {
-        System.out.println("updatetick in update tick anfang");
 
         playerManager.commitPlayerMoves();
-        System.out.println("updatetick in commit moves");
         updateBoard();
         List<int[]> collisions = checkCollision();
 

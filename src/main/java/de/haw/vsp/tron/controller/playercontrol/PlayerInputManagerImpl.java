@@ -40,7 +40,6 @@ public class PlayerInputManagerImpl implements IPlayerInputManager {
     }
 
     public void switchPlayerController() {
-        System.out.println("im switch player controller");
         if(this.playerController instanceof PlayerControllerOnboardingImpl) {
             this.playerController = playerControllerFactory.createPlayerController("movement");
             sceneChanger.registerNextSceneCallback(() -> switchPlayerController());

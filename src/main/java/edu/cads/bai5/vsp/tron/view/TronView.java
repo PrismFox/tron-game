@@ -103,7 +103,7 @@ public class TronView implements ITronView {
             g.setFill(color); //Color.PAPAYAWHIP);
             g.fillRect(pos.x*WIDTH/COLUMNS, pos.y*HEIGHT/ROWS, WIDTH/COLUMNS, HEIGHT/ROWS);
         }
-        System.out.println("in draw bikes - in der TronView von Becke am ende der Methode");
+        //System.out.println("in draw bikes - in der TronView von Becke am ende der Methode");
 
     }
 

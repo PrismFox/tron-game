@@ -35,11 +35,12 @@ public class PlayerManager implements IPlayerManager {
 
     @Override
     public void setPlayerMove(int playerId, int direction) {
-        List<Player> rightPlayer = this.players
-                .stream().filter(player -> playerId == player.getId())
-                .collect(Collectors.toList());
-        Player player = rightPlayer.get(0);
-        player.setIntendedDirection(direction);
+        setIntendedDirection(playerId, direction);
+        //ist<Player> rightPlayer = this.players
+        //        .stream().filter(player -> playerId == player.getId())
+        //        .collect(Collectors.toList());
+        //Player player = rightPlayer.get(0);
+        //player.setIntendedDirection(direction);
 
     }
 
@@ -69,7 +70,6 @@ public class PlayerManager implements IPlayerManager {
     @Override
     public void commitPlayerMoves() {
         for (Player player : players) {
-            System.out.println("commit player moves for player ");
             player.commitMove();
         }
 
@@ -85,6 +85,7 @@ public class PlayerManager implements IPlayerManager {
     public void setIntendedDirection(int playerId, int intendedDirection) {
         Player player = getPlayerById(playerId);
         player.setIntendedDirection(intendedDirection);
+        System.out.println("Player " + playerId + " Direction " + intendedDirection);
     }
 
     @Override

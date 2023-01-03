@@ -24,26 +24,26 @@ public class GameScreen extends VBox {
         List<Coordinate> list = new ArrayList<>();
         list.add(new Coordinate(20,23));
         view.draw(list, Color.BLUE);
-        System.out.println("in draw bikes");
+        //System.out.println("in draw bikes");
         for (Map.Entry<Integer, int[][]> entry : bikePos.entrySet()){
             int colorNum = entry.getKey();
-            System.out.println("Color num : " + colorNum);
+            //System.out.println("Color num : " + colorNum);
             String color = de.haw.vsp.tron.Enums.Color.values()[colorNum].toString();
-            System.out.println(color);
+            //System.out.println(color);
             Color bikeColor = Color.valueOf(color);
             List<Coordinate> coordinates = new ArrayList<>();
-            System.out.println("entrty value .length " + entry.getValue().length);
+            //System.out.println("entrty value .length " + entry.getValue().length);
             for(int i = 0; i < entry.getValue().length; i++){
-                System.out.println("entry value: ");
+                //System.out.println("entry value: ");
 
-                    System.out.println("entry value: "+entry.getValue()[i][0]);
+                    //System.out.println("entry value: "+entry.getValue()[i][0]);
                     Coordinate coordinate = new Coordinate(entry.getValue()[i][0], entry.getValue()[i][1]);
                     coordinates.add(coordinate);
                     //view.highlightCell(coordinate, );
 
             }
             //0 -> [[x,y], [x1,y1,...] , 1 -> [[x,y]], 2 -> ...
-            System.out.println(coordinates.toString());
+            //System.out.println(coordinates.toString());
             view.draw(coordinates, bikeColor);
         }
     }
