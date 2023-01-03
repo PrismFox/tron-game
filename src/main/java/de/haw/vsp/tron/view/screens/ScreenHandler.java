@@ -142,8 +142,6 @@ public class ScreenHandler implements IScreenHandler{
                 System.err.println("wrong param");
                 break;
             case 4:
-                /*view.hideOverlays();
-                view.clear();*/
 
                 Platform.runLater(() -> {
                     EndScreen endScreen = new EndScreen("menu.css", view, winningNumber);
@@ -183,19 +181,13 @@ public class ScreenHandler implements IScreenHandler{
                 break;
             case 3:
                 Platform.runLater(() -> {
-                    //gameScreen wird erstellt, im konstruktur wird die draw() methode aufgerufen.
+                    //Draw methode aufrufen
                     view.hideOverlays();
-                    //view.clear(); // ich weiß nicht, ob man das hier braucht, da man nur die neuen werte mitschickt und nicht die kompletten werte, bzw. komplette koordinaten.
-                    //System.out.println("view clear for gamescreen");
-                    //GameScreen gameScreen = new GameScreen("menu.css", view, bikePos);
 
                     System.out.println("gamescreen erstellt");
 
                     drawBikes(bikePos, view);
 
-
-                    //view.init();
-                    //view.showOverlay("gameScreen");
                 });
                     break;
             case 4:
@@ -218,24 +210,21 @@ public class ScreenHandler implements IScreenHandler{
             List<Coordinate> coordinates = new ArrayList<>();
             System.out.println("entrty value .length " + entry.getValue().length);
             for (int i = 0; i < entry.getValue().length; i++) {
-                //System.out.println("entry value: ");
                 int x = entry.getValue()[i][0];
                 int y = entry.getValue()[i][1];
-                // TODO: x oder y > maxValue
-                if(x < 0 || y < 0) {
+                if(x < 0 || y < 0 || x >= view.getCOLUMNS() || y >= view.getROWS()) {
+                    System.out.println("ist nicht mehr im game field");
                     continue;
                 }
 
                 System.out.println("entry value: " + x);
                 Coordinate coordinate = new Coordinate(x, y);
                 coordinates.add(coordinate);
-
-
+                //view.highlightCell(coordinate, Color.BLACK);
             }
-            //0 -> [[x,y], [x1,y1,...] , 1 -> [[x,y]], 2 -> ...
-            //System.out.println(coordinates.toString());
+
             view.draw(coordinates, bikeColor);
-            //view.highlightCell(coordinates.get(1), bikeColor);
+
         }
     }
 

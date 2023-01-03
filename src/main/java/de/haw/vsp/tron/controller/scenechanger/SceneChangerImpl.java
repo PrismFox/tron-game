@@ -57,6 +57,8 @@ public class SceneChangerImpl implements ISceneChanger {
                 } else {
                     // TODO: Do something here?
                     gameManager.updateView(1);
+                    gameLogic.removePlayers();
+                    gameManager.removePlayers();
                     changeToPreviousScene();
                 }
             });
