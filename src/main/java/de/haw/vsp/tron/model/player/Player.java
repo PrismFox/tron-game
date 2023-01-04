@@ -33,25 +33,30 @@ public class Player {
     }
 
 
-    public void commitMove() {
-        if (Direction.UP == Direction.values()[intendedDirection]) {
+    private void commitMove(int dir) {
+        if (Direction.UP == Direction.values()[dir]) {
             this.changePosition(1, 0);
         }
 
-        if (Direction.Down == Direction.values()[intendedDirection]) {
+        if (Direction.Down == Direction.values()[dir]) {
             this.changePosition(1, 1);
         }
 
-        if (Direction.LEFT == Direction.values()[intendedDirection]) {
+        if (Direction.LEFT == Direction.values()[dir]) {
             this.changePosition(0, 0);
         }
 
-        if (Direction.RIGHT == Direction.values()[intendedDirection]) {
+        if (Direction.RIGHT == Direction.values()[dir]) {
             this.changePosition(0, 1);
         }
         System.out.println("----- Player " + this.id + " Direction: " + Direction.values()[intendedDirection].toString() + " --------");
 
     }
+
+    public void commitMove() {
+        commitMove(intendedDirection);
+    }
+
 
     private void changePosition(int index, int operation) {
         int[] temp = currentPosition.clone();
@@ -75,7 +80,8 @@ public class Player {
             //TODO hier muss auf die naechste position ein schatten gesetzt werden
             intendedDirection = direction;
 
-            this.commitMove();
+
+            this.commitMove(direction);
         }
 
 
