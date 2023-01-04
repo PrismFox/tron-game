@@ -55,7 +55,6 @@ public class SceneChangerImpl implements ISceneChanger {
                         updateTick();
                     });
                 } else {
-                    // TODO: Do something here?
                     gameManager.updateView(1);
                     gameLogic.removePlayers();
                     gameManager.removePlayers();
