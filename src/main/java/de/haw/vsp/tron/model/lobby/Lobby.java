@@ -81,7 +81,7 @@ public class Lobby implements ILobbyGameLogic, IInitLobby {
             if (entry.getKey() == currentPlayerCount) {
                 playerManager.createPlayer(entry.getValue(), currentPlayerCount);
 
-                System.out.println(String.format("Create Player %d", currentPlayerCount));
+                log.info(String.format("Create Player %d", currentPlayerCount));
             }
         }
 
