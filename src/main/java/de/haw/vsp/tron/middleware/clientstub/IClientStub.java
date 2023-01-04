@@ -8,5 +8,5 @@ public interface IClientStub {
     
     Object invokeSynchronously(String methodName, Object... args);
 
-    void invokeAsynchron(String methodName, TransportType transportType, Object... args) throws UnknownHostException;
+    void invokeAsynchronously(String methodName, TransportType transportType, Object... args) throws UnknownHostException;
 }
