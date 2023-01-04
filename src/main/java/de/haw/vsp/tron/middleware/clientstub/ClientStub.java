@@ -13,7 +13,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -23,111 +26,132 @@ public class ClientStub implements IClientStub {
     int portNameServer = 5549;
     public static final int UDP_PACKET_SIZE = 1024;
 
-    private DatagramSocket udpSocket;
-    private Socket tcpSocket;
     private INameServerMarshaler nameServerMarshaler;
-    private DatagramPacket udpReceivePacket;
     private IMarshaler marshaler;
-    private BufferedReader inFromClient;
-    private DataOutputStream outToClient;
+    Map<String, List<String>> knownIps = new HashMap<>();
 
     @Autowired
-    public ClientStub(INameServerMarshaler nameServerMarshaler, IMarshaler marshaler) throws SocketException {
+    public ClientStub(INameServerMarshaler nameServerMarshaler, IMarshaler marshaler) {
         this.nameServerMarshaler = nameServerMarshaler;
         this.marshaler = marshaler;
-        udpSocket = new DatagramSocket();
     }
 
     @Override
-    public Object invokeSynchronously(String methodName, Object... args) {
-        List<String> address = lookUp(methodName);
-        String ip = address.get(0);
-        int port = Integer.parseInt(address.get(1));
+    public Object invokeSynchronously(String methodName, Object... args) throws SocketException {
+        List<String> address;
+        ResponseObject result;
 
-        String messageId = "2";
+        try (DatagramSocket udpSocket = new DatagramSocket()) {
+            if (!knownIps.containsKey(methodName)) {
+                address = lookUp(methodName, udpSocket);
+                knownIps.put(methodName, address);
+            } else {
+                address = knownIps.get(methodName);
+            }
 
-        String rpcMessage = marshaler.marshal(methodName, messageId, args);
-        byte[] rpcMessageBytes = rpcMessage.getBytes();
+            String ip = address.get(0);
+            int port = Integer.parseInt(address.get(1));
 
-        return invokeTCP(ip, port, rpcMessageBytes, messageId, true);
+            String messageId = "2";
+
+            String rpcMessage = marshaler.marshal(methodName, messageId, args);
+            byte[] rpcMessageBytes = rpcMessage.getBytes();
+            result = invokeTCP(ip, port, rpcMessageBytes, messageId, true);
+        }
+
+
+        return result;
     }
 
 
     @Override
     public void invokeAsynchronously(String methodName, TransportType transportType,
-                                     Object... args) {
+                                     Object... args) throws SocketException {
 
-        List<String> address = lookUp(methodName);
-        String ip = address.get(0);
-        int port = Integer.parseInt(address.get(1));
+        List<String> address;
+        try (DatagramSocket udpSocket = new DatagramSocket()) {
 
-        String messageId = "2";
+            if (!knownIps.containsKey(methodName)) {
+                address = lookUp(methodName, udpSocket);
+                knownIps.put(methodName, address);
+            } else {
+                address = knownIps.get(methodName);
+            }
 
-        String rpcMessage = marshaler.marshal(methodName, messageId, args);
-        byte[] rpcMessageBytes = rpcMessage.getBytes();
+            String ip = address.get(0);
+            int port = Integer.parseInt(address.get(1));
 
-        if (transportType.equals(TransportType.TCP)) {
-            invokeTCP(ip, port, rpcMessageBytes, messageId, false);
+            String messageId = "2";
+
+            String rpcMessage = marshaler.marshal(methodName, messageId, args);
+            byte[] rpcMessageBytes = rpcMessage.getBytes();
+
+            if (transportType.equals(TransportType.TCP)) {
+                invokeTCP(ip, port, rpcMessageBytes, messageId, false);
+            }
+
+            if (transportType.equals(TransportType.UDP)) {
+                sendUDPPacket(rpcMessageBytes, rpcMessageBytes.length, ip, port, udpSocket);
+            }
         }
 
-        if (transportType.equals(TransportType.UDP)) {
-            sendUDPPacket(rpcMessageBytes, rpcMessageBytes.length, ip, port);
-        }
 
     }
 
     private ResponseObject invokeTCP(String targetIp, int targetPort, byte[] message, String messageId, boolean receive) {
         boolean rightMessageId = false;
-
-        initTCPSocket(targetIp, targetPort);
-
-        try {
-            inFromClient = new BufferedReader(new InputStreamReader(tcpSocket.getInputStream()));
-            outToClient = new DataOutputStream(tcpSocket.getOutputStream());
-            sendTCPPacket(message);
-        } catch (IOException exception) {
-            log.error("Error while trying to send TCP packet");
-        }
-
-
         ResponseObject responseObject = null;
 
-        if (receive) {
-            while (!rightMessageId) {
-                String responseStr = receiveTCPPacket();
-                responseObject = marshaler.unmarshalClientStub(responseStr);
 
-                if (responseObject.getMessageId() == Long.getLong(messageId)) {
-                    rightMessageId = true;
+        try (Socket socket = initTCPSocket(targetIp, targetPort)) {
+            BufferedReader inFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            DataOutputStream outToClient = new DataOutputStream(socket.getOutputStream());
+            sendTCPPacket(message, outToClient);
+
+
+            if (receive) {
+                while (!rightMessageId) {
+                    String responseStr = readResponseTCPPacket(inFromClient);
+                    responseObject = marshaler.unmarshalClientStub(responseStr);
+
+                    if (responseObject.getMessageId() == Long.getLong(messageId)) {
+                        rightMessageId = true;
+                    }
+
                 }
-
             }
+
+
+        } catch (IOException exception) {
+            log.error("Error while trying to send TCP packet");
         }
 
         return responseObject;
     }
 
-    public void initTCPSocket(String host, int port) {
+    public Socket initTCPSocket(String host, int port) {
+        Socket socket = null;
         try {
-            tcpSocket = new Socket(host, port);
+            socket = new Socket(host, port);
         } catch (IOException excep) {
             log.error(String.format("Couldn't connect to a socket with host: %s and port: %d", host, port));
         }
+        return socket;
     }
 
-    private List<String> lookUp(String methodName) {
+    private List<String> lookUp(String methodName, DatagramSocket udpSocket) {
         String queryJson = nameServerMarshaler.marshalQueryRequest(methodName);
 
         byte[] queryJsonBytes = queryJson.getBytes();
-        sendUDPPacket(queryJsonBytes, queryJsonBytes.length, nameServerIp, portNameServer);
+        sendUDPPacket(queryJsonBytes, queryJsonBytes.length, nameServerIp, portNameServer, udpSocket);
 
-        String reponseString = receiveUDPPacket();
+        String reponseString = receiveUDPPacket(udpSocket);
 
         return nameServerMarshaler.unmarshal(reponseString);
 
     }
 
-    private void sendUDPPacket(byte[] content, int length, String ipAddress, int port) {
+    private void sendUDPPacket(byte[] content, int length, String ipAddress, int port, DatagramSocket udpSocket) {
         try {
             InetAddress targetAddress = InetAddress.getByName(ipAddress);
             DatagramPacket packet = new DatagramPacket(content, length, targetAddress, port);
@@ -137,11 +161,11 @@ public class ClientStub implements IClientStub {
         }
     }
 
-    private String receiveUDPPacket() {
+    private String receiveUDPPacket(DatagramSocket udpSocket) {
         String response = null;
         try {
             byte[] receivedData = new byte[UDP_PACKET_SIZE];
-            udpReceivePacket = new DatagramPacket(receivedData, UDP_PACKET_SIZE);
+            DatagramPacket udpReceivePacket = new DatagramPacket(receivedData, UDP_PACKET_SIZE);
             udpSocket.receive(udpReceivePacket);
             response = new String(udpReceivePacket.getData(), 0, udpReceivePacket.getLength());
 
@@ -153,25 +177,14 @@ public class ClientStub implements IClientStub {
     }
 
     //Schreibt antworten an den Client
-    private void sendTCPPacket(byte[] line) throws IOException {
+    private void sendTCPPacket(byte[] line, DataOutputStream outToClient) throws IOException {
         /* Sende die Antwortzeile (mit CRLF) zum Client */
         outToClient.write((line));
 
     }
 
-    private String receiveTCPPacket() {
-        String responseStr = null;
-        try {
-            responseStr = readResponseTCPPacket();
 
-        } catch (IOException e) {
-            log.error("Error while receiving TCP packet");
-        }
-
-        return responseStr;
-    }
-
-    private String readResponseTCPPacket() throws IOException {
+    private String readResponseTCPPacket(BufferedReader inFromClient) throws IOException {
         /* Lies die naechste Anfrage-Zeile (request) vom Client */
         StringBuilder sbLine = new StringBuilder();
         String reply = inFromClient.readLine();
