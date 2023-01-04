@@ -124,7 +124,7 @@ public class PlayerManager implements IPlayerManager {
             for (int i = 0; i < livingPlayers.size(); i++) {
                 Player player = livingPlayers.get(i);
                 int[] currentPosition = player.getCurrentPosition();
-                if (collisions.contains(currentPosition)) {
+                if (collisions.stream().anyMatch(c -> Arrays.equals(c, currentPosition))) {
                     obstaclesToRemove.addAll(getPlayerPositions(player.getId()));
                     killPlayer(player.getId());
                 } else {
