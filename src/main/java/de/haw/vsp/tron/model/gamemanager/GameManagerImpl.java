@@ -55,5 +55,11 @@ public class GameManagerImpl implements IGameManager {
         lobbyInitializer.setCurrentPlayerCount(0);
     }
 
+    @Override
+    public void endGame() {
+        removePlayers();
+        lobbyInitializer.updateView(1);  
+    }
+
     
 }

@@ -7,4 +7,5 @@ public interface IGameManager {
     public void startGame();
     public void updateView(int screenNumber);
     public void removePlayers();
+    public void endGame();
 }

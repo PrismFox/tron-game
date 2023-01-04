@@ -36,7 +36,10 @@ public class SceneChangerImpl implements ISceneChanger {
         this.currentScene = new StartScene(this.gameManager, this.config, this.timer, (ISceneChanger) this);
 
         Runnable gameRunnable = () -> {
-            init();
+            timer.startLobbyTimer(3000, () -> {
+                gameManager.endGame();
+                init();
+            });
         };
         Runnable lobbyRunnable = () -> {
             registerNextSceneCallback(gameRunnable);
