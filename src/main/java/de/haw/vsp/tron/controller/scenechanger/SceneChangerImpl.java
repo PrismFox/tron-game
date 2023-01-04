@@ -37,6 +37,7 @@ public class SceneChangerImpl implements ISceneChanger {
 
         Runnable gameRunnable = () -> {
             timer.startLobbyTimer(3000, () -> {
+                gameLogic.removePlayers();
                 gameManager.endGame();
                 init();
             });
