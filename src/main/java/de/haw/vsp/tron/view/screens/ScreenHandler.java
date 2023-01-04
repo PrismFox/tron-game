@@ -1,5 +1,6 @@
 package de.haw.vsp.tron.view.screens;
 
+import de.haw.vsp.tron.view.inputHandler.IInputHandler;
 import de.haw.vsp.tron.view.inputHandler.InputHandler;
 import edu.cads.bai5.vsp.tron.view.Coordinate;
 import edu.cads.bai5.vsp.tron.view.ITronView;

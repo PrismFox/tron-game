@@ -11,7 +11,7 @@ import java.util.List;
 
 @Component
 public
-class InputHandler implements EventHandler<KeyEvent> {
+class InputHandler implements EventHandler<KeyEvent>, IInputHandler {
 
     @Autowired
     private IPlayerInputManager playerController;
@@ -36,7 +36,7 @@ class InputHandler implements EventHandler<KeyEvent> {
     }
 
 
-
+    @Override
     public boolean checkInputString(String keyInput){
         //get the validKeys from the controller and check if the
         //user input is one of the valid keys
@@ -55,6 +55,7 @@ class InputHandler implements EventHandler<KeyEvent> {
         return validInput;
     }
 
+    @Override
     public void forwardInput(String keyInput){
         //onKeyPress from Controller
 

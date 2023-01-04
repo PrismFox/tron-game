@@ -58,7 +58,9 @@ public class GameManagerImpl implements IGameManager {
     @Override
     public void endGame() {
         removePlayers();
-        lobbyInitializer.updateView(1);  
+        System.err.println("remove Players is da");
+        lobbyInitializer.updateView(1);
+        board.clearBoard();
     }
 
     
