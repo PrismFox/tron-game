@@ -141,4 +141,14 @@ public class TronView implements ITronView {
         g.setFill(bikeColor);
         g.fillRect(cell.x*WIDTH/COLUMNS, cell.y*HEIGHT/ROWS, WIDTH/COLUMNS, HEIGHT/ROWS);
     }
+
+    @Override
+    public int getROWS(){
+        return this.ROWS;
+    }
+
+    @Override
+    public int getCOLUMNS(){
+        return this.COLUMNS;
+    }
 }

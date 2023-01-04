@@ -3,6 +3,7 @@ package de.haw.vsp.tron.view.screens;
 import de.haw.vsp.tron.controller.scenechanger.ISceneChanger;
 import edu.cads.bai5.vsp.tron.view.ITronView;
 import edu.cads.bai5.vsp.tron.view.ViewUtility;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -31,6 +32,8 @@ public class WaitingScreen extends VBox {
                 case 0: break;
                 case 1:
                     playerList.getItems().addAll("Player 1" );
+
+
                     break;
                 case 2:
                     playerList.getItems().addAll("Player 1", "Player 2" );
@@ -52,36 +55,32 @@ public class WaitingScreen extends VBox {
             playerList.setStyle("-fx-font-size: 12pt; -fx-font-family: 'Arial'; -fx-font-weight: bold; -fx-text-fill: blue; " +
                     "-fx-background-color: lightgray; -fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 10");
 
+
+        playerList.setCellFactory(lv -> new ListCell<String>() {
+            @Override
+            public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null) {
+                    setText(item);
+
+                    switch (item){
+                        case "Player 1": setTextFill(Color.RED); break;
+                        case "Player 2": setTextFill(Color.BLUE); break;
+                        case "Player 3": setTextFill(Color.GREEN); break;
+                        case "Player 4": setTextFill(Color.YELLOW); break;
+                        case "Player 5": setTextFill(Color.PURPLE); break;
+                        case "Player 6": setTextFill(Color.ORANGE); break;
+                    }
+
+                } else {
+                    setText(null);
+                }
+            }
+        });
+
             this.getChildren().add(ListLabel);
             this.getChildren().add(playerList);
 
-           /* //countdown anzeigen lassen soabld alle Spieler da sind
-            // Create a label to display the time remaining
-            Label timeLabel = new Label();
-
-            // Set the initial time remaining to 5 seconds
-            AtomicInteger timeRemaining = new AtomicInteger(timeSec);
-            timeLabel.setText(String.valueOf(timeRemaining));
-
-            Timeline timeline = new Timeline();
-            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), event -> {
-                timeRemaining.getAndDecrement();  // okay, timeRemaining is effectively final within the if block
-                timeLabel.setText(String.valueOf(timeRemaining.get()));
-                if (timeRemaining.get() <= 0 ) {
-                    timeline.stop();
-                    //TODO Kompletter Countdown kann erstmal raus und hier soll kein changeToNextScene Aufgerufen werden
-                    view.hideOverlays();
-                    //change to next scene (GameScreen)
-                    iSceneChanger.changeToNextScene();
-                }
-            }));
-
-            timeline.setCycleCount(Animation.INDEFINITE);
-            // Start the countdown
-            timeline.play();
-
-            this.getChildren().add(timeLabel);
-*/
 
         this.getChildren().add(labelWaiting);
     }

@@ -139,4 +139,9 @@ public class PlayerManager implements IPlayerManager {
 
         return colorPositions;
     }
+
+    @Override
+    public void killPlayers(){
+        players.clear();
+    }
 }

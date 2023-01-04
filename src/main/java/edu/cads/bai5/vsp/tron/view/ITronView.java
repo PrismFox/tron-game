@@ -71,4 +71,9 @@ public interface ITronView {
      * @param bikeColor
      */
     void highlightCell(Coordinate cell, Color bikeColor);
+
+
+    public int getROWS();
+
+    public int getCOLUMNS();
 }

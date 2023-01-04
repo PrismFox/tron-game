@@ -72,7 +72,9 @@ public class Player {
             direction = intendedDirection;
 
         }else{
+            //TODO hier muss auf die naechste position ein schatten gesetzt werden
             intendedDirection = direction;
+
             this.commitMove();
         }
 
