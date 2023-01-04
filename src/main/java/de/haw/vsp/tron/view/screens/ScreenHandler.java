@@ -1,6 +1,5 @@
 package de.haw.vsp.tron.view.screens;
 
-import de.haw.vsp.tron.view.inputHandler.IInputHandler;
 import de.haw.vsp.tron.view.inputHandler.InputHandler;
 import edu.cads.bai5.vsp.tron.view.Coordinate;
 import edu.cads.bai5.vsp.tron.view.ITronView;
@@ -208,6 +207,9 @@ public class ScreenHandler implements IScreenHandler{
             String color = de.haw.vsp.tron.Enums.Color.values()[colorNum].toString();
             System.out.println(color);
             Color bikeColor = Color.valueOf(color);
+            if(bikeColor == Color.BLUEVIOLET){
+                bikeColor = Color.BLUEVIOLET.darker().darker().darker().desaturate();
+            }
             List<Coordinate> coordinates = new ArrayList<>();
             System.out.println("entrty value .length " + entry.getValue().length);
             for (int i = 0; i < entry.getValue().length; i++) {

@@ -55,13 +55,8 @@ public class EndScreen extends VBox {
         winningLabel.setStyle("-fx-text-fill: " + ViewUtility.getHexTriplet(Color.PAPAYAWHIP.brighter()) + ";"+ "-fx-font-size: 12pt; -fx-font-family: 'Arial';");
         this.getChildren().add(winningLabel);
 
-        try {
-            //waits 30 sec and then changes to the next scene
-            Thread.sleep(10000);
-            iSceneChanger.changeToNextScene();
-        }catch (InterruptedException e ){
-            e.printStackTrace();
-        }
+        iSceneChanger.changeToNextScene();
+
 
 
     }
