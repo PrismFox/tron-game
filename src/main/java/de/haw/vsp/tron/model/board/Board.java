@@ -95,4 +95,9 @@ public class Board implements IBoard {
     public void updateView(int screenNumber, Map<Integer, int[][]> bikePos){
         screenHandler.showScreen(screenNumber, bikePos);
     }
+
+    @Override
+    public void clearBoard(){
+        obstacles.clear();
+    }
 }

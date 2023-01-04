@@ -23,4 +23,6 @@ public interface IBoard {
     List<int[]> getObstacles();
 
     int[] getBoardSize();
+
+    void clearBoard();
 }

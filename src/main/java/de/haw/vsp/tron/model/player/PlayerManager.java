@@ -78,6 +78,7 @@ public class PlayerManager implements IPlayerManager {
     @Override
     public void createPlayer(List<String> mapping, int color) {
         Player newPlayer = new Player(mapping, Color.values()[color]);
+        System.out.println("Player ID bei Create Player in PlayerManager " +newPlayer.getId());
         players.add(newPlayer);
     }
 
@@ -142,6 +143,8 @@ public class PlayerManager implements IPlayerManager {
 
     @Override
     public void killPlayers(){
+        Player.resetNextId();
         players.clear();
+
     }
 }
