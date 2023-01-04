@@ -3,11 +3,12 @@ package de.haw.vsp.tron.middleware.marshaler;
 import de.haw.vsp.tron.middleware.pojo.ResponseObject;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.UnknownHostException;
 
+@Component
 public class Marshaler implements IMarshaler {
 
     @Override
@@ -28,16 +29,14 @@ public class Marshaler implements IMarshaler {
     }
 
     @Override
-    public ResponseObject unmarshal(String message) {
+    public ResponseObject unmarshalClientStub(String message) {
         JSONObject json = new JSONObject(message);
         Object response = null;
 
-
         String responseType = json.getString("return_type");
-        Constructor<?> responseConstructor = null;
         try {
             Class<?> responseClass = Class.forName(responseType);
-            responseConstructor = responseClass.getConstructor();
+            Constructor<?> responseConstructor = responseClass.getConstructor();
 
             String returnValue = json.getString("return_value");
             response = responseConstructor.newInstance(returnValue);
