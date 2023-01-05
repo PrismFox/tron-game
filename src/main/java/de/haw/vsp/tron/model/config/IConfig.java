@@ -12,7 +12,7 @@ public interface IConfig {
 
     public void setPlayerCount(int playerCount);
 
-    int[] getBoardSize();
+    public int[] getBoardSize();
 
-    int getCellSize();
+    public int getCellSize();
 }
