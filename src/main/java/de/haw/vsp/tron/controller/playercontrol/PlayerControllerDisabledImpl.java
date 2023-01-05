@@ -13,4 +13,9 @@ public class PlayerControllerDisabledImpl implements IPlayerController{
     public List<String> getValidKeys() {
         return new ArrayList<>();
     }
+
+    @Override
+    public void loadMappings() {
+        return;        
+    }
 }

@@ -6,4 +6,6 @@ public interface IPlayerController {
     public void onKeyPress(String key);
 
     public List<String> getValidKeys();
+
+    public void loadMappings();
 }

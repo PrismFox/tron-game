@@ -24,16 +24,10 @@ public class PlayerControllerMovementImpl implements IPlayerController {
 
     @Override
     public List<String> getValidKeys() {
-        if(this.playerMappings == null) {
-            this.playerMappings = this.playerManager.getPlayerMappings();
-        }
         return playerMappings.values().stream().flatMap(List::stream).collect(Collectors.toList());
     }
 
     private int getPlayerForKey(String key) {
-        if(this.playerMappings == null) {
-            this.playerMappings = this.playerManager.getPlayerMappings();
-        }
         Integer playerId = null;
 
         for (Map.Entry<Integer,List<String>> entry: this.playerMappings.entrySet()){
@@ -49,9 +43,6 @@ public class PlayerControllerMovementImpl implements IPlayerController {
     }
 
     private int getDirectionForKey(String key) {
-        if(this.playerMappings == null) {
-            this.playerMappings = this.playerManager.getPlayerMappings();
-        }
         for (Map.Entry<Integer, List<String>> entry: this.playerMappings.entrySet()) {
             int index = entry.getValue().indexOf(key);
             if(index != -1) {
@@ -59,5 +50,10 @@ public class PlayerControllerMovementImpl implements IPlayerController {
             }
         }
         return -1;
+    }
+
+    @Override
+    public void loadMappings() {
+        this.playerMappings = this.playerManager.getPlayerMappings();
     }
 } 

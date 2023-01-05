@@ -59,7 +59,7 @@ public class PlayerInputManagerImpl implements IPlayerInputManager {
         }else{
             this.playerController = playerControllerFactory.createPlayerController("disabled");
             sceneChanger.registerNextSceneCallback(this::switchPlayerController);
-
         }
+        playerController.loadMappings();
     }
 }
