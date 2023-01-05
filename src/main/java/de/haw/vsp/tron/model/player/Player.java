@@ -96,5 +96,8 @@ public class Player {
         return Arrays.equals(newPosition, lastPosition);
     }
 
+    public static void resetNextId(){
+        nextId.set(1);
+    }
 
 }
