@@ -77,15 +77,9 @@ public class Lobby implements ILobbyGameLogic, IInitLobby {
     @Override
     public void playerJoin(int playerNumber) {
         currentPlayerCount++;
-        for (Map.Entry<Integer, List<String>> entry : playerMapping.entrySet()) {
-            if (entry.getKey() == currentPlayerCount) {
-                playerManager.createPlayer(entry.getValue(), currentPlayerCount);
+        playerManager.createPlayer(playerMapping.get(playerNumber), currentPlayerCount);
 
-                log.info(String.format("Create Player %d", currentPlayerCount));
-            }
-        }
-
-        if (currentPlayerCount == maxPlayer || currentPlayerCount == playerNumber) {
+        if (currentPlayerCount == maxPlayer) {
             maxPlayerJoined = true;
         }
         //TODO timesec wieder raus nehmen

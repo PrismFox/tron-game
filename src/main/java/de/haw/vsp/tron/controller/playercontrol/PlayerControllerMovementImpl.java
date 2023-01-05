@@ -13,8 +13,7 @@ public class PlayerControllerMovementImpl implements IPlayerController {
 
     @Autowired
     private IPlayerManager playerManager;
-    private Map<Integer, List<String>> playerMappings;
-    private Map<String, Integer> playerKeyIdMap;
+    private Map<Integer, List<String>> playerMappings;    
 
     @Override
     public void onKeyPress(String key) {
