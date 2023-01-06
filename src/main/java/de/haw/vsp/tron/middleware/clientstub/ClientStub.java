@@ -26,8 +26,8 @@ public class ClientStub implements IClientStub {
     int portNameServer = 5549;
     public static final int UDP_PACKET_SIZE = 1024;
 
-    private INameServerMarshaler nameServerMarshaler;
-    private IMarshaler marshaler;
+    private final INameServerMarshaler nameServerMarshaler;
+    private final IMarshaler marshaler;
     Map<String, List<String>> knownIps = new HashMap<>();
 
     @Autowired
