@@ -50,32 +50,21 @@ public class ScreenHandler implements IScreenHandler{
     }
 
     @Override
-    public void showStartScreen(int screenNumber) {
+    public void showStartScreen() {
 
         //int uebergeben, 1-4. 1 = startscreen etc.
         //switch case, je nach int wird dann
         //view.registerOverlay(SCREEN), view.init(), view.showOverlay(SCREEN)
 
-        switch (screenNumber){
-            case 1:
-                StartScreen startScreen = new StartScreen("menu.css", view);
-                Platform.runLater(() -> {
-                    view.registerOverlay("start", startScreen);
+
+        StartScreen startScreen = new StartScreen("menu.css", view);
+        Platform.runLater(() -> {
+            view.registerOverlay("start", startScreen);
                     
-                    view.init();
-                    view.showOverlay("start");
-                });
-                break;
-            case 2:
-                System.err.println("wrong param");
-                break;
-            case 3:
-                System.err.println("wrong param");
-                break;
-            case 4:
-                System.err.println("wrong param");
-                break;
-        }
+            view.init();
+            view.showOverlay("start");
+        });
+
     }
 
 
@@ -130,40 +119,23 @@ public class ScreenHandler implements IScreenHandler{
 
 
     @Override
-    public void showGameScreen(int screenNumber, Map<Integer, int[][]> bikePos) {
+    public void showGameScreen( Map<Integer, int[][]> bikePos) {
 
         //int uebergeben, 1-4. 1 = startscreen etc.
         //switch case, je nach int wird dann
         //view.registerOverlay(SCREEN), view.init(), view.showOverlay(SCREEN)
 
-        switch (screenNumber){
-            case 1:
-                StartScreen startScreen = new StartScreen("menu.css", view);
-                Platform.runLater(() -> {
-                    view.registerOverlay("start", startScreen);
-                    
-                    view.init();
-                    view.showOverlay("start");
-                });
-                break;
-            case 2:
-                System.err.println("wrong param");
-                break;
-            case 3:
-                Platform.runLater(() -> {
-                    //Draw methode aufrufen
-                    view.hideOverlays();
 
-                    System.out.println("gamescreen erstellt");
+        Platform.runLater(() -> {
+            //Draw methode aufrufen
+            view.hideOverlays();
 
-                    drawBikes(bikePos, view);
+            System.out.println("gamescreen erstellt");
 
-                });
-                    break;
-            case 4:
-                System.err.println("wrong param");
-                break;
-        }
+            drawBikes(bikePos, view);
+        });
+
+
     }
 
     public void drawBikes(Map<Integer, int[][]> bikePos, ITronView view) {

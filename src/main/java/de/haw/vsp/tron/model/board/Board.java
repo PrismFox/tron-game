@@ -93,7 +93,7 @@ public class Board implements IBoard {
 
     @Override
     public void updateView(int screenNumber, Map<Integer, int[][]> bikePos){
-        screenHandler.showGameScreen(screenNumber, bikePos);
+        screenHandler.showGameScreen(bikePos);
     }
 
     @Override

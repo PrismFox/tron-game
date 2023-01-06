@@ -14,7 +14,7 @@ public interface IScreenHandler {
      *
      * @author Dominik Martin
      */
-    public void showStartScreen(int screenNumber);
+    public void showStartScreen();
 
 
         /**
@@ -38,7 +38,7 @@ public interface IScreenHandler {
      *
      * @author Dominik Martin
      */
-    public void showGameScreen(int screenNumber, Map<Integer, int[][]> bikePos);
+    public void showGameScreen(Map<Integer, int[][]> bikePos);
 
     public void init(Stage primaryStage);
 

@@ -70,7 +70,7 @@ public class Lobby implements ILobbyGameLogic, IInitLobby {
 
     @Override
     public void updateView(int screenNumber) {
-        screenHandler.showStartScreen(screenNumber);
+        screenHandler.showStartScreen();
     }
 
     @Override
