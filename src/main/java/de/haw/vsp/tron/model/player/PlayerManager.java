@@ -17,10 +17,6 @@ import java.util.stream.Collectors;
 public class PlayerManager implements IPlayerManager {
     private List<Player> players = new ArrayList<>();
 
-    public List<Player> getPlayers() {
-        return players;
-    }
-
 
     @Override
     public Map<Integer, List<String>> getPlayerMappings() {
@@ -36,12 +32,6 @@ public class PlayerManager implements IPlayerManager {
     @Override
     public void setPlayerMove(int playerId, int direction) {
         setIntendedDirection(playerId, direction);
-        //ist<Player> rightPlayer = this.players
-        //        .stream().filter(player -> playerId == player.getId())
-        //        .collect(Collectors.toList());
-        //Player player = rightPlayer.get(0);
-        //player.setIntendedDirection(direction);
-
     }
 
     @Override
@@ -78,7 +68,7 @@ public class PlayerManager implements IPlayerManager {
     @Override
     public void createPlayer(List<String> mapping, int color) {
         Player newPlayer = new Player(mapping, Color.values()[color]);
-        System.out.println("Player ID bei Create Player in PlayerManager " +newPlayer.getId());
+        System.out.println("Player ID bei Create Player in PlayerManager " + newPlayer.getId());
         players.add(newPlayer);
     }
 
@@ -121,18 +111,22 @@ public class PlayerManager implements IPlayerManager {
         Map<Integer, int[][]> colorPositions = new HashMap<>();
         List<Player> livingPlayers = getLivingPlayers();
 
-        //if (!collisions.isEmpty()) {
-            for (int i = 0; i < livingPlayers.size(); i++) {
-                Player player = livingPlayers.get(i);
-                int[] currentPosition = player.getCurrentPosition();
-                if (collisions.stream().anyMatch(c -> Arrays.equals(c, currentPosition))) {
-                    obstaclesToRemove.addAll(getPlayerPositions(player.getId()));
-                    killPlayer(player.getId());
-                } else {
-                    colorPositions.put(player.getColor().ordinal(), new int[][]{currentPosition});
-                }
+        for (int i = 0; i < livingPlayers.size(); i++) {
+            Player player = livingPlayers.get(i);
+            int[] currentPosition = player.getCurrentPosition();
+
+            if (collisions.stream().anyMatch(c -> Arrays.equals(c, currentPosition))) {
+                List<int[]> obstaclesWithoutCollisionPos = getPlayerPositions(player.getId())
+                        .stream()
+                        .filter(obstacle -> !Arrays.equals(obstacle, currentPosition))
+                        .collect(Collectors.toList());
+
+                obstaclesToRemove.addAll(obstaclesWithoutCollisionPos);
+                killPlayer(player.getId());
+            } else {
+                colorPositions.put(player.getColor().ordinal(), new int[][]{currentPosition});
             }
-        //}
+        }
 
 
         int[][] allPositionsArray = obstaclesToRemove.toArray(new int[obstaclesToRemove.size()][]);
@@ -142,9 +136,10 @@ public class PlayerManager implements IPlayerManager {
     }
 
     @Override
-    public void killPlayers(){
+    public void killPlayers() {
         Player.resetNextId();
         players.clear();
-
+        log.info("Reset Players");
     }
+
 }

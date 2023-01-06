@@ -33,10 +33,7 @@ public class GameManagerImpl implements IGameManager {
 
     @Override
     public boolean isReadyToPlay() {
-        if(lobbyInitializer.getCurrentPlayerCount() > 1 && lobbyInitializer.getCurrentPlayerCount() <= config.getPlayerCount()) {
-            return true;
-        }
-        return false;
+        return lobbyInitializer.getCurrentPlayerCount() > 1 && lobbyInitializer.getCurrentPlayerCount() <= config.getPlayerCount();
     }
 
     @Override
@@ -58,7 +55,6 @@ public class GameManagerImpl implements IGameManager {
     @Override
     public void endGame() {
         removePlayers();
-        System.err.println("remove Players is da");
         lobbyInitializer.updateView(1);
         board.clearBoard();
     }
