@@ -9,7 +9,6 @@ public interface IScreenHandler {
     /**
      * showScreen will show the screen with the given Number
      * StartScreen
-     * @param screenNumber, 1 = StartScreen, 2 = WaitingScreen, 3 = GameScreen, 4 = EndScreen
      *
      *
      * @author Dominik Martin
@@ -31,7 +30,6 @@ public interface IScreenHandler {
     /**
      * showScreen will show the screen with the given Number
      * GameScreen
-     * @param screenNumber, 1 = StartScreen, 2 = WaitingScreen, 3 = GameScreen, 4 = EndScreen
      * @param bikePos a map with the color of the player as an int and a 2d array with the xy coordinates as ints
      *                when the key is 0, then the coordinates will be deleted , so the key 0 should
      *                only bes used, if a player dies.
