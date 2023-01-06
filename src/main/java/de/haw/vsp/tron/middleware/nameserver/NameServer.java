@@ -1,6 +1,10 @@
-package de.haw.vsp.tron.nameServer;
+package de.haw.vsp.tron.middleware.nameserver;
 
+import de.haw.vsp.tron.middleware.middlewareconfig.IMiddlewareConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -8,12 +12,15 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.*;
 
+@Component
+@Slf4j
 public class NameServer {
 
     // Constants
-    public final static int SERVER_PORT = 53480;
-    public final static int UDP_PACKET_SIZE = 1024;
+    public static final int UDP_PACKET_SIZE = 1024;
 
+    @Autowired
+    private IMiddlewareConfig middlewareConfig;
     private DatagramSocket socket;
     byte[] receivedData;
     Map<String, List<String>> methodIps = new HashMap<>();
@@ -27,7 +34,7 @@ public class NameServer {
         int receivedPort;
         DatagramPacket udpReceivePacket;
         boolean running = true;
-        socket = new DatagramSocket(SERVER_PORT);
+        socket = new DatagramSocket(middlewareConfig.getNameServerPort());
 
         while (running) {
             String methodType = null;
@@ -37,7 +44,6 @@ public class NameServer {
                 socket.receive(udpReceivePacket);
 
                 receivedIPAddress = udpReceivePacket.getAddress();
-                System.out.println(receivedIPAddress.getHostAddress());
 
                 receivedPort = udpReceivePacket.getPort();
 
@@ -57,7 +63,7 @@ public class NameServer {
                 }
 
             } catch (IOException e) {
-                System.err.println(String.format("Error while Receiving. Methodtype: %s, Methodname: %s",methodType, methodName));
+                log.error(String.format("Error while Receiving. Methodtype: %s, Methodname: %s",methodType, methodName));
                 e.printStackTrace();
                 running = false;
             }
@@ -86,7 +92,7 @@ public class NameServer {
         try {
             socket.send(packet);
         } catch (IOException e) {
-            System.err.println(String.format("Packet couldn't be sent to address: %s with port: %d", ipAddress.getHostAddress(), port));
+            log.error(String.format("Packet couldn't be sent to address: %s with port: %d", ipAddress.getHostAddress(), port));
             e.printStackTrace();
         }
     }
