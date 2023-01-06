@@ -37,7 +37,7 @@ public class ClientStub implements IClientStub {
     }
 
     @Override
-    public Object invokeSynchronously(String methodName, Object... args) throws SocketException {
+    public Object invokeSynchronously(String methodName, Object... args) {
         List<String> address;
         ResponseObject result;
 
@@ -57,6 +57,9 @@ public class ClientStub implements IClientStub {
             String rpcMessage = marshaler.marshal(methodName, messageId, args);
             byte[] rpcMessageBytes = rpcMessage.getBytes();
             result = invokeTCP(ip, port, rpcMessageBytes, messageId, true);
+        } catch(SocketException exc) {
+            exc.printStackTrace();
+            return invokeSynchronously(methodName, args);
         }
 
 
@@ -66,7 +69,7 @@ public class ClientStub implements IClientStub {
 
     @Override
     public void invokeAsynchronously(String methodName, TransportType transportType,
-                                     Object... args) throws SocketException {
+                                     Object... args) {
 
         List<String> address;
         try (DatagramSocket udpSocket = new DatagramSocket()) {
@@ -93,6 +96,9 @@ public class ClientStub implements IClientStub {
             if (transportType.equals(TransportType.UDP)) {
                 sendUDPPacket(rpcMessageBytes, rpcMessageBytes.length, ip, port, udpSocket);
             }
+        }catch(SocketException exc) {
+            exc.printStackTrace();
+            invokeAsynchronously(methodName, transportType, args);
         }
 
 

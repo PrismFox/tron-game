@@ -4,6 +4,7 @@ import javafx.stage.Stage;
 
 import java.util.Map;
 
+
 public interface IScreenHandler {
     /**
      * showScreen will show the screen with the given Number

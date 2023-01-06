@@ -85,9 +85,9 @@
                         <source>11</source>
                         <target>11</target>
                         <includes>
-                            <!--<include>
-                                middleware/RemoteInvocationProcessor.java
-                            </include>-->
+                            <include>
+                                de/haw/vsp/tron/middleware/RemoteInvocationProcessor.java
+                            </include>
                         </includes>
                     </configuration>
                 </execution>
@@ -102,9 +102,9 @@
                         <source>11</source>
                         <target>11</target>
                         <annotationProcessors>
-                            <!--<annotationProcessor>
-                                middleware.RemoteInvocationProcessor
-                            </annotationProcessor>-->
+                            <annotationProcessor>
+                                de.haw.vsp.tron.middleware.RemoteInvocationProcessor
+                            </annotationProcessor>
                             <annotationProcessor>
                                 lombok.launch.AnnotationProcessorHider$AnnotationProcessor
                             </annotationProcessor>
@@ -122,9 +122,9 @@
                             </path>
                         </annotationProcessorPaths>
                         <excludes>
-                            <!--<exclude>
-                                middleware/RemoteInvocationProcessor.java
-                            </exclude>-->
+                            <exclude>
+                                de/haw/vsp/tron/middleware/RemoteInvocationProcessor.java
+                            </exclude>
                         </excludes>
                     </configuration>
                 </execution>

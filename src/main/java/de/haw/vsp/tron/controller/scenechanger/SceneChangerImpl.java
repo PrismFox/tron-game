@@ -15,7 +15,7 @@ import de.haw.vsp.tron.model.gamelogic.IGameLogic;
 import de.haw.vsp.tron.model.gamemanager.IGameManager;
 
 @Component
-public class SceneChangerImpl implements ISceneChanger {
+public class SceneChangerImpl implements ISceneChanger, ISceneCallbackRegistry {
     @Autowired
     private IGameManager gameManager;
     @Autowired
@@ -28,7 +28,7 @@ public class SceneChangerImpl implements ISceneChanger {
     @Lazy
     private IGameLogic gameLogic;
 
-    private List<Runnable> previousSceneCallbacks = new ArrayList<>();;
+    private List<Runnable> previousSceneCallbacks = new ArrayList<>();
     private List<Runnable> nextSceneCallbacks = new ArrayList<>();
 
     @PostConstruct
@@ -104,7 +104,7 @@ public class SceneChangerImpl implements ISceneChanger {
     }
 
     @Override
-    public boolean changeToNextScene(int startPlayerCounter) {
+    public boolean commitAndChangeToNextScene(int startPlayerCounter) {
         config.setPlayerCount(startPlayerCounter);
         return changeToNextScene();
     }

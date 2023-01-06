@@ -69,7 +69,7 @@ public class StartScreen extends VBox {
             System.out.println("click!");
             view.hideOverlays();
 
-            iSceneChanger.changeToNextScene(playerNum[0]);
+            iSceneChanger.commitAndChangeToNextScene(playerNum[0]);
         });
 
         this.getChildren().add(labelReady);

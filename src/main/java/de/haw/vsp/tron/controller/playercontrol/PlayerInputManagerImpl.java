@@ -7,7 +7,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import de.haw.vsp.tron.controller.scenechanger.ISceneChanger;
+import de.haw.vsp.tron.controller.scenechanger.ISceneCallbackRegistry;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
 public class PlayerInputManagerImpl implements IPlayerInputManager {
 
     @Autowired
-    private ISceneChanger sceneChanger;
+    private ISceneCallbackRegistry sceneChanger;
 
     @Lazy
     @Autowired
