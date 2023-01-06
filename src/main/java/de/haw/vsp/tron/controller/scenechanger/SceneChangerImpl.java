@@ -86,7 +86,7 @@ public class SceneChangerImpl implements ISceneChanger, ISceneCallbackRegistry {
     }
 
     @Override
-    public boolean changeToNextScene() {
+    public void changeToNextScene() {
         Scene newScene = currentScene.changeToNextScene();
 
         if(newScene != null) {
@@ -98,19 +98,17 @@ public class SceneChangerImpl implements ISceneChanger, ISceneCallbackRegistry {
 
             callbacks.forEach(callback -> callback.run());
     
-            return true;
         }
-        return false;
     }
 
     @Override
-    public boolean commitAndChangeToNextScene(int startPlayerCounter) {
+    public void commitAndChangeToNextScene(int startPlayerCounter) {
         config.setPlayerCount(startPlayerCounter);
-        return changeToNextScene();
+        changeToNextScene();
     }
 
     @Override
-    public boolean changeToPreviousScene() {
+    public void changeToPreviousScene() {
         Scene newScene = currentScene.changeToPreviousScene();
         
         if(newScene != null) {
@@ -122,9 +120,7 @@ public class SceneChangerImpl implements ISceneChanger, ISceneCallbackRegistry {
 
             callbacks.forEach(callback -> callback.run());
     
-            return true;
         }
-        return false;
     }
 
     @Override
