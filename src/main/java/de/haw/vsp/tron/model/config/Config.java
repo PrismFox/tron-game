@@ -20,7 +20,7 @@ public class Config implements IConfig {
     private Map<Integer, List<String>> playerMappings = new HashMap<>();
     private int lobbyTimerDuration = 30;
     private int playerCount = 6;
-    private int[] boardSize = {16, 16};
+    private int[] boardSize = new int[]{16, 16};
     private int cellSize = 5;
 
     public Config() {
@@ -31,7 +31,7 @@ public class Config implements IConfig {
     private void loadConfigFile(String path) {
         lobbyTimerDuration = 30;
         playerCount = 6;
-        boardSize = new int[] {16, 16};
+        boardSize = new int[]{16, 16};
         cellSize = 5;
 
         Properties prop = new Properties();
@@ -41,22 +41,22 @@ public class Config implements IConfig {
             this.playerCount = Integer.parseInt(prop.getProperty("playerCount", "6"));
             String boardValue = prop.getProperty("boardSize", "16, 16");
             String[] boardArray = boardValue.split(",");
-            if(boardArray.length != 2) {
+            if (boardArray.length != 2) {
                 //TODO: handle error
             }
             this.boardSize = Arrays.asList(boardArray).stream().map(c -> Integer.parseInt(c.strip())).mapToInt(c -> c).toArray();
-            for(int i = 1; i <= this.playerCount; i++) {
+            for (int i = 1; i <= this.playerCount; i++) {
                 String keys = prop.getProperty(String.format("player%dKeys", i));
-                if(keys == null) {
+                if (keys == null) {
                     //TODO: handle error
                 }
                 List<String> keyList = Arrays.asList(keys.split(",")).stream().map(k -> k.strip()).collect(Collectors.toList());
-                if(keyList.size() != 1) {
+                if (keyList.size() != 1) {
                     //TODO: handle error
                 }
                 this.playerMappings.put(i, keyList);
             }
-            
+
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -79,12 +79,12 @@ public class Config implements IConfig {
     }
 
     @Override
-    public int[] getBoardSize(){
+    public int[] getBoardSize() {
         return this.boardSize;
     }
 
     @Override
-    public int getCellSize(){
+    public int getCellSize() {
         return this.cellSize;
     }
 
