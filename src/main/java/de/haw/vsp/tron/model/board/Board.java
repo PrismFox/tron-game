@@ -69,7 +69,7 @@ public class Board implements IBoard {
     @Override
     public void remainingTime(int remainingTime) {
         try {
-            screenHandler.showScreen(3, remainingTime);
+            screenHandler.showLobbyScreens(3, remainingTime);
 
         }catch (Exception e){
             e.printStackTrace();
@@ -85,7 +85,7 @@ public class Board implements IBoard {
     @Override
     public void updateView(int screenNumber, int winningNumber){
         try {
-            screenHandler.showScreen(screenNumber, winningNumber);
+            screenHandler.showLobbyScreens(screenNumber, winningNumber);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -93,7 +93,7 @@ public class Board implements IBoard {
 
     @Override
     public void updateView(int screenNumber, Map<Integer, int[][]> bikePos){
-        screenHandler.showScreen(screenNumber, bikePos);
+        screenHandler.showGameScreen(screenNumber, bikePos);
     }
 
     @Override

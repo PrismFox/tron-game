@@ -50,7 +50,7 @@ public class ScreenHandler implements IScreenHandler{
     }
 
     @Override
-    public void showScreen(int screenNumber) {
+    public void showStartScreen(int screenNumber) {
 
         //int uebergeben, 1-4. 1 = startscreen etc.
         //switch case, je nach int wird dann
@@ -80,7 +80,7 @@ public class ScreenHandler implements IScreenHandler{
 
 
     @Override
-    public void showScreen(int screenNumber, int player) {
+    public void showLobbyScreens(int screenNumber, int player) {
 
         //int uebergeben, 1-4. 1 = startscreen etc.
         //switch case, je nach int wird dann
@@ -130,7 +130,7 @@ public class ScreenHandler implements IScreenHandler{
 
 
     @Override
-    public void showScreen(int screenNumber, Map<Integer, int[][]> bikePos) {
+    public void showGameScreen(int screenNumber, Map<Integer, int[][]> bikePos) {
 
         //int uebergeben, 1-4. 1 = startscreen etc.
         //switch case, je nach int wird dann
