@@ -3,6 +3,6 @@ package de.haw.vsp.tron.Enums;
 public enum Direction {
     UP,
     LEFT,
-    Down,
+    DOWN,
     RIGHT
 }
