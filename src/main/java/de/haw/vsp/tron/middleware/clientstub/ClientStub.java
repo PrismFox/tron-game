@@ -2,6 +2,7 @@ package de.haw.vsp.tron.middleware.clientstub;
 
 import de.haw.vsp.tron.Enums.TransportType;
 import de.haw.vsp.tron.middleware.marshaler.IMarshaler;
+import de.haw.vsp.tron.middleware.middlewareconfig.IMiddlewareConfig;
 import de.haw.vsp.tron.middleware.pojo.ResponseObject;
 import lombok.extern.slf4j.Slf4j;
 import de.haw.vsp.tron.middleware.marshaler.INameServerMarshaler;
@@ -21,19 +22,19 @@ import java.util.Map;
 @Slf4j
 @Component
 public class ClientStub implements IClientStub {
-
-    String nameServerIp = "192.0.0.1";
-    int portNameServer = 5549;
     public static final int UDP_PACKET_SIZE = 1024;
 
-    private INameServerMarshaler nameServerMarshaler;
-    private IMarshaler marshaler;
+    private final INameServerMarshaler nameServerMarshaler;
+    private final IMarshaler marshaler;
+    private final IMiddlewareConfig middlewareConfig;
+
     Map<String, List<String>> knownIps = new HashMap<>();
 
     @Autowired
-    public ClientStub(INameServerMarshaler nameServerMarshaler, IMarshaler marshaler) {
+    public ClientStub(INameServerMarshaler nameServerMarshaler, IMarshaler marshaler, IMiddlewareConfig middlewareConfig) {
         this.nameServerMarshaler = nameServerMarshaler;
         this.marshaler = marshaler;
+        this.middlewareConfig = middlewareConfig;
     }
 
     @Override
@@ -149,7 +150,8 @@ public class ClientStub implements IClientStub {
         String queryJson = nameServerMarshaler.marshalQueryRequest(methodName);
 
         byte[] queryJsonBytes = queryJson.getBytes();
-        sendUDPPacket(queryJsonBytes, queryJsonBytes.length, nameServerIp, portNameServer, udpSocket);
+        sendUDPPacket(queryJsonBytes, queryJsonBytes.length,
+                middlewareConfig.getNameServerIP(), middlewareConfig.getNameServerPort(), udpSocket);
 
         String reponseString = receiveUDPPacket(udpSocket);
 

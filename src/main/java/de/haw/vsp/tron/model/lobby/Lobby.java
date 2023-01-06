@@ -56,21 +56,21 @@ public class Lobby implements ILobbyGameLogic, IInitLobby {
 
         int[] winnerStatus = gameLogic.getWinnerStatus();
         if (winnerStatus[0] == -1) {
-            screenHandler.showScreen(4, -1);
+            screenHandler.showLobbyScreens(4, -1);
         } else {
             System.out.println("winner status ist " + winnerStatus[1]);
-            screenHandler.showScreen(4, winnerStatus[1]);
+            screenHandler.showLobbyScreens(4, winnerStatus[1]);
         }
     }
 
     @Override
     public void initLobby() {
-        screenHandler.showScreen(2, 0);
+        screenHandler.showLobbyScreens(2, 0);
     }
 
     @Override
     public void updateView(int screenNumber) {
-        screenHandler.showScreen(screenNumber);
+        screenHandler.showStartScreen();
     }
 
     @Override
@@ -81,7 +81,7 @@ public class Lobby implements ILobbyGameLogic, IInitLobby {
         if (currentPlayerCount == maxPlayer) {
             maxPlayerJoined = true;
         }
-        screenHandler.showScreen(2, currentPlayerCount);
+        screenHandler.showLobbyScreens(2, currentPlayerCount);
     }
 
     @Override
