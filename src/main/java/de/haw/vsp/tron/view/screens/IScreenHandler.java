@@ -4,7 +4,9 @@ import javafx.stage.Stage;
 
 import java.util.Map;
 
+import de.haw.vsp.tron.middleware.annotation.RemoteInterface;
 
+@RemoteInterface
 public interface IScreenHandler {
     /**
      * showScreen will show the screen with the given Number

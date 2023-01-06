@@ -5,12 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import de.haw.vsp.tron.Enums.TransportType;
-
-@Target(ElementType.METHOD)
+@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.SOURCE)
-public @interface AsyncCall {
-
-    TransportType transportType() default TransportType.TCP;
+public @interface Prefix {
     
 }

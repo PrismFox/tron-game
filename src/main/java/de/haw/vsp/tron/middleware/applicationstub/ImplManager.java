@@ -14,7 +14,13 @@ public class ImplManager implements IImplRegistry, IImplCaller {
     private Map<String, Function<Object[], Object>> referenceMap = new HashMap<>();
 
     @Override
-    public void registerImplementation(String methodId, Function<Object[], Object> methodReference) {
+    public void registerSyncImplementation(String methodId, Function<Object[], Object> methodReference, boolean[] prefixedArgs) {
+        referenceMap.put(methodId, methodReference);
+        //TODO: in ServerStub registrieren
+    }
+
+    @Override
+    public void registerAsyncImplementation(String methodId, Function<Object[], Object> methodReference, boolean[] prefixedArgs) {
         referenceMap.put(methodId, methodReference);
         //TODO: in ServerStub registrieren
     }
