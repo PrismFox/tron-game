@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,63 +22,88 @@ import javax.lang.model.type.ExecutableType;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
+import de.haw.vsp.tron.Enums.TransportType;
 import de.haw.vsp.tron.middleware.annotation.RemoteImplementation;
 import de.haw.vsp.tron.middleware.annotation.RemoteInterface;
 
 
-@SupportedAnnotationTypes({"de.haw.vsp.tron.middleware.annotation.RemoteInterface", "de.haw.vsp.tron.middleware.annotation.RemoteImplementation"})
+@SupportedAnnotationTypes({"de.haw.vsp.tron.middleware.annotation.RemoteInterface", "de.haw.vsp.tron.middleware.annotation.RemoteImplementation", "de.haw.vsp.tron.middleware.annotation.AsyncCall"})
 @SupportedSourceVersion(SourceVersion.RELEASE_11)
 public class RemoteInvocationProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         for(TypeElement annotation : annotations) {
-            Set<? extends Element> annotatedElements = roundEnv.getElementsAnnotatedWith(annotation);
-            Map<Boolean, List<Element>> annotatedMethods = annotatedElements.stream().collect(
-                Collectors.partitioningBy(element -> 
-                    element.getKind().isInterface()
-                )
-            );
+            if(annotation.getClass() == de.haw.vsp.tron.middleware.annotation.AsyncCall.class) {
+                Set<? extends Element> annotatedElements = roundEnv.getElementsAnnotatedWith(annotation);
+                Map<Boolean, List<Element>> annotatedMethods = annotatedElements.stream().collect(
+                    Collectors.partitioningBy(element -> 
+                        element.getEnclosingElement().getAnnotation(de.haw.vsp.tron.middleware.annotation.RemoteInterface.class) != null ||
+                        element.getEnclosingElement().getAnnotation(de.haw.vsp.tron.middleware.annotation.RemoteImplementation.class) != null
+                    )
+                );
+                annotatedMethods.get(false).forEach(element -> {
+                    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Async may only be applied to a method inside an interface annotated with either RemoteInterface or RemoteImplementation.", element);
+                });
 
-            List<Element> interfaces = annotatedMethods.get(true);
-            List<Element> otherTypes = annotatedMethods.get(false);
-            otherTypes.forEach(element -> 
-                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "RemoteInterface may only be applied to an Interface.", element)
-            );
+            } else {
+                Set<? extends Element> annotatedElements = roundEnv.getElementsAnnotatedWith(annotation);
+                Map<Boolean, List<Element>> partitionedAnnotatedElements = annotatedElements.stream().collect(
+                    Collectors.partitioningBy(element -> 
+                        element.getKind().isInterface()
+                    )
+                );
 
-            if(interfaces.isEmpty()) {
-                continue;
-            }
-            TypeElement interf = (TypeElement) interfaces.get(0);
+                List<Element> interfaces = partitionedAnnotatedElements.get(true);
+                List<Element> otherTypes = partitionedAnnotatedElements.get(false);
+                otherTypes.forEach(element -> 
+                    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "RemoteInterface may only be applied to an Interface.", element)
+                );
 
-            String className = interf.getQualifiedName().toString();
-            Map<String, List<String>> methodMap = interf.getEnclosedElements().stream()
-                .filter(e -> e.getKind() == ElementKind.METHOD)
-                .collect(Collectors.toMap(
-                    method -> ((Element) method).getSimpleName().toString(),
-                    method -> Stream.concat(
-                            Stream.of(((ExecutableType) method.asType()).getReturnType().toString()), 
-                            ((ExecutableType) method.asType()).getParameterTypes().stream().map(e -> e.toString())
-                        ).collect(Collectors.toList())
-                ));
-            try {
-                if(interf.getAnnotation(RemoteInterface.class) != null) {
-                    if(interf.getAnnotation(RemoteImplementation.class) != null) {
-                        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "An Interface may not be simultaneously annotated as RemoteInterface and RemoteImplementation.", interf);
-                    }
-                    writeRPCInvokerFile(className, methodMap);
-                } else if(interf.getAnnotation(RemoteImplementation.class) != null) {
-                    writeImplWrapperFile(className, methodMap);
-                } // else exception
-            } catch (IOException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
+                if(interfaces.isEmpty()) {
+                    continue;
+                }
+                TypeElement interf = (TypeElement) interfaces.get(0);
+
+                String className = interf.getQualifiedName().toString();
+                List<Element> methods = interf.getEnclosedElements().stream()
+                .filter(e -> e.getKind() == ElementKind.METHOD).collect(Collectors.toList());
+                Map<String, List<String>> methodMap = methods.stream()
+                    .collect(Collectors.toMap(
+                        method -> ((Element) method).getSimpleName().toString(),
+                        method -> Stream.concat(
+                                Stream.of(((ExecutableType) method.asType()).getReturnType().toString()), 
+                                ((ExecutableType) method.asType()).getParameterTypes().stream().map(e -> e.toString())
+                            ).collect(Collectors.toList())
+                    ));
+                Map<String, TransportType> methodAsyncProtocolMap = methods.stream()
+                    .collect(Collectors.toMap(
+                        method -> ((Element) method).getSimpleName().toString(), 
+                        method -> Optional.ofNullable(
+                                ((Element) method)
+                                .getAnnotation(de.haw.vsp.tron.middleware.annotation.AsyncCall.class)
+                            ).map(a -> ((de.haw.vsp.tron.middleware.annotation.AsyncCall) a).transportType())
+                            .orElse(null)
+                    ));
+                try {
+                    if(interf.getAnnotation(RemoteInterface.class) != null) {
+                        if(interf.getAnnotation(RemoteImplementation.class) != null) {
+                            processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "An Interface may not be simultaneously annotated as RemoteInterface and RemoteImplementation.", interf);
+                        }
+                        writeRPCInvokerFile(className, methodMap, methodAsyncProtocolMap);
+                    } else if(interf.getAnnotation(RemoteImplementation.class) != null) {
+                        writeImplWrapperFile(className, methodMap, methodAsyncProtocolMap);
+                    } // else exception
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
             }
         }
         return false;
     }
 
-    private void writeImplWrapperFile(String className, Map<String, List<String>> methodMap) throws IOException {
+    private void writeImplWrapperFile(String className, Map<String, List<String>> methodMap, Map<String, TransportType> methodAsyncMap) throws IOException {
         String packageName = null;
         int lastDot = className.lastIndexOf('.');
         if(lastDot > 0) {
@@ -102,6 +128,8 @@ public class RemoteInvocationProcessor extends AbstractProcessor {
             out.println("import org.springframework.beans.factory.annotation.Autowired;");
             out.println("import javax.annotation.PostConstruct;");
             out.println("import de.haw.vsp.tron.middleware.applicationstub.IImplRegistry;");
+            out.println("import de.haw.vsp.tron.Enums.TransportType;");
+
             out.println();
 
             out.println("@Component");
@@ -184,7 +212,7 @@ public class RemoteInvocationProcessor extends AbstractProcessor {
         }
     }
 
-    private void writeRPCInvokerFile(String className, Map<String, List<String>> methodMap) throws IOException {
+    private void writeRPCInvokerFile(String className, Map<String, List<String>> methodMap, Map<String, TransportType> methodAsyncMap) throws IOException {
         String packageName = null;
         int lastDot = className.lastIndexOf('.');
         if(lastDot > 0) {
@@ -207,6 +235,7 @@ public class RemoteInvocationProcessor extends AbstractProcessor {
             out.println("import org.springframework.stereotype.Component;");
             out.println("import org.springframework.beans.factory.annotation.Autowired;");
             out.println("import de.haw.vsp.tron.middleware.clientstub.IClientStub;");
+            out.println("import de.haw.vsp.tron.Enums.TransportType;");
 
             out.println("@Component");
             out.print("public class ");
@@ -250,7 +279,11 @@ public class RemoteInvocationProcessor extends AbstractProcessor {
                     out.print(") ");
                 }
 
-                out.print("clientStub.invokeSynchronously(\"");
+                if(methodAsyncMap.get(methodName) != null) {
+                    out.print("clientStub.invokeAsynchronously(");
+                } else {
+                    out.print("clientStub.invokeSynchronously(\"");
+                }
                 out.print(className);
                 out.print(" ");
                 out.print(methodName);
@@ -259,6 +292,14 @@ public class RemoteInvocationProcessor extends AbstractProcessor {
                     out.print(param);
                 });
                 out.print("\"");
+
+                if(methodAsyncMap.get(methodName) != null) {
+                    if(methodAsyncMap.get(methodName) == TransportType.TCP) {
+                        out.print(", TransportType.TCP");
+                    } else {
+                        out.print(", TransportType.UDP");
+                    }
+                }
 
                 if(typeList.size() > 0) {
                     out.print(", ");
