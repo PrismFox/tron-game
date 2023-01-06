@@ -16,7 +16,7 @@ class InputHandler implements EventHandler<KeyEvent>, IInputHandler {
     @Autowired
     private IPlayerInputManager playerController;
 
-    String input;
+    private String input;
 
     @Override
     public void handle(KeyEvent event) {

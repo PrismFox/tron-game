@@ -16,15 +16,6 @@ public interface IScreenHandler {
      */
     public void showScreen(int screenNumber);
 
-    /**
-     * showScreen will show the screen with the given Number
-     * WaitingScreen
-     * @param screenNumber, 1 = StartScreen, 2 = WaitingScreen, 3 = GameScreen, 4 = EndScreen
-     *
-     *
-     * @author Dominik Martin
-     */
-    public void showScreen(int screenNumber, int timeSec, int playerIdJoined, boolean maxPlayerJoined);
 
         /**
          * showScreen will show the screen with the given Number

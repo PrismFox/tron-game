@@ -78,8 +78,9 @@ public class ScreenHandler implements IScreenHandler{
         }
     }
 
+
     @Override
-    public void showScreen(int screenNumber, int timeSec, int playerCounter, boolean maxPlayerJoined) {
+    public void showScreen(int screenNumber, int player) {
 
         //int uebergeben, 1-4. 1 = startscreen etc.
         //switch case, je nach int wird dann
@@ -89,6 +90,7 @@ public class ScreenHandler implements IScreenHandler{
             case 1:
                 StartScreen startScreen = new StartScreen("menu.css", view);
                 Platform.runLater(() -> {
+
                     view.registerOverlay("start", startScreen);
                     
                     view.init();
@@ -96,13 +98,12 @@ public class ScreenHandler implements IScreenHandler{
                 });
                 break;
             case 2:
-
-                WaitingScreen waitingScreen = new WaitingScreen("menu.css", timeSec, playerCounter, maxPlayerJoined, view);
+                WaitingScreen waitingScreen = new WaitingScreen("menu.css", player);
                 Platform.runLater(() -> {
                     view.hideOverlays();
                     view.clear();
                     view.registerOverlay("waitingScreen", waitingScreen);
-                    
+
                     view.init();
                     view.showOverlay("waitingScreen");
                 });
@@ -111,40 +112,9 @@ public class ScreenHandler implements IScreenHandler{
                 System.err.println("wrong param");
                 break;
             case 4:
-                System.err.println("wrong param");
-                break;
-
-        }
-    }
-
-    @Override
-    public void showScreen(int screenNumber, int winningNumber) {
-
-        //int uebergeben, 1-4. 1 = startscreen etc.
-        //switch case, je nach int wird dann
-        //view.registerOverlay(SCREEN), view.init(), view.showOverlay(SCREEN)
-
-        switch (screenNumber){
-            case 1:
-                StartScreen startScreen = new StartScreen("menu.css", view);
-                Platform.runLater(() -> {
-
-                    view.registerOverlay("start", startScreen);
-                    
-                    view.init();
-                    view.showOverlay("start");
-                });
-                break;
-            case 2:
-                System.err.println("wrong param");
-                break;
-            case 3:
-                System.err.println("wrong param");
-                break;
-            case 4:
 
                 Platform.runLater(() -> {
-                    EndScreen endScreen = new EndScreen("menu.css", view, winningNumber);
+                    EndScreen endScreen = new EndScreen("menu.css", player);
 
                     System.out.println("endscreen wird erstellt");
                     view.hideOverlays();

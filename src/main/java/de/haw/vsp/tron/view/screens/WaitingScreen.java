@@ -1,21 +1,16 @@
 package de.haw.vsp.tron.view.screens;
 
-import de.haw.vsp.tron.controller.scenechanger.ISceneChanger;
-import edu.cads.bai5.vsp.tron.view.ITronView;
+
 import edu.cads.bai5.vsp.tron.view.ViewUtility;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.control.Label;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class WaitingScreen extends VBox {
 
-    @Autowired
-    private ISceneChanger iSceneChanger;
-
-    public WaitingScreen(String stylesheet, int timeSec, int playerCounter, boolean maxPlayerJoined, ITronView view){
+    public WaitingScreen(String stylesheet, int playerCounter){
         super(20.0);
         this.getStylesheets().add(stylesheet);
 

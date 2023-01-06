@@ -25,10 +25,6 @@ import java.util.List;
 
 public class StartScreen extends VBox {
 
-    //@Autowired
-    //ISceneChanger iSceneChanger;
-
-    //ISceneChanger iSceneChanger = new SceneChangerImpl();
 
     ApplicationContext appCtx = ApplicationContextUtils.getApplicationContext();
     ISceneChanger iSceneChanger = appCtx.getBean("sceneChangerImpl", SceneChangerImpl.class);

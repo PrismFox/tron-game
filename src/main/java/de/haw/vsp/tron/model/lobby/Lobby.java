@@ -65,8 +65,7 @@ public class Lobby implements ILobbyGameLogic, IInitLobby {
 
     @Override
     public void initLobby() {
-        int timeSec = config.getLobbyTimerDuration();
-        screenHandler.showScreen(2, timeSec, 0, maxPlayerJoined);
+        screenHandler.showScreen(2, 0);
     }
 
     @Override
@@ -82,9 +81,7 @@ public class Lobby implements ILobbyGameLogic, IInitLobby {
         if (currentPlayerCount == maxPlayer) {
             maxPlayerJoined = true;
         }
-        //TODO timesec wieder raus nehmen
-        int timeSec = config.getLobbyTimerDuration();
-        screenHandler.showScreen(2, timeSec, currentPlayerCount, maxPlayerJoined);
+        screenHandler.showScreen(2, currentPlayerCount);
     }
 
     @Override
@@ -93,6 +90,7 @@ public class Lobby implements ILobbyGameLogic, IInitLobby {
         return currentPlayerCount;
     }
 
+    @Override
     public void setCurrentPlayerCount(int currentPlayerCount) {
         this.currentPlayerCount = currentPlayerCount;
 
