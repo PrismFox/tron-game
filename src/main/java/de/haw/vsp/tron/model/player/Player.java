@@ -38,7 +38,7 @@ public class Player {
             this.changePosition(1, 0);
         }
 
-        if (Direction.Down == Direction.values()[dir]) {
+        if (Direction.DOWN == Direction.values()[dir]) {
             this.changePosition(1, 1);
         }
 
