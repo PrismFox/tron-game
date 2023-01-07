@@ -23,7 +23,6 @@ public class ServerStub implements IServerStub {
     private final IMiddlewareConfig middlewareConfig;
     private final IImplCaller implCaller;
     private final IMarshaler marshaler;
-    private DatagramSocket socketUDP;
 
     @Autowired
     public ServerStub(IMiddlewareConfig middlewareConfig, IImplCaller implCaller, IMarshaler marshaler) {
@@ -52,10 +51,13 @@ public class ServerStub implements IServerStub {
 
     private void startUDP() {
         try (DatagramSocket socket = new DatagramSocket()) {
-            byte[] receivedData = new byte[UDP_PACKET_SIZE];
-            DatagramPacket udpReceivePacket = new DatagramPacket(receivedData, UDP_PACKET_SIZE);
-            socket.receive(udpReceivePacket);
-            new Thread(new RunnableUDPWorker(socket, udpReceivePacket));
+            while (true){
+                byte[] receivedData = new byte[UDP_PACKET_SIZE];
+                DatagramPacket udpReceivePacket = new DatagramPacket(receivedData, UDP_PACKET_SIZE);
+                socket.receive(udpReceivePacket);
+                new Thread(new RunnableUDPWorker(socket, udpReceivePacket));
+            }
+
         } catch (SocketException e) {
             e.printStackTrace();
         } catch (IOException exception) {
@@ -80,7 +82,24 @@ public class ServerStub implements IServerStub {
         @Override
         public void run() {
             String request = receivePacket();
+            RequestObject requestObject = marshaler.unmarshalServerStub(request);
 
+            Object[] objects = requestObject.getArgs();
+
+            for (int i = 0; i < objects.length ; i++) {
+               if (implCaller.isPrefixedArg(requestObject.getMethodName(), i)){
+                   InetSocketAddress targetInetSocketAddress = (InetSocketAddress) socket.getRemoteSocketAddress();
+                   String targetIp = targetInetSocketAddress.getAddress().getHostAddress();
+                   String targetPort = String.valueOf(targetInetSocketAddress.getPort());
+
+                   String prefixedObject = String.format("%s:%s|%s",targetIp, targetPort, objects[i].toString());
+                   objects[i] = prefixedObject;
+               }
+            }
+            Object returnValue = implCaller.callImplementation(requestObject.getMethodName(), objects);
+            String returnValueStr = marshaler.marshalReturnValue(requestObject.getMessageId(), returnValue);
+
+            sendPacket(returnValueStr);
             try {
                 socket.close();
             } catch (IOException exception) {
@@ -109,7 +128,7 @@ public class ServerStub implements IServerStub {
             return result;
         }
 
-        private void sendPacket(String message) {
+        public void sendPacket(String message) {
             try {
                 byte[] messageBytes = message.getBytes();
                 DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
@@ -138,7 +157,7 @@ public class ServerStub implements IServerStub {
             String request = processUDPPacket();
             RequestObject requestObject = marshaler.unmarshalServerStub(request);
 
-            String ack = marshaler.marshalReturnValue(String.valueOf(requestObject.getMessageId()), "ACK");
+            String ack = marshaler.marshalReturnValue(requestObject.getMessageId(), "ACK");
             byte[] ackBytes = ack.getBytes();
             sendUDPACKPacket(ackBytes, ackBytes.length);
 
