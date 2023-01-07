@@ -116,12 +116,12 @@ public class PlayerManager implements IPlayerManager {
             int[] currentPosition = player.getCurrentPosition();
 
             if (collisions.stream().anyMatch(c -> Arrays.equals(c, currentPosition))) {
-                List<int[]> obstaclesWithoutCollisionPos = getPlayerPositions(player.getId())
+                /*List<int[]> obstaclesWithoutCollisionPos = getPlayerPositions(player.getId())
                         .stream()
                         .filter(obstacle -> !Arrays.equals(obstacle, currentPosition))
-                        .collect(Collectors.toList());
+                        .collect(Collectors.toList());*/
 
-                obstaclesToRemove.addAll(obstaclesWithoutCollisionPos);
+                obstaclesToRemove.addAll(getPlayerPositions(player.getId()));
                 killPlayer(player.getId());
             } else {
                 colorPositions.put(player.getColor().ordinal(), new int[][]{currentPosition});
