@@ -55,7 +55,7 @@ public class ClientStub implements IClientStub {
 
             String messageId = "2";
 
-            String rpcMessage = marshaler.marshal(methodName, messageId, args);
+            String rpcMessage = marshaler.marshal(methodName, Long.getLong(messageId), args);
             byte[] rpcMessageBytes = rpcMessage.getBytes();
             result = invokeTCP(ip, port, rpcMessageBytes, messageId, true);
         } catch(SocketException exc) {
@@ -87,7 +87,7 @@ public class ClientStub implements IClientStub {
 
             String messageId = "2";
 
-            String rpcMessage = marshaler.marshal(methodName, messageId, args);
+            String rpcMessage = marshaler.marshal(methodName, Long.getLong(messageId), args);
             byte[] rpcMessageBytes = rpcMessage.getBytes();
 
             if (transportType.equals(TransportType.TCP)) {
