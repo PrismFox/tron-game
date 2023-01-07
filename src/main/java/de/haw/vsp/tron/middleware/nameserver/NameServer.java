@@ -29,76 +29,86 @@ public class NameServer {
         receivedData = new byte[UDP_PACKET_SIZE];
     }
 
-    public void run() throws IOException {
-        InetAddress receivedIPAddress;
-        int receivedPort;
-        DatagramPacket udpReceivePacket;
+
+    public void start() {
         boolean running = true;
-        socket = new DatagramSocket(middlewareConfig.getNameServerPort());
+        try (DatagramSocket socket = new DatagramSocket(middlewareConfig.getNameServerPort())) {
+            byte[] receivedData = new byte[UDP_PACKET_SIZE];
+            log.info("NameServer started");
 
-        while (running) {
-            String methodType = null;
-            String methodName = null;
-            try {
-                udpReceivePacket = new DatagramPacket(receivedData, UDP_PACKET_SIZE);
+            while (running) {
+                DatagramPacket udpReceivePacket = new DatagramPacket(receivedData, UDP_PACKET_SIZE);
                 socket.receive(udpReceivePacket);
+                new Thread(new RunnableUDPWorker(socket, udpReceivePacket)).start();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            running = false;
 
-                receivedIPAddress = udpReceivePacket.getAddress();
+        }
+    }
 
-                receivedPort = udpReceivePacket.getPort();
 
-                String received = new String(udpReceivePacket.getData(), 0, udpReceivePacket.getLength());
+    public static void main(String[] arg) {
+        NameServer server = new NameServer();
+        server.start();
+    }
 
-                JSONObject requestJson = new JSONObject(received);
 
-                methodType = requestJson.getString("methodType");
-                methodName = requestJson.getString("methodName");
+    private class RunnableUDPWorker implements Runnable {
+        private DatagramSocket socket;
+        private DatagramPacket udpReceivePacket;
 
-                if ("register".equals(methodType)) {
-                    List<String> ip = Arrays.asList(receivedIPAddress.getHostAddress(), String.valueOf(receivedPort));
-                    register(methodName, ip);
-                }
-                if ("query".equals(methodType)) {
-                    query(methodName, receivedIPAddress, receivedPort);
-                }
+        public RunnableUDPWorker(DatagramSocket socket, DatagramPacket udpReceivePacket) {
+            this.socket = socket;
+            this.udpReceivePacket = udpReceivePacket;
+        }
 
-            } catch (IOException e) {
-                log.error(String.format("Error while Receiving. Methodtype: %s, Methodname: %s",methodType, methodName));
-                e.printStackTrace();
-                running = false;
+        @Override
+        public void run() {
+            InetAddress receivedIPAddress = udpReceivePacket.getAddress();
+            int receivedPort = udpReceivePacket.getPort();
+            String received = new String(udpReceivePacket.getData(), 0, udpReceivePacket.getLength());
+
+            JSONObject requestJson = new JSONObject(received);
+
+            String methodType = requestJson.getString("methodType");
+            String methodName = requestJson.getString("methodName");
+
+            if ("register".equals(methodType)) {
+                List<String> ip = Arrays.asList(receivedIPAddress.getHostAddress(), String.valueOf(receivedPort));
+                register(methodName, ip);
+            }
+            if ("query".equals(methodType)) {
+                query(methodName, receivedIPAddress, receivedPort);
             }
 
+            socket.close();
         }
-        socket.close();
-    }
 
-    private void register(String methodName, List<String> ip) {
-        methodIps.put(methodName, ip);
-    }
-
-    private void query(String methodName, InetAddress ipAddress, int port) {
-        List<String> ip = methodIps.get(methodName);
-
-        JSONObject ipResponse = new JSONObject();
-        ipResponse.put("ip", ip.get(0));
-        ipResponse.put("port", ip.get(1));
-
-        byte[] ipReponseBytes = ipResponse.toString().getBytes();
-        sendPacket(ipReponseBytes, ipReponseBytes.length, ipAddress, port);
-    }
-
-    private void sendPacket(byte[] content, int length, InetAddress ipAddress, int port) {
-        DatagramPacket packet = new DatagramPacket(content, length, ipAddress, port);
-        try {
-            socket.send(packet);
-        } catch (IOException e) {
-            log.error(String.format("Packet couldn't be sent to address: %s with port: %d", ipAddress.getHostAddress(), port));
-            e.printStackTrace();
+        private void register(String methodName, List<String> ip) {
+            methodIps.put(methodName, ip);
         }
-    }
 
-    public static void main(String[] arg) throws Exception {
-        NameServer server = new NameServer();
-        server.run();
+        private void query(String methodName, InetAddress ipAddress, int port) {
+            List<String> ip = methodIps.get(methodName);
+
+            JSONObject ipResponse = new JSONObject();
+            ipResponse.put("ip", ip.get(0));
+            ipResponse.put("port", ip.get(1));
+
+            byte[] ipReponseBytes = ipResponse.toString().getBytes();
+            sendPacket(ipReponseBytes, ipReponseBytes.length, ipAddress, port);
+        }
+
+        private void sendPacket(byte[] content, int length, InetAddress ipAddress, int port) {
+            DatagramPacket packet = new DatagramPacket(content, length, ipAddress, port);
+            try {
+                socket.send(packet);
+            } catch (IOException e) {
+                log.error(String.format("Packet couldn't be sent to address: %s with port: %d", ipAddress.getHostAddress(), port));
+                e.printStackTrace();
+            }
+        }
     }
 }
