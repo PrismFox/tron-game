@@ -13,7 +13,7 @@ import java.util.Locale;
 public class Marshaler implements IMarshaler {
 
     @Override
-    public String marshal(String methodName, String messageId, Object... args) {
+    public String marshal(String methodName, long messageId, Object... args) {
         JSONObject json = new JSONObject();
         JSONArray argsArray = new JSONArray();
         JSONArray argTypesArray = new JSONArray();
@@ -27,7 +27,7 @@ public class Marshaler implements IMarshaler {
 
         json.put("args", argsArray);
         json.put("arg_types", argTypesArray);
-        json.put("msg_id", messageId);
+        json.put("msg_id", String.valueOf(messageId));
 
         return json.toString();
     }
@@ -100,9 +100,9 @@ public class Marshaler implements IMarshaler {
     }
 
     @Override
-    public String marshalReturnValue(String messageId, Object arg) {
+    public String marshalReturnValue(long messageId, Object arg) {
         JSONObject returnJSON = new JSONObject();
-        returnJSON.put("msg_id", messageId);
+        returnJSON.put("msg_id", String.valueOf(messageId));
         Class<?> returnType = arg.getClass();
 
         if (returnType.isArray()) {
