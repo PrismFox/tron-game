@@ -1,6 +1,9 @@
 package de.haw.vsp.tron.middleware.serverstub;
 
+import de.haw.vsp.tron.middleware.applicationstub.IImplCaller;
+import de.haw.vsp.tron.middleware.marshaler.IMarshaler;
 import de.haw.vsp.tron.middleware.middlewareconfig.IMiddlewareConfig;
+import de.haw.vsp.tron.middleware.pojo.RequestObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,11 +21,15 @@ public class ServerStub implements IServerStub {
     public static final int UDP_PACKET_SIZE = 1024;
 
     private final IMiddlewareConfig middlewareConfig;
+    private final IImplCaller implCaller;
+    private final IMarshaler marshaler;
     private DatagramSocket socketUDP;
 
     @Autowired
-    public ServerStub(IMiddlewareConfig middlewareConfig) {
+    public ServerStub(IMiddlewareConfig middlewareConfig, IImplCaller implCaller, IMarshaler marshaler) {
         this.middlewareConfig = middlewareConfig;
+        this.implCaller = implCaller;
+        this.marshaler = marshaler;
         new Thread(this::startTCP);
         new Thread(this::startUDP);
     }
@@ -43,8 +50,8 @@ public class ServerStub implements IServerStub {
 
     }
 
-    private void startUDP(){
-        try (DatagramSocket socket = new DatagramSocket()){
+    private void startUDP() {
+        try (DatagramSocket socket = new DatagramSocket()) {
             byte[] receivedData = new byte[UDP_PACKET_SIZE];
             DatagramPacket udpReceivePacket = new DatagramPacket(receivedData, UDP_PACKET_SIZE);
             socket.receive(udpReceivePacket);
@@ -55,9 +62,12 @@ public class ServerStub implements IServerStub {
             exception.printStackTrace();
         }
 
-        ;
     }
 
+
+    public void registerMethod(){
+
+    }
 
 
     private class RunnableTCPWorker implements Runnable {
@@ -126,7 +136,11 @@ public class ServerStub implements IServerStub {
         @Override
         public void run() {
             String request = processUDPPacket();
+            RequestObject requestObject = marshaler.unmarshalServerStub(request);
 
+            String ack = marshaler.marshalReturnValue(String.valueOf(requestObject.getMessageId()), "ACK");
+            byte[] ackBytes = ack.getBytes();
+            sendUDPACKPacket(ackBytes, ackBytes.length);
 
         }
 
@@ -134,7 +148,7 @@ public class ServerStub implements IServerStub {
             return new String(requestPacket.getData(), 0, requestPacket.getLength());
         }
 
-        private void sendUDPPacket(byte[] content, int length) {
+        private void sendUDPACKPacket(byte[] content, int length) {
             try {
                 InetAddress targetAddress = requestPacket.getAddress();
                 DatagramPacket responsePacket = new DatagramPacket(content, length, targetAddress, requestPacket.getPort());
@@ -148,4 +162,4 @@ public class ServerStub implements IServerStub {
 
         }
     }
-    }
+}
