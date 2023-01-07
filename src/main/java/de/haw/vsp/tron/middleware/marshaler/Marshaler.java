@@ -1,9 +1,12 @@
 package de.haw.vsp.tron.middleware.marshaler;
 
+import de.haw.vsp.tron.middleware.pojo.RequestObject;
 import de.haw.vsp.tron.middleware.pojo.ResponseObject;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
+
+import java.util.Locale;
 
 
 @Component
@@ -13,14 +16,17 @@ public class Marshaler implements IMarshaler {
     public String marshal(String methodName, String messageId, Object... args) {
         JSONObject json = new JSONObject();
         JSONArray argsArray = new JSONArray();
+        JSONArray argTypesArray = new JSONArray();
 
         json.put("method_name", methodName);
 
         for (int i = 0; i < args.length; i++) {
             argsArray.put(args[i]);
+            argTypesArray.put(args[i].getClass().getSimpleName().toLowerCase(Locale.ROOT));
         }
 
         json.put("args", argsArray);
+        json.put("arg_types", argTypesArray);
         json.put("msg_id", messageId);
 
         return json.toString();
@@ -94,24 +100,42 @@ public class Marshaler implements IMarshaler {
     }
 
     @Override
-    public String marshalReturnValue(String messageId, Object... args) {
+    public String marshalReturnValue(String messageId, Object arg) {
         JSONObject returnJSON = new JSONObject();
         returnJSON.put("msg_id", messageId);
-        Class<?> returnType = args[0].getClass();
+        Class<?> returnType = arg.getClass();
 
-        if (args.length > 1) {
+        if (returnType.isArray()) {
             MarshalArray marshalArray = new MarshalArray();
-            JSONArray jsonArray = getJSONArray(args, marshalArray);
-            marshalArray.createCompleteReturnType(args);
+            JSONArray jsonArray = getJSONArray((Object[]) arg, marshalArray);
+            marshalArray.createCompleteReturnType((Object[]) arg);
 
             returnJSON.put("return_type", marshalArray.getReturnType());
             returnJSON.put("return_value", jsonArray);
 
         } else {
             returnJSON.put("return_type", returnType.toString());
-            returnJSON.put("return_value", args[0]);
+            returnJSON.put("return_value", arg);
         }
         return returnJSON.toString();
+    }
+
+    @Override
+    public RequestObject unmarshalServerStub(String message) {
+        JSONObject json = new JSONObject(message);
+        String methodName = json.getString("method_name");
+        JSONArray args = json.getJSONArray("args");
+        JSONArray argTypes = json.getJSONArray("arg_types");
+
+        Object[] objects = new Object[args.length()];
+        for (int i = 0; i < args.length(); i++) {
+            objects[i] = unmarshalObject(argTypes.getString(i), args.getString(i));
+        }
+
+        long messageId = json.getLong("msg_id");
+
+        return new RequestObject(methodName, objects, messageId);
+
     }
 
     private JSONArray getJSONArray(Object[] objects, MarshalArray marshalArray) {
