@@ -6,10 +6,11 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+import java.io.InputStreamReader;
+import java.net.*;
 import java.util.*;
 
 @Component
@@ -17,34 +18,28 @@ import java.util.*;
 public class NameServer {
 
     // Constants
-    public static final int UDP_PACKET_SIZE = 1024;
 
     @Autowired
     private IMiddlewareConfig middlewareConfig;
-    private DatagramSocket socket;
-    byte[] receivedData;
     Map<String, List<String>> methodIps = new HashMap<>();
 
     public NameServer() {
-        receivedData = new byte[UDP_PACKET_SIZE];
     }
 
 
     public void start() {
         boolean running = true;
-        try (DatagramSocket socket = new DatagramSocket(middlewareConfig.getNameServerPort())) {
-            byte[] receivedData = new byte[UDP_PACKET_SIZE];
+        try (ServerSocket serverSocket = new ServerSocket(middlewareConfig.getNameServerPort())) {
+            Socket socket;
             log.info("NameServer started");
 
             while (running) {
-                DatagramPacket udpReceivePacket = new DatagramPacket(receivedData, UDP_PACKET_SIZE);
-                socket.receive(udpReceivePacket);
-                new Thread(new RunnableUDPWorker(socket, udpReceivePacket)).start();
+                socket = serverSocket.accept();
+                new Thread(new RunnableTCPWorker(socket)).start();
             }
         } catch (IOException e) {
             e.printStackTrace();
             running = false;
-
         }
     }
 
@@ -55,20 +50,20 @@ public class NameServer {
     }
 
 
-    private class RunnableUDPWorker implements Runnable {
-        private DatagramSocket socket;
-        private DatagramPacket udpReceivePacket;
+    private class RunnableTCPWorker implements Runnable {
+        private Socket socket;
 
-        public RunnableUDPWorker(DatagramSocket socket, DatagramPacket udpReceivePacket) {
+        public RunnableTCPWorker(Socket socket) {
             this.socket = socket;
-            this.udpReceivePacket = udpReceivePacket;
         }
 
         @Override
         public void run() {
-            InetAddress receivedIPAddress = udpReceivePacket.getAddress();
-            int receivedPort = udpReceivePacket.getPort();
-            String received = new String(udpReceivePacket.getData(), 0, udpReceivePacket.getLength());
+            String received = receivePacket();
+
+            InetSocketAddress targetInetSocketAddress = (InetSocketAddress) socket.getRemoteSocketAddress();
+            InetAddress targetIp = targetInetSocketAddress.getAddress();
+            int targetPort = targetInetSocketAddress.getPort();
 
             JSONObject requestJson = new JSONObject(received);
 
@@ -76,14 +71,19 @@ public class NameServer {
             String methodName = requestJson.getString("methodName");
 
             if ("register".equals(methodType)) {
-                List<String> ip = Arrays.asList(receivedIPAddress.getHostAddress(), String.valueOf(receivedPort));
+                List<String> ip = Arrays.asList(targetIp.getHostAddress(), String.valueOf(targetPort));
                 register(methodName, ip);
             }
             if ("query".equals(methodType)) {
-                query(methodName, receivedIPAddress, receivedPort);
+                query(methodName, targetIp, targetPort);
             }
 
-            socket.close();
+            try {
+                socket.close();
+            } catch (IOException exception) {
+                exception.printStackTrace();
+
+            }
         }
 
         private void register(String methodName, List<String> ip) {
@@ -97,18 +97,40 @@ public class NameServer {
             ipResponse.put("ip", ip.get(0));
             ipResponse.put("port", ip.get(1));
 
-            byte[] ipReponseBytes = ipResponse.toString().getBytes();
-            sendPacket(ipReponseBytes, ipReponseBytes.length, ipAddress, port);
+            String ipReponse = ipResponse.toString();
+            sendPacket(ipReponse);
         }
 
-        private void sendPacket(byte[] content, int length, InetAddress ipAddress, int port) {
-            DatagramPacket packet = new DatagramPacket(content, length, ipAddress, port);
+        private String receivePacket() {
+            String result = null;
             try {
-                socket.send(packet);
-            } catch (IOException e) {
-                log.error(String.format("Packet couldn't be sent to address: %s with port: %d", ipAddress.getHostAddress(), port));
-                e.printStackTrace();
+                BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+                StringBuilder sbLine = new StringBuilder();
+                String reply = inputStream.readLine();
+
+                while (!(reply.equals(""))) {
+                    sbLine.append(reply).append("\n");
+                    reply = inputStream.readLine();
+                }
+                result = sbLine.toString();
+            } catch (IOException exception) {
+                log.error("Couldn't read Socket");
             }
+
+            return result;
         }
+
+        public void sendPacket(String message) {
+            try {
+                byte[] messageBytes = message.getBytes();
+                DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
+                outputStream.write(messageBytes);
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+
+        }
+
     }
 }
