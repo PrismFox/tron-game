@@ -22,7 +22,6 @@ public class NameServer {
     Map<String, List<String>> methodIps = new HashMap<>();
 
 
-
     public void start() {
         boolean running = true;
         try (ServerSocket serverSocket = new ServerSocket(middlewareConfig.getNameServerPort())) {
