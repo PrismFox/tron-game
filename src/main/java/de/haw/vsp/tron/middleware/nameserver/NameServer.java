@@ -17,14 +17,10 @@ import java.util.*;
 @Slf4j
 public class NameServer {
 
-    // Constants
-
     @Autowired
     private IMiddlewareConfig middlewareConfig;
     Map<String, List<String>> methodIps = new HashMap<>();
 
-    public NameServer() {
-    }
 
 
     public void start() {
