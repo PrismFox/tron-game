@@ -25,23 +25,24 @@ import java.util.Map;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class ClientStub implements IClientStub {
     public static final int UDP_PACKET_SIZE = 1024;
+    public static final int TIMEOUT = 150;
 
     private final INameServerMarshaler nameServerMarshaler;
     private final IMarshaler marshaler;
     private final IUnmarshaler unmarshaler;
     private final IMiddlewareConfig middlewareConfig;
+    private static long messageIdInc = 1;
 
     Map<String, List<String>> knownIps = new HashMap<>();
-
 
     @Override
     public Object invokeSynchronously(String methodName, Object... args) {
         List<String> address;
-        ResponseObject result;
+        ResponseObject result = null;
 
-        try (DatagramSocket udpSocket = new DatagramSocket()) {
+        try {
             if (!knownIps.containsKey(methodName)) {
-                address = lookUp(methodName, udpSocket);
+                address = lookUp(methodName);
                 knownIps.put(methodName, address);
             } else {
                 address = knownIps.get(methodName);
@@ -50,16 +51,17 @@ public class ClientStub implements IClientStub {
             String ip = address.get(0);
             int port = Integer.parseInt(address.get(1));
 
-            String messageId = "2";
-
-            String rpcMessage = marshaler.marshal(methodName, Long.getLong(messageId), args);
+            long messageId = messageIdInc++;
+            String rpcMessage = marshaler.marshal(methodName, messageId, args);
             byte[] rpcMessageBytes = rpcMessage.getBytes();
-            result = invokeTCP(ip, port, rpcMessageBytes, messageId, true);
-        } catch (SocketException exc) {
+            result = invokeTCP(ip, port, rpcMessageBytes, String.valueOf(messageId), true);
+        } catch (SocketException exc ) {
             exc.printStackTrace();
             return invokeSynchronously(methodName, args);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+            return invokeSynchronously(methodName, args);
         }
-
 
         return result;
     }
@@ -68,12 +70,11 @@ public class ClientStub implements IClientStub {
     @Override
     public void invokeAsynchronously(String methodName, TransportType transportType,
                                      Object... args) {
-
         List<String> address;
         try (DatagramSocket udpSocket = new DatagramSocket()) {
 
             if (!knownIps.containsKey(methodName)) {
-                address = lookUp(methodName, udpSocket);
+                address = lookUp(methodName);
                 knownIps.put(methodName, address);
             } else {
                 address = knownIps.get(methodName);
@@ -82,13 +83,13 @@ public class ClientStub implements IClientStub {
             String ip = address.get(0);
             int port = Integer.parseInt(address.get(1));
 
-            String messageId = "2";
+            long messageId = messageIdInc++;
 
-            String rpcMessage = marshaler.marshal(methodName, Long.getLong(messageId), args);
+            String rpcMessage = marshaler.marshal(methodName, messageId, args);
             byte[] rpcMessageBytes = rpcMessage.getBytes();
 
             if (transportType.equals(TransportType.TCP)) {
-                invokeTCP(ip, port, rpcMessageBytes, messageId, false);
+                invokeTCP(ip, port, rpcMessageBytes, String.valueOf(messageId), false);
             }
 
             if (transportType.equals(TransportType.UDP)) {
@@ -97,8 +98,10 @@ public class ClientStub implements IClientStub {
         } catch (SocketException exc) {
             exc.printStackTrace();
             invokeAsynchronously(methodName, transportType, args);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+            invokeAsynchronously(methodName, transportType, args);
         }
-
 
     }
 
@@ -137,23 +140,28 @@ public class ClientStub implements IClientStub {
         Socket socket = null;
         try {
             socket = new Socket(host, port);
+            socket.setSoTimeout(TIMEOUT);
         } catch (IOException excep) {
             log.error(String.format("Couldn't connect to a socket with host: %s and port: %d", host, port));
         }
         return socket;
     }
 
-    private List<String> lookUp(String methodName, DatagramSocket udpSocket) {
+    private List<String> lookUp(String methodName) throws IOException {
+        String responseString;
         String queryJson = nameServerMarshaler.marshalQueryRequest(methodName);
 
-        byte[] queryJsonBytes = queryJson.getBytes();
-        sendUDPPacket(queryJsonBytes, queryJsonBytes.length,
-                middlewareConfig.getNameServerIP(), middlewareConfig.getNameServerPort(), udpSocket);
+        try (Socket socket = initTCPSocket(middlewareConfig.getNameServerIP(), middlewareConfig.getNameServerPort());) {
+            BufferedReader inFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            DataOutputStream outToClient = new DataOutputStream(socket.getOutputStream());
 
-        String reponseString = receiveUDPPacket(udpSocket);
+            sendTCPPacket(queryJson.getBytes(), outToClient);
+            responseString = readResponseTCPPacket(inFromClient);
+        }
 
-        return nameServerMarshaler.unmarshal(reponseString);
-
+        return nameServerMarshaler.unmarshal(responseString);
+        // sendUDPPacket(queryJsonBytes, queryJsonBytes.length, middlewareConfig.getNameServerIP(), middlewareConfig.getNameServerPort(), udpSocket);
+        //String reponseString = receiveUDPPacket(udpSocket);
     }
 
     private void sendUDPPacket(byte[] content, int length, String ipAddress, int port, DatagramSocket udpSocket) {
@@ -200,6 +208,5 @@ public class ClientStub implements IClientStub {
         }
         return sbLine.toString();
     }
-
 
 }
