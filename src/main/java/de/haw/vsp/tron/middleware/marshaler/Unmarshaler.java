@@ -4,7 +4,9 @@ import de.haw.vsp.tron.middleware.pojo.RequestObject;
 import de.haw.vsp.tron.middleware.pojo.ResponseObject;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Unmarshaler implements IUnmarshaler {
 
     @Override

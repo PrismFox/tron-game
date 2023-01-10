@@ -70,9 +70,9 @@ public class ServerStub implements IServerStub {
 
     }
 
-
-    public void registerMethod() {
-
+    @Override
+    public void registerMethod(String methodname) {
+        new Thread(new NameServerWorker(methodname)).start();
     }
 
 
@@ -101,9 +101,13 @@ public class ServerStub implements IServerStub {
                 }
             }
             Object returnValue = implCaller.callImplementation(requestObject.getMethodName(), objects);
-            String returnValueStr = marshaler.marshalReturnValue(requestObject.getMessageId(), returnValue);
 
-            sendPacket(returnValueStr);
+            if (!implCaller.isAsyncMethod(requestObject.getMethodName())) {
+                String returnValueStr = marshaler.marshalReturnValue(requestObject.getMessageId(), returnValue);
+
+                sendPacket(returnValueStr);
+            }
+
             try {
                 socket.close();
             } catch (IOException exception) {
@@ -183,6 +187,28 @@ public class ServerStub implements IServerStub {
             }
 
 
+        }
+    }
+
+    private class NameServerWorker implements Runnable {
+
+        private final String methodName;
+
+        public NameServerWorker(String methodName)
+        {
+            this.methodName = methodName;
+        }
+
+        @Override
+        public void run() {
+            try (Socket socket = new Socket(middlewareConfig.getNameServerIP(), middlewareConfig.getNameServerPort())) {
+                DataOutputStream outToServer = new DataOutputStream(socket.getOutputStream());
+                outToServer.writeBytes(methodName);
+
+            } catch (IOException exception) {
+                log.error("Error while registering method");
+                exception.printStackTrace();
+            }
         }
     }
 }

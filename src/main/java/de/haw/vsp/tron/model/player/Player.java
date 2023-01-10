@@ -7,12 +7,11 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Data
 public class Player {
 
-    private static final AtomicInteger nextId = new AtomicInteger(1);
+    private static int idInc = 1;
     private final int id;
     private int[] currentPosition = new int[2];
 
@@ -26,7 +25,7 @@ public class Player {
     private final Color color;
 
     public Player(List<String> mapping, Color color) {
-        this.id = nextId.getAndIncrement();
+        this.id = idInc++;
         this.mapping = mapping;
         this.color = color;
         this.alive = true;
@@ -97,7 +96,7 @@ public class Player {
     }
 
     public static void resetNextId(){
-        nextId.set(1);
+        idInc = 1;
     }
 
 }
