@@ -13,15 +13,18 @@ public class Marshaler implements IMarshaler {
     public String marshal(String methodName, String messageId, Object... args) {
         JSONObject json = new JSONObject();
         JSONArray argsArray = new JSONArray();
+        JSONArray argTypes = new JSONArray();
 
         json.put("method_name", methodName);
 
         for (int i = 0; i < args.length; i++) {
             argsArray.put(args[i]);
+            argTypes.put(args[i].getClass().getSimpleName().toLowerCase());
         }
 
         json.put("args", argsArray);
         json.put("msg_id", messageId);
+        json.put("arg_types", argTypes);
 
         return json.toString();
     }
@@ -123,7 +126,7 @@ public class Marshaler implements IMarshaler {
                 jsonArray.put(furtherDimension);
             } else {
                 jsonArray.put(object);
-                marshalArray.setReturnType(object.getClass().getSimpleName());
+                marshalArray.setReturnType(object.getClass().getSimpleName().toLowerCase());
 
             }
 
