@@ -40,6 +40,6 @@ public interface IScreenHandler {
      */
     public void showGameScreen(Map<Integer, int[][]> bikePos);
 
-    public void init(Stage primaryStage);
+    //public void init(Stage primaryStage);
 
    }
