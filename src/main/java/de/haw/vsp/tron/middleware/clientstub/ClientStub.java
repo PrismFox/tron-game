@@ -2,8 +2,10 @@ package de.haw.vsp.tron.middleware.clientstub;
 
 import de.haw.vsp.tron.Enums.TransportType;
 import de.haw.vsp.tron.middleware.marshaler.IMarshaler;
+import de.haw.vsp.tron.middleware.marshaler.IUnmarshaler;
 import de.haw.vsp.tron.middleware.middlewareconfig.IMiddlewareConfig;
 import de.haw.vsp.tron.middleware.pojo.ResponseObject;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import de.haw.vsp.tron.middleware.marshaler.INameServerMarshaler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,28 +16,23 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class ClientStub implements IClientStub {
     public static final int UDP_PACKET_SIZE = 1024;
 
     private final INameServerMarshaler nameServerMarshaler;
     private final IMarshaler marshaler;
+    private final IUnmarshaler unmarshaler;
     private final IMiddlewareConfig middlewareConfig;
 
     Map<String, List<String>> knownIps = new HashMap<>();
 
-    @Autowired
-    public ClientStub(INameServerMarshaler nameServerMarshaler, IMarshaler marshaler, IMiddlewareConfig middlewareConfig) {
-        this.nameServerMarshaler = nameServerMarshaler;
-        this.marshaler = marshaler;
-        this.middlewareConfig = middlewareConfig;
-    }
 
     @Override
     public Object invokeSynchronously(String methodName, Object... args) {
@@ -55,10 +52,10 @@ public class ClientStub implements IClientStub {
 
             String messageId = "2";
 
-            String rpcMessage = marshaler.marshal(methodName, messageId, args);
+            String rpcMessage = marshaler.marshal(methodName, Long.getLong(messageId), args);
             byte[] rpcMessageBytes = rpcMessage.getBytes();
             result = invokeTCP(ip, port, rpcMessageBytes, messageId, true);
-        } catch(SocketException exc) {
+        } catch (SocketException exc) {
             exc.printStackTrace();
             return invokeSynchronously(methodName, args);
         }
@@ -87,7 +84,7 @@ public class ClientStub implements IClientStub {
 
             String messageId = "2";
 
-            String rpcMessage = marshaler.marshal(methodName, messageId, args);
+            String rpcMessage = marshaler.marshal(methodName, Long.getLong(messageId), args);
             byte[] rpcMessageBytes = rpcMessage.getBytes();
 
             if (transportType.equals(TransportType.TCP)) {
@@ -97,7 +94,7 @@ public class ClientStub implements IClientStub {
             if (transportType.equals(TransportType.UDP)) {
                 sendUDPPacket(rpcMessageBytes, rpcMessageBytes.length, ip, port, udpSocket);
             }
-        }catch(SocketException exc) {
+        } catch (SocketException exc) {
             exc.printStackTrace();
             invokeAsynchronously(methodName, transportType, args);
         }
@@ -119,7 +116,7 @@ public class ClientStub implements IClientStub {
             if (receive) {
                 while (!rightMessageId) {
                     String responseStr = readResponseTCPPacket(inFromClient);
-                    responseObject = marshaler.unmarshalClientStub(responseStr);
+                    responseObject = unmarshaler.unmarshalClientStub(responseStr);
 
                     if (responseObject.getMessageId() == Long.getLong(messageId)) {
                         rightMessageId = true;
