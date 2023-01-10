@@ -70,7 +70,7 @@ public class ServerStub implements IServerStub {
 
     }
 
-
+    @Override
     public void registerMethod(String methodname) {
         new Thread(new NameServerWorker(methodname)).start();
     }
