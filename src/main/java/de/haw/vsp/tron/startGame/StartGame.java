@@ -3,6 +3,7 @@ package de.haw.vsp.tron.startGame;
 import de.haw.vsp.tron.controller.scenechanger.ISceneChanger;
 import de.haw.vsp.tron.controller.scenechanger.SceneChangerImpl;
 import de.haw.vsp.tron.view.screens.IScreenHandler;
+import de.haw.vsp.tron.view.screens.ScreenHandler;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -42,7 +43,7 @@ public class StartGame extends Application {
         //ScreenHandler screenHandler = new ScreenHandler(primaryStage);
 
         ApplicationContext appCtx = ApplicationContextUtils.getApplicationContext();
-        IScreenHandler screenHandler = appCtx.getBean("screenHandler", IScreenHandler.class);
+        ScreenHandler screenHandler = appCtx.getBean("screenHandler", ScreenHandler.class);
         screenHandler.init(primaryStage);
 
     }
