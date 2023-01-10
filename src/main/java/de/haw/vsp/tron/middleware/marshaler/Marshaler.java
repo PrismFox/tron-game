@@ -54,7 +54,11 @@ public class Marshaler implements IMarshaler {
         returnJSON.put("msg_id", String.valueOf(messageId));
         Class<?> returnType = arg.getClass();
 
-        if (returnType.isArray()) {
+        if (arg instanceof Map) {
+            MarshalMap mMap = new MarshalMap((Map) args[i]);
+            returnJSON.put("return_value", mMap.getJSONObject());
+            returnJSON.put("return_type", mMap.getType());
+        } else if (returnType.isArray()) {
             MarshalArray marshalArray = new MarshalArray();
             JSONArray jsonArray = getJSONArray((Object[]) arg, marshalArray);
             marshalArray.createCompleteReturnType((Object[]) arg);
