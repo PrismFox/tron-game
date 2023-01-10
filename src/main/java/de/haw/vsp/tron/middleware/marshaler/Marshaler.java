@@ -4,7 +4,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 
 @Component
@@ -19,8 +22,22 @@ public class Marshaler implements IMarshaler {
         json.put("method_name", methodName);
 
         for (int i = 0; i < args.length; i++) {
-            argsArray.put(args[i]);
-            argTypesArray.put(args[i].getClass().getSimpleName().toLowerCase(Locale.ROOT));
+            if(!args[i].getClass().isArray()) {
+                if(args[i] instanceof Map) {
+                    MarshalMap mMap = new MarshalMap((Map) args[i]);
+                    argsArray.put(mMap.getJSONObject());
+                    argTypesArray.put(mMap.getType());
+                } else {
+                    argsArray.put(args[i]);
+                    argTypesArray.put(args[i].getClass().getSimpleName().toLowerCase(Locale.ROOT));
+                }
+            } else {
+                MarshalArray marshalArray = new MarshalArray();
+                JSONArray jsonArray = getJSONArray((Object[]) args[i], marshalArray);
+                marshalArray.createCompleteReturnType((Object[]) args[i]);
+                argsArray.put(jsonArray);
+                argTypesArray.put(marshalArray.getReturnType());
+            }
         }
 
         json.put("args", argsArray);
@@ -70,6 +87,70 @@ public class Marshaler implements IMarshaler {
         return jsonArray;
     }
 
+    private class MarshalMap {
+        private JSONObject mapJSON;
+        private String type;
+        private String valueType;
+
+        public MarshalMap(Map map) {
+            buildJSONMap(map);
+        }
+
+        public JSONObject getJSONObject() {
+            return this.mapJSON;
+        }
+
+        private void buildTypeString(Map map) {
+            StringBuilder typeSB = new StringBuilder();
+            Set keySet = map.keySet();
+            if(keySet.isEmpty()) {
+                typeSB.append("integer"); 
+            } else {
+                Object key = keySet.iterator().next();
+                typeSB.append(key.getClass().getSimpleName().toLowerCase());
+            }
+            typeSB.append(",");
+
+            Collection values = map.values();
+            if(values.isEmpty()) {
+                typeSB.append("integer");
+            } else {
+                typeSB.append(valueType);
+            }
+            type = typeSB.toString();
+        }
+
+        public String getType() {
+            return this.type;
+        }
+
+        private void buildJSONMap(Map map) {
+            JSONObject obj = new JSONObject();
+            map.entrySet().stream().forEach(e -> {
+                Object k = ((Map.Entry) e).getKey();
+                Object v = ((Map.Entry) e).getValue();
+
+                if(v.getClass().isArray()) {
+                    MarshalArray ary = new MarshalArray();
+                    v = getJSONArray((Object[]) v, ary);
+                    ary.createCompleteReturnType((Object[]) k);
+                    if(valueType == null) {
+                        valueType = ary.getReturnType();
+                    }
+                } else if(v instanceof Map) {
+                    MarshalMap mMap = new MarshalMap((Map) v);
+                    v = mMap.getJSONObject();
+                    if(valueType == null) {
+                        valueType = mMap.getType();
+                    }
+                } else if(valueType == null) {
+                    valueType = v.getClass().getSimpleName().toLowerCase();
+                }
+                
+                obj.put(k.toString(), v);
+            });
+        }
+    }
 
     private class MarshalArray {
         private String returnType;
