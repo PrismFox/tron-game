@@ -1,5 +1,8 @@
 package de.haw.vsp.tron.middleware.marshaler;
 
+import de.haw.vsp.tron.middleware.pojo.NameServerRequestObject;
+import de.haw.vsp.tron.middleware.pojo.NameServerResponseObject;
+
 import java.util.List;
 
 public interface INameServerMarshaler {
@@ -8,6 +11,10 @@ public interface INameServerMarshaler {
 
     String marshalRegisterRequest(String methodName);
 
-    List<String> unmarshal(String responseJson);
+    String marshalQueryResponse(List<List<String>> ipLists);
+
+    NameServerRequestObject unmarshalRequest(String methodName);
+
+    List<NameServerResponseObject> unmarshalResponse(String responseJson);
 
 }
