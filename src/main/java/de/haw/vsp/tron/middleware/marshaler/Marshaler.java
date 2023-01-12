@@ -98,6 +98,7 @@ public class Marshaler implements IMarshaler {
 
         public MarshalMap(Map map) {
             buildJSONMap(map);
+            buildTypeString(map);
         }
 
         public JSONObject getJSONObject() {
@@ -107,6 +108,7 @@ public class Marshaler implements IMarshaler {
         private void buildTypeString(Map map) {
             StringBuilder typeSB = new StringBuilder();
             Set keySet = map.keySet();
+            typeSB.append("<");
             if(keySet.isEmpty()) {
                 typeSB.append("integer"); 
             } else {
@@ -121,6 +123,7 @@ public class Marshaler implements IMarshaler {
             } else {
                 typeSB.append(valueType);
             }
+            typeSB.append(">");
             type = typeSB.toString();
         }
 
