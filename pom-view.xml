@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>edu.cads.bai5.vsp.tron</groupId>
-    <artifactId>view</artifactId>
+    <artifactId>view-library</artifactId>
     <packaging>jar</packaging>
     <version>0.1</version>
 
@@ -123,7 +123,7 @@
                             <annotationProcessorPaths>
                                 <path>
                                     <groupId>edu.cads.bai5.vsp.tron</groupId>
-                                    <artifactId>view</artifactId>
+                                    <artifactId>view-library</artifactId>
                                     <version>0.1</version>
                                 </path>
                                 <path>
@@ -158,30 +158,6 @@
                     <mainClass>de.haw.vsp.tron.startGame.StartGameView</mainClass>
                 </configuration>
             </plugin>
-
-
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <archive>
-                        <manifest>
-                            <mainClass>de.haw.vsp.tron.startGame.StartGameModelView</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
 
         </plugins>
 
