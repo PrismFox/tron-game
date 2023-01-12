@@ -1,12 +1,13 @@
 package de.haw.vsp.tron.view.screens;
 
+import de.haw.vsp.tron.middleware.annotation.RemoteImplementation;
 import javafx.stage.Stage;
 
 import java.util.Map;
 
 import de.haw.vsp.tron.middleware.annotation.RemoteInterface;
 
-@RemoteInterface
+@RemoteImplementation
 public interface IScreenHandler {
     /**
      * showScreen will show the screen with the given Number
