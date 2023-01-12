@@ -12,10 +12,7 @@ import de.haw.vsp.tron.middleware.marshaler.INameServerMarshaler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.*;
 import java.util.*;
 
@@ -118,14 +115,14 @@ public class ClientStub implements IClientStub {
 
 
         try (Socket socket = initTCPSocket(targetIp, targetPort)) {
-            BufferedReader inFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            DataOutputStream outToClient = new DataOutputStream(socket.getOutputStream());
-            sendTCPPacket(message, outToClient);
+            BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
+            sendTCPPacket(message, outputStream);
 
 
             if (receive) {
                 while (!rightMessageId) {
-                    String responseStr = readResponseTCPPacket(inFromClient);
+                    String responseStr = readResponseTCPPacket(inputStream);
                     responseObject = unmarshaler.unmarshalClientStub(responseStr);
 
                     if (responseObject.getMessageId() == Long.getLong(messageId)) {
@@ -159,12 +156,12 @@ public class ClientStub implements IClientStub {
         String queryJson = nameServerMarshaler.marshalQueryRequest(methodName);
         List<List<String>> addresses = new ArrayList<>();
 
-        try (Socket socket = initTCPSocket(middlewareConfig.getNameServerIP(), middlewareConfig.getNameServerPort());) {
-            BufferedReader inFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            DataOutputStream outToClient = new DataOutputStream(socket.getOutputStream());
+        try (Socket socket = initTCPSocket(middlewareConfig.getNameServerIP(), middlewareConfig.getNameServerPort())) {
+            BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
 
-            sendTCPPacket(queryJson.getBytes(), outToClient);
-            responseString = readResponseTCPPacket(inFromClient);
+            sendTCPPacket(queryJson.getBytes(), outputStream);
+            responseString = readResponseTCPPacket(inputStream);
         }
         List<NameServerResponseObject> responsePojo = nameServerMarshaler.unmarshalResponse(responseString);
 
@@ -202,37 +199,24 @@ public class ClientStub implements IClientStub {
     }
 
     //Schreibt antworten an den Client
-    private void sendTCPPacket(byte[] line, DataOutputStream outToClient) throws IOException {
+    private void sendTCPPacket(byte[] line, DataOutputStream outputStream) throws IOException {
         /* Sende die Antwortzeile (mit CRLF) zum Client */
-        outToClient.write((line));
+        outputStream.write((line));
 
     }
 
 
-    private String readResponseTCPPacket(BufferedReader inFromClient) throws IOException {
+    private String readResponseTCPPacket(BufferedReader inputStream) throws IOException {
         /* Lies die naechste Anfrage-Zeile (request) vom Client */
         StringBuilder sbLine = new StringBuilder();
-        String reply = inFromClient.readLine();
+        String reply = inputStream.readLine();
 
         while (!(reply.equals(""))) {
             sbLine.append(reply).append("\n");
-            reply = inFromClient.readLine();
+            reply = inputStream.readLine();
         }
         return sbLine.toString();
     }
 
-    private class TCPWorker implements Runnable{
-        private Socket socket;
-        private String purpose;
 
-        public TCPWorker(Socket socket, String purpose){
-           this.socket = socket;
-           this.purpose = purpose;
-        }
-
-        @Override
-        public void run() {
-
-        }
-    }
 }
