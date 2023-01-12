@@ -1,32 +1,25 @@
 package de.haw.vsp.tron.view.screens;
 
 import de.haw.vsp.tron.controller.scenechanger.ISceneChanger;
-import de.haw.vsp.tron.controller.scenechanger.SceneChangerImpl;
-import de.haw.vsp.tron.startGame.ApplicationContextUtils;
 import edu.cads.bai5.vsp.tron.view.ViewUtility;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import org.springframework.context.ApplicationContext;
 
 public class EndScreen extends VBox {
 
-
-    //@Autowired
-    //private ISceneChanger iSceneChanger;
-
-    private ApplicationContext appCtx = ApplicationContextUtils.getApplicationContext();
-    private ISceneChanger iSceneChanger = appCtx.getBean("sceneChangerImpl", SceneChangerImpl.class);
+    private ISceneChanger iSceneChanger;
 
     private Label winningLabel;
 
-    public EndScreen(String stylesheet, int winningNumber) {
+    public EndScreen(String stylesheet, int winningNumber, ISceneChanger sceneChanger) {
         super(20.0);
         this.getStylesheets().add(stylesheet);
         this.setAlignment(Pos.CENTER);
+        this.iSceneChanger = sceneChanger;
         winningLabel = new Label("Unkown");
-        switch(winningNumber){
+        switch (winningNumber) {
             case -1:
                 winningLabel = new Label("Tie");
                 System.out.println("endscreen tie");
@@ -51,7 +44,7 @@ public class EndScreen extends VBox {
                 break;
         }
 
-        winningLabel.setStyle("-fx-text-fill: " + ViewUtility.getHexTriplet(Color.PAPAYAWHIP.brighter()) + ";"+ "-fx-font-size: 12pt; -fx-font-family: 'Arial';");
+        winningLabel.setStyle("-fx-text-fill: " + ViewUtility.getHexTriplet(Color.PAPAYAWHIP.brighter()) + ";" + "-fx-font-size: 12pt; -fx-font-family: 'Arial';");
         this.getChildren().add(winningLabel);
 
         iSceneChanger.changeToNextScene();

@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class ScreenHandler implements IScreenHandler{
+public class ScreenHandler implements IScreenHandler {
 
     private ITronView view;
 
@@ -30,7 +30,8 @@ public class ScreenHandler implements IScreenHandler{
     @Autowired
     private ISceneChanger sceneChanger;
 
-    public ScreenHandler() {}
+    public ScreenHandler() {
+    }
 
     public void init(Stage primaryStage) {
         try {
@@ -64,7 +65,6 @@ public class ScreenHandler implements IScreenHandler{
     }
 
 
-
     @Override
     public void showStartScreen() {
 
@@ -76,7 +76,7 @@ public class ScreenHandler implements IScreenHandler{
         StartScreen startScreen = new StartScreen("menu.css", view, sceneChanger);
         Platform.runLater(() -> {
             view.registerOverlay("start", startScreen);
-                    
+
             view.init();
             view.showOverlay("start");
         });
@@ -91,13 +91,13 @@ public class ScreenHandler implements IScreenHandler{
         //switch case, je nach int wird dann
         //view.registerOverlay(SCREEN), view.init(), view.showOverlay(SCREEN)
 
-        switch (screenNumber){
+        switch (screenNumber) {
             case 1:
-                StartScreen startScreen = new StartScreen("menu.css", view);
+                StartScreen startScreen = new StartScreen("menu.css", view, sceneChanger);
                 Platform.runLater(() -> {
 
                     view.registerOverlay("start", startScreen);
-                    
+
                     view.init();
                     view.showOverlay("start");
                 });
@@ -119,13 +119,13 @@ public class ScreenHandler implements IScreenHandler{
             case 4:
 
                 Platform.runLater(() -> {
-                    EndScreen endScreen = new EndScreen("menu.css", player);
+                    EndScreen endScreen = new EndScreen("menu.css", player, sceneChanger);
 
                     System.out.println("endscreen wird erstellt");
                     view.hideOverlays();
                     view.clear();
                     view.registerOverlay("endScreen", endScreen);
-                    
+
                     view.init();
                     view.showOverlay("endScreen");
                 });
@@ -135,7 +135,7 @@ public class ScreenHandler implements IScreenHandler{
 
 
     @Override
-    public void showGameScreen( Map<Integer, int[][]> bikePos) {
+    public void showGameScreen(Map<Integer, int[][]> bikePos) {
 
         //int uebergeben, 1-4. 1 = startscreen etc.
         //switch case, je nach int wird dann
@@ -165,7 +165,7 @@ public class ScreenHandler implements IScreenHandler{
             String color = de.haw.vsp.tron.Enums.Color.values()[colorNum].toString();
             System.out.println(color);
             Color bikeColor = Color.valueOf(color);
-            if(bikeColor == Color.BLUEVIOLET){
+            if (bikeColor == Color.BLUEVIOLET) {
                 bikeColor = Color.BLUEVIOLET.darker().darker().darker().desaturate();
             }
             List<Coordinate> coordinates = new ArrayList<>();
@@ -173,7 +173,7 @@ public class ScreenHandler implements IScreenHandler{
             for (int i = 0; i < entry.getValue().length; i++) {
                 int x = entry.getValue()[i][0];
                 int y = entry.getValue()[i][1];
-                if(x < 0 || y < 0 || x >= view.getCOLUMNS() || y >= view.getROWS()) {
+                if (x < 0 || y < 0 || x >= view.getCOLUMNS() || y >= view.getROWS()) {
                     System.out.println("ist nicht mehr im game field");
                     continue;
                 }
