@@ -121,8 +121,8 @@ public class ClientStub implements IClientStub {
 
 
             if (receive) {
-                while (!rightMessageId) {
-                    String responseStr = readResponseTCPPacket(inputStream);
+                while (!rightMessageId) { //schleife kann drin bleiben fuer performance
+                    String responseStr = receiveResponseTCPPacket(inputStream);
                     responseObject = unmarshaler.unmarshalClientStub(responseStr);
 
                     if (responseObject.getMessageId() == Long.getLong(messageId)) {
@@ -161,7 +161,7 @@ public class ClientStub implements IClientStub {
             DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
 
             sendTCPPacket(queryJson.getBytes(), outputStream);
-            responseString = readResponseTCPPacket(inputStream);
+            responseString = receiveResponseTCPPacket(inputStream);
         }
         List<NameServerResponseObject> responsePojo = nameServerMarshaler.unmarshalResponse(responseString);
 
@@ -206,7 +206,7 @@ public class ClientStub implements IClientStub {
     }
 
 
-    private String readResponseTCPPacket(BufferedReader inputStream) throws IOException {
+    private String receiveResponseTCPPacket(BufferedReader inputStream) throws IOException {
         /* Lies die naechste Anfrage-Zeile (request) vom Client */
         StringBuilder sbLine = new StringBuilder();
         String reply = inputStream.readLine();
