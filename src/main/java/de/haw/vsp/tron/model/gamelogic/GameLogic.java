@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 @Data
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Lazy
 public class GameLogic implements IGameLogic {
 
@@ -28,6 +27,13 @@ public class GameLogic implements IGameLogic {
 
     @Lazy
     private final ILobbyGameLogic lobby;
+
+   @Autowired
+    public GameLogic(IPlayerManager playerManager, IBoard board, ILobbyGameLogic lobby){
+        this.playerManager = playerManager;
+        this.board = board;
+        this.lobby = lobby;
+    }
 
     @Override
     public void startGame() {

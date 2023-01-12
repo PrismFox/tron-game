@@ -18,7 +18,6 @@ import java.util.*;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class ClientStub implements IClientStub {
     public static final int UDP_PACKET_SIZE = 1024;
     public static final int TIMEOUT = 150;
@@ -30,6 +29,14 @@ public class ClientStub implements IClientStub {
     private static long messageIdInc = 1;
 
     Map<String, List<List<String>>> knownIps = new HashMap<>();
+
+   @Autowired
+    public ClientStub(INameServerMarshaler nameServerMarshaler, IMarshaler marshaler, IUnmarshaler unmarshaler, IMiddlewareConfig middlewareConfig){
+        this.nameServerMarshaler = nameServerMarshaler;
+        this.marshaler = marshaler;
+        this.unmarshaler = unmarshaler;
+        this.middlewareConfig = middlewareConfig;
+    }
 
     @Override
     public Object invokeSynchronously(String methodName, Object... args) {
