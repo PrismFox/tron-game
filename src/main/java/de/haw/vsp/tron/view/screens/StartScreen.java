@@ -1,9 +1,6 @@
 package de.haw.vsp.tron.view.screens;
 
-
 import de.haw.vsp.tron.controller.scenechanger.ISceneChanger;
-import de.haw.vsp.tron.controller.scenechanger.SceneChangerImpl;
-import de.haw.vsp.tron.startGame.ApplicationContextUtils;
 import edu.cads.bai5.vsp.tron.view.ITronView;
 import edu.cads.bai5.vsp.tron.view.ViewUtility;
 import javafx.collections.FXCollections;
@@ -25,17 +22,17 @@ import java.util.List;
 
 public class StartScreen extends VBox {
 
-
-    ApplicationContext appCtx = ApplicationContextUtils.getApplicationContext();
-    ISceneChanger iSceneChanger = appCtx.getBean("sceneChangerImpl", SceneChangerImpl.class);
+    ISceneChanger iSceneChanger;
 
     private Button btnStart;
 
 
-    public StartScreen(String stylesheet, ITronView view) {
+    public StartScreen(String stylesheet, ITronView view, ISceneChanger sceneChanger) {
         super(20.0);
         this.getStylesheets().add(stylesheet);
         this.setAlignment(Pos.CENTER);
+
+        this.iSceneChanger = sceneChanger;
 
         Label labelReady = new Label("Ready?");
         labelReady.setStyle("-fx-text-fill: " + ViewUtility.getHexTriplet(Color.PAPAYAWHIP.brighter()) + ";");

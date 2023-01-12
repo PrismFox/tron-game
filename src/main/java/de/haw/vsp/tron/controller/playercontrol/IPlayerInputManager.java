@@ -4,8 +4,9 @@ import java.util.List;
 
 import de.haw.vsp.tron.middleware.annotation.Prefix;
 import de.haw.vsp.tron.middleware.annotation.RemoteImplementation;
+import de.haw.vsp.tron.middleware.annotation.RemoteInterface;
 
-@RemoteImplementation
+@RemoteInterface
 public interface IPlayerInputManager {
     public void onKeyPress(@Prefix String key);
 

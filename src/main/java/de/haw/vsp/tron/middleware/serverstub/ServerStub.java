@@ -43,9 +43,8 @@ public class ServerStub implements IServerStub {
     private void startTCP() {
         try (ServerSocket serverSocketTCP = new ServerSocket()) {
             Socket socketTCP;
-            boolean running = true;
 
-            while (running) {
+            while (true) {
                 socketTCP = serverSocketTCP.accept();
                 new Thread(new RunnableTCPWorker(socketTCP)).start();
             }
@@ -205,9 +204,9 @@ public class ServerStub implements IServerStub {
         @Override
         public void run() {
             try (Socket socket = new Socket(middlewareConfig.getNameServerIP(), middlewareConfig.getNameServerPort())) {
-                DataOutputStream outToServer = new DataOutputStream(socket.getOutputStream());
+                DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
                 String marshaledRequest = nameServerMarshaler.marshalRegisterRequest(methodName);
-                outToServer.writeBytes(marshaledRequest);
+                outputStream.writeBytes(marshaledRequest);
 
             } catch (IOException exception) {
                 log.error("Error while registering method");

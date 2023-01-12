@@ -1,6 +1,7 @@
 package de.haw.vsp.tron.view.screens;
 
 import de.haw.vsp.tron.view.inputHandler.InputHandler;
+import de.haw.vsp.tron.controller.scenechanger.ISceneChanger;
 import edu.cads.bai5.vsp.tron.view.Coordinate;
 import edu.cads.bai5.vsp.tron.view.ITronView;
 import edu.cads.bai5.vsp.tron.view.TronView;
@@ -26,6 +27,9 @@ public class ScreenHandler implements IScreenHandler{
     @Autowired
     private InputHandler inputHandler;
 
+    @Autowired
+    private ISceneChanger sceneChanger;
+
     public ScreenHandler() {}
 
     public void init(Stage primaryStage) {
@@ -35,7 +39,7 @@ public class ScreenHandler implements IScreenHandler{
             e.printStackTrace();
         }
 
-        StartScreen startScreen = new StartScreen("menu.css", view);
+        StartScreen startScreen = new StartScreen("menu.css", view, sceneChanger);
         view.registerOverlay("start", startScreen);
 
         view.init();
@@ -69,7 +73,7 @@ public class ScreenHandler implements IScreenHandler{
         //view.registerOverlay(SCREEN), view.init(), view.showOverlay(SCREEN)
 
 
-        StartScreen startScreen = new StartScreen("menu.css", view);
+        StartScreen startScreen = new StartScreen("menu.css", view, sceneChanger);
         Platform.runLater(() -> {
             view.registerOverlay("start", startScreen);
                     
