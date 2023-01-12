@@ -8,6 +8,7 @@ import de.haw.vsp.tron.middleware.middlewareconfig.IMiddlewareConfig;
 import de.haw.vsp.tron.middleware.pojo.RequestObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -23,21 +24,25 @@ public class ServerStub implements IServerStub {
     public static final int UDP_PACKET_SIZE = 1024;
 
     private final IMiddlewareConfig middlewareConfig;
-    private final IImplCaller implCaller;
+
+    @Lazy
+    @Autowired
+    private IImplCaller implCaller;
     private final IMarshaler marshaler;
     private final IUnmarshaler unmarshaler;
     private final INameServerMarshaler nameServerMarshaler;
 
     @Autowired
-    public ServerStub(IMiddlewareConfig middlewareConfig, IImplCaller implCaller,
+    public ServerStub(IMiddlewareConfig middlewareConfig,
                       IMarshaler marshaler, IUnmarshaler unmarshaler, INameServerMarshaler nameServerMarshaler) {
         this.middlewareConfig = middlewareConfig;
-        this.implCaller = implCaller;
         this.marshaler = marshaler;
         this.unmarshaler = unmarshaler;
         this.nameServerMarshaler = nameServerMarshaler;
+        System.out.println("Start of Serverstub");
         new Thread(this::startTCP);
         new Thread(this::startUDP);
+
     }
 
     private void startTCP() {
