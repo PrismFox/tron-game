@@ -155,7 +155,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>de.haw.vsp.tron.startGame.StartGame</mainClass>
+                    <mainClass>de.haw.vsp.tron.startGame.StartGameView</mainClass>
                 </configuration>
             </plugin>
 
