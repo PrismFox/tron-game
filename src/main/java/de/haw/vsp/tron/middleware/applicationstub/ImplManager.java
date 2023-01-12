@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import de.haw.vsp.tron.middleware.serverstub.IServerStub;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ImplManager implements IImplRegistry, IImplCaller {
 
+    @Autowired
+    private IServerStub serverStub;
     private Map<String, Function<Object[], Object>> referenceMap = new HashMap<>();
     private Map<String, boolean[]> paramPrefixMap = new HashMap<>();
     private Map<String, Boolean> asyncMethodMap = new HashMap<>();
@@ -20,7 +24,7 @@ public class ImplManager implements IImplRegistry, IImplCaller {
         referenceMap.put(methodId, methodReference);
         paramPrefixMap.put(methodId, prefixedArgs);
         asyncMethodMap.put(methodId, false);
-        //TODO: in ServerStub registrieren
+        serverStub.registerMethod(methodId);
     }
 
     @Override
@@ -28,7 +32,7 @@ public class ImplManager implements IImplRegistry, IImplCaller {
         referenceMap.put(methodId, methodReference);
         paramPrefixMap.put(methodId, prefixedArgs);
         asyncMethodMap.put(methodId, true);
-        //TODO: in ServerStub registrieren
+        serverStub.registerMethod(methodId);
     }
 
     @Override
