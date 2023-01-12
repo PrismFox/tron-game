@@ -10,7 +10,7 @@ import java.util.Properties;
 @Component
 @Data
 public class MiddlwareConfig implements IMiddlewareConfig {
-    private static final String ENVVAR_NAME = "TRON_CONFIG";
+    private static final String ENVVAR_NAME = "TRON_MIDDLEWARE_CONFIG";
     private static final String DEFAULT_PATH = "configMiddleware.properties";
 
     private String nameServerIP = "127.0.0.1";
