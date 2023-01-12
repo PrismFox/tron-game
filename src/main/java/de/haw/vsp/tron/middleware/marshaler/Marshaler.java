@@ -55,7 +55,7 @@ public class Marshaler implements IMarshaler {
         Class<?> returnType = arg.getClass();
 
         if (arg instanceof Map) {
-            MarshalMap mMap = new MarshalMap((Map) args[i]);
+            MarshalMap mMap = new MarshalMap((Map) arg);
             returnJSON.put("return_value", mMap.getJSONObject());
             returnJSON.put("return_type", mMap.getType());
         } else if (returnType.isArray()) {

@@ -6,6 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Component
 public class Unmarshaler implements IUnmarshaler {
 
@@ -36,6 +39,15 @@ public class Unmarshaler implements IUnmarshaler {
 
         Object[] objects = new Object[args.length()];
         for (int i = 0; i < args.length(); i++) {
+            String argType = argTypes.getString(i);
+            if (argType.contains("[]")) {
+                String nonBracketType = argType.replaceFirst("\\[]", "");
+                objects[i] = unmarshalArray(nonBracketType, args.getJSONArray(i));
+            }
+
+            if (argTypes.get(i).toString().contains("<")) { // Map case
+                objects[i] = unmarshalMap(args.getJSONObject(i), argType);
+            }
             objects[i] = unmarshalObject(argTypes.getString(i), args.getString(i));
         }
 
@@ -91,6 +103,47 @@ public class Unmarshaler implements IUnmarshaler {
             }
         }
         return resultAry;
+    }
+
+    private Map unmarshalMap(JSONObject jsonObject, String type) {
+        Map resultMap = new HashMap();
+        String identifier = null;
+
+        String subType = type.substring(1, type.length() - 2);
+        String[] splitSubType = subType.split(",", 2);
+
+
+        if (subType.contains("<")) {
+            identifier = "Map";
+
+        } else if (subType.contains("[]")) {
+            identifier = "List";
+
+        } else {
+            identifier = "Primitive";
+        }
+
+        for (String key: jsonObject.keySet()){
+            Object rightKey = unmarshalObject(splitSubType[0], key);
+            Object value = null;
+
+            if (identifier.equals("Map")){
+                value = unmarshalMap(jsonObject.getJSONObject(key), splitSubType[1]);
+            }
+            else if (identifier.equals("List")){
+                String nonBracketType = splitSubType[1].replaceFirst("\\[]", "");
+                value = unmarshalArray(nonBracketType,jsonObject.getJSONArray(key));
+            }
+            else if (identifier.equals("Primitive")){
+                value = unmarshalObject(splitSubType[1], jsonObject.getString(key));
+            }
+            resultMap.put(rightKey, value);
+        }
+
+        return resultMap;
+
+
+
     }
 
 }

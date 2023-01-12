@@ -1,5 +1,8 @@
 package de.haw.vsp.tron.middleware.marshaler;
 
+import de.haw.vsp.tron.middleware.pojo.NameServerRequestObject;
+import de.haw.vsp.tron.middleware.pojo.NameServerResponseObject;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
@@ -19,16 +22,51 @@ public class NameServerMarshaler implements INameServerMarshaler{
         return this.marshalNameServerRequest("register", methodName);
     }
 
+
     @Override
-    public List<String> unmarshal(String responseJson){
-        JSONObject response = new JSONObject(responseJson);
-        List<String> address = new ArrayList<>();
+    public String marshalQueryResponse(List<List<String>> ipLists){
+        JSONObject ipResponse = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
 
-        address.add(response.getString("ip"));
-        address.add(response.getString("port"));
+        for (List<String> ipList: ipLists) {
+            JSONObject tempObject = new JSONObject();
+            tempObject.put("ip", ipList.get(0));
+            tempObject.put("port", ipList.get(1));
+            jsonArray.put(tempObject);
+        }
 
-        return address;
+        ipResponse.put("providers", jsonArray);
+
+        return ipResponse.toString();
     }
+
+    @Override
+    public List<NameServerResponseObject> unmarshalResponse(String responseJson){
+        List<NameServerResponseObject> result = new ArrayList<>();
+        JSONObject response = new JSONObject(responseJson);
+        JSONArray receivers = response.getJSONArray("providers");
+
+        for (int i = 0; i < receivers.length(); i++){
+
+            JSONObject ipAndPortObj  = receivers.getJSONObject(i);
+            String ip = ipAndPortObj.getString("ip");
+            String port = ipAndPortObj.getString("port");
+            result.add(new NameServerResponseObject(ip, port));
+
+        }
+        return result;
+    }
+
+
+    public NameServerRequestObject unmarshalRequest(String message){
+        JSONObject request = new JSONObject(message);
+
+        String methodType = request.getString("method_type");
+        String methodName = request.getString("method_name");
+
+        return new NameServerRequestObject(methodType, methodName);
+    }
+
 
     private String marshalNameServerRequest(String methodType,String methodName){
         JSONObject request = new JSONObject();

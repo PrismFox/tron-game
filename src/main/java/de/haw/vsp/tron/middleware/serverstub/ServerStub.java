@@ -2,6 +2,7 @@ package de.haw.vsp.tron.middleware.serverstub;
 
 import de.haw.vsp.tron.middleware.applicationstub.IImplCaller;
 import de.haw.vsp.tron.middleware.marshaler.IMarshaler;
+import de.haw.vsp.tron.middleware.marshaler.INameServerMarshaler;
 import de.haw.vsp.tron.middleware.marshaler.IUnmarshaler;
 import de.haw.vsp.tron.middleware.middlewareconfig.IMiddlewareConfig;
 import de.haw.vsp.tron.middleware.pojo.RequestObject;
@@ -25,14 +26,16 @@ public class ServerStub implements IServerStub {
     private final IImplCaller implCaller;
     private final IMarshaler marshaler;
     private final IUnmarshaler unmarshaler;
+    private final INameServerMarshaler nameServerMarshaler;
 
     @Autowired
     public ServerStub(IMiddlewareConfig middlewareConfig, IImplCaller implCaller,
-                      IMarshaler marshaler, IUnmarshaler unmarshaler) {
+                      IMarshaler marshaler, IUnmarshaler unmarshaler, INameServerMarshaler nameServerMarshaler) {
         this.middlewareConfig = middlewareConfig;
         this.implCaller = implCaller;
         this.marshaler = marshaler;
         this.unmarshaler = unmarshaler;
+        this.nameServerMarshaler = nameServerMarshaler;
         new Thread(this::startTCP);
         new Thread(this::startUDP);
     }
@@ -203,7 +206,8 @@ public class ServerStub implements IServerStub {
         public void run() {
             try (Socket socket = new Socket(middlewareConfig.getNameServerIP(), middlewareConfig.getNameServerPort())) {
                 DataOutputStream outToServer = new DataOutputStream(socket.getOutputStream());
-                outToServer.writeBytes(methodName);
+                String marshaledRequest = nameServerMarshaler.marshalRegisterRequest(methodName);
+                outToServer.writeBytes(marshaledRequest);
 
             } catch (IOException exception) {
                 log.error("Error while registering method");

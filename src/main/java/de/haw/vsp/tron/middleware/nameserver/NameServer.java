@@ -1,8 +1,9 @@
 package de.haw.vsp.tron.middleware.nameserver;
 
+import de.haw.vsp.tron.middleware.marshaler.NameServerMarshaler;
 import de.haw.vsp.tron.middleware.middlewareconfig.IMiddlewareConfig;
+import de.haw.vsp.tron.middleware.pojo.NameServerRequestObject;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,11 @@ public class NameServer {
 
     @Autowired
     private IMiddlewareConfig middlewareConfig;
-    Map<String, List<String>> methodIps = new HashMap<>();
+
+    @Autowired
+    private NameServerMarshaler marshaler;
+
+    Map<String, List<List<String>>> methodIps = new HashMap<>();
 
 
     public void start() {
@@ -60,17 +65,14 @@ public class NameServer {
             InetAddress targetIp = targetInetSocketAddress.getAddress();
             int targetPort = targetInetSocketAddress.getPort();
 
-            JSONObject requestJson = new JSONObject(received);
+            NameServerRequestObject nameServerRequestObject = marshaler.unmarshalRequest(received);
 
-            String methodType = requestJson.getString("methodType");
-            String methodName = requestJson.getString("methodName");
-
-            if ("register".equals(methodType)) {
+            if ("register".equals(nameServerRequestObject.getMethodType())) {
                 List<String> ip = Arrays.asList(targetIp.getHostAddress(), String.valueOf(targetPort));
-                register(methodName, ip);
+                register(nameServerRequestObject.getMethodName(), ip);
             }
-            if ("query".equals(methodType)) {
-                query(methodName, targetIp, targetPort);
+            if ("query".equals(nameServerRequestObject.getMethodType())) {
+                query(nameServerRequestObject.getMethodName(), targetIp, targetPort);
             }
 
             try {
@@ -82,17 +84,22 @@ public class NameServer {
         }
 
         private void register(String methodName, List<String> ip) {
-            methodIps.put(methodName, ip);
+            List<List<String>> value;
+            if (!methodIps.containsKey(methodName)) {
+                value = new ArrayList<>();
+
+            } else {
+                value = methodIps.get(methodName);
+            }
+            value.add(ip);
+            methodIps.put(methodName, value);
         }
 
+
         private void query(String methodName, InetAddress ipAddress, int port) {
-            List<String> ip = methodIps.get(methodName);
+            List<List<String>> ipLists = methodIps.get(methodName);
 
-            JSONObject ipResponse = new JSONObject();
-            ipResponse.put("ip", ip.get(0));
-            ipResponse.put("port", ip.get(1));
-
-            String ipReponse = ipResponse.toString();
+            String ipReponse = marshaler.marshalQueryResponse(ipLists);
             sendPacket(ipReponse);
         }
 
