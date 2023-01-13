@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class NameServerMarshaler implements INameServerMarshaler{
+public class NameServerMarshaler implements INameServerMarshaler {
 
     @Override
     public String marshalQueryRequest(String methodName) {
@@ -18,17 +18,19 @@ public class NameServerMarshaler implements INameServerMarshaler{
     }
 
     @Override
-    public String marshalRegisterRequest(String methodName) {
-        return this.marshalNameServerRequest("register", methodName);
+    public String marshalRegisterRequest(String methodName, int port) {
+        String registerReq = this.marshalNameServerRequest("register", methodName);
+        JSONObject jsonObject = new JSONObject(registerReq);
+        return jsonObject.put("port", String.valueOf(port)).toString();
     }
 
 
     @Override
-    public String marshalQueryResponse(List<List<String>> ipLists){
+    public String marshalQueryResponse(List<List<String>> ipLists) {
         JSONObject ipResponse = new JSONObject();
         JSONArray jsonArray = new JSONArray();
 
-        for (List<String> ipList: ipLists) {
+        for (List<String> ipList : ipLists) {
             JSONObject tempObject = new JSONObject();
             tempObject.put("ip", ipList.get(0));
             tempObject.put("port", ipList.get(1));
@@ -41,14 +43,14 @@ public class NameServerMarshaler implements INameServerMarshaler{
     }
 
     @Override
-    public List<NameServerResponseObject> unmarshalResponse(String responseJson){
+    public List<NameServerResponseObject> unmarshalResponse(String responseJson) {
         List<NameServerResponseObject> result = new ArrayList<>();
         JSONObject response = new JSONObject(responseJson);
         JSONArray receivers = response.getJSONArray("providers");
 
-        for (int i = 0; i < receivers.length(); i++){
+        for (int i = 0; i < receivers.length(); i++) {
 
-            JSONObject ipAndPortObj  = receivers.getJSONObject(i);
+            JSONObject ipAndPortObj = receivers.getJSONObject(i);
             String ip = ipAndPortObj.getString("ip");
             String port = ipAndPortObj.getString("port");
             result.add(new NameServerResponseObject(ip, port));
@@ -58,17 +60,25 @@ public class NameServerMarshaler implements INameServerMarshaler{
     }
 
 
-    public NameServerRequestObject unmarshalRequest(String message){
+    public NameServerRequestObject unmarshalRequest(String message) {
         JSONObject request = new JSONObject(message);
 
         String methodType = request.getString("method_type");
         String methodName = request.getString("method_name");
 
-        return new NameServerRequestObject(methodType, methodName);
+        String port;
+        if (methodType.equals("register")) {
+            port = request.getString("port");
+        } else {
+            port = "0";
+        }
+
+
+        return new NameServerRequestObject(methodType, methodName, port);
     }
 
 
-    private String marshalNameServerRequest(String methodType,String methodName){
+    private String marshalNameServerRequest(String methodType, String methodName) {
         JSONObject request = new JSONObject();
         request.put("methodType", methodType);
         request.put("methodName", methodName);
