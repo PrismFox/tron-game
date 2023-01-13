@@ -65,7 +65,7 @@ public class Unmarshaler implements IUnmarshaler {
             case "short":
                 returnObject = Short.valueOf(value);
                 break;
-            case "int":
+            case "integer":
                 returnObject = Integer.valueOf(value);
                 break;
             case "long":
@@ -77,7 +77,7 @@ public class Unmarshaler implements IUnmarshaler {
             case "double":
                 returnObject = Double.valueOf(value);
                 break;
-            case "char":
+            case "character":
                 returnObject = value.charAt(0);
                 break;
             case "string":
@@ -86,6 +86,7 @@ public class Unmarshaler implements IUnmarshaler {
             case "boolean":
                 returnObject = Boolean.valueOf(value);
                 break;
+
         }
         return returnObject;
     }
