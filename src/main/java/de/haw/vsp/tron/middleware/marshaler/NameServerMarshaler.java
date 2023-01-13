@@ -18,8 +18,10 @@ public class NameServerMarshaler implements INameServerMarshaler{
     }
 
     @Override
-    public String marshalRegisterRequest(String methodName) {
-        return this.marshalNameServerRequest("register", methodName);
+    public String marshalRegisterRequest(String methodName, int port) {
+        String registerReq = this.marshalNameServerRequest("register", methodName);
+        JSONObject jsonObject = new JSONObject(registerReq);
+        return jsonObject.put("port", String.valueOf(port)).toString();
     }
 
 
