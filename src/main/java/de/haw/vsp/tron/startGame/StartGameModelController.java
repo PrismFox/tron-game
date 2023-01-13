@@ -8,7 +8,6 @@ import org.springframework.context.annotation.ComponentScan;
 public class StartGameModelController {
 
     public static void main(String[] args) {
-        System.out.println("Test");
         ApplicationContext context = new AnnotationConfigApplicationContext(TronConfig.class);
 
     }
