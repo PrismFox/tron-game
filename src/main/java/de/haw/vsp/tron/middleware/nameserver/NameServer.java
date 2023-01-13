@@ -111,7 +111,7 @@ public class NameServer {
                 StringBuilder sbLine = new StringBuilder();
                 String reply = inputStream.readLine();
 
-                while (!(reply.equals(""))) {
+                while (reply != null && !(reply.equals(""))) {
                     sbLine.append(reply).append("\n");
                     reply = inputStream.readLine();
                 }
