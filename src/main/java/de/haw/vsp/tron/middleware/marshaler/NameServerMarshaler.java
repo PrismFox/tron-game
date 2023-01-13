@@ -80,8 +80,8 @@ public class NameServerMarshaler implements INameServerMarshaler {
 
     private String marshalNameServerRequest(String methodType, String methodName) {
         JSONObject request = new JSONObject();
-        request.put("methodType", methodType);
-        request.put("methodName", methodName);
+        request.put("method_type", methodType);
+        request.put("method_name", methodName);
 
         return request.toString();
     }
