@@ -1,6 +1,6 @@
 package de.haw.vsp.tron.middleware.nameserver;
 
-import de.haw.vsp.tron.middleware.marshaler.NameServerMarshaler;
+import de.haw.vsp.tron.middleware.marshaler.INameServerMarshaler;
 import de.haw.vsp.tron.middleware.middlewareconfig.IMiddlewareConfig;
 import de.haw.vsp.tron.middleware.pojo.NameServerRequestObject;
 import lombok.extern.slf4j.Slf4j;
@@ -18,14 +18,20 @@ import java.util.*;
 @Slf4j
 public class NameServer {
 
-    @Autowired
     private IMiddlewareConfig middlewareConfig;
 
-    @Autowired
-    private NameServerMarshaler marshaler;
+    private INameServerMarshaler marshaler;
 
     Map<String, List<List<String>>> methodIps = new HashMap<>();
 
+
+    @Autowired
+    public NameServer(IMiddlewareConfig middlewareConfig, INameServerMarshaler marshaler){
+        this.middlewareConfig = middlewareConfig;
+        this.marshaler = marshaler;
+        System.out.println("Start of nameserver");
+        start();
+    }
 
     public void start() {
         boolean running = true;
@@ -41,12 +47,6 @@ public class NameServer {
             e.printStackTrace();
             running = false;
         }
-    }
-
-
-    public static void main(String[] arg) {
-        NameServer server = new NameServer();
-        server.start();
     }
 
 
