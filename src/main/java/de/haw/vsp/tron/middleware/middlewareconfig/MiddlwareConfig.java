@@ -14,7 +14,7 @@ public class MiddlwareConfig implements IMiddlewareConfig {
     private static final String DEFAULT_PATH = "configMiddleware.properties";
 
     private String nameServerIP = "127.0.0.1";
-    private int nameServerPort = 5502;
+    private int nameServerPort = 5505;
 
     public MiddlwareConfig() {
         String configPath = System.getenv().getOrDefault(ENVVAR_NAME, DEFAULT_PATH);
@@ -23,7 +23,7 @@ public class MiddlwareConfig implements IMiddlewareConfig {
 
     private void loadConfigFile(String path) {
         nameServerIP = "127.0.0.1";
-        nameServerPort = 5502;
+        nameServerPort = 5505;
 
         Properties prop = new Properties();
         try (FileInputStream input = new FileInputStream(path)) {
