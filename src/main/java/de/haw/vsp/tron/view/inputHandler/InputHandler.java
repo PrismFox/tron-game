@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public
@@ -17,6 +18,8 @@ class InputHandler implements EventHandler<KeyEvent>, IInputHandler {
     private IPlayerInputManager playerController;
 
     private String input;
+
+    private List<String> keyMapping;
 
     @Override
     public void handle(KeyEvent event) {
@@ -40,12 +43,13 @@ class InputHandler implements EventHandler<KeyEvent>, IInputHandler {
     public boolean checkInputString(String keyInput){
         //get the validKeys from the controller and check if the
         //user input is one of the valid keys
-
-        //TODO keys irgendwo speichern
-        playerController.getValidKeys();
-
-        List<String> keyMapping = playerController.getValidKeys();
-
+        
+        if(keyMapping == null) {
+            keyMapping = playerController.getValidKeys().stream().map(k -> {
+                String[] seperatedPrefix = k.split("|");
+                return seperatedPrefix[seperatedPrefix.length];
+            }).collect(Collectors.toList());
+        }
         boolean validInput = false;
 
         if(keyMapping.contains(keyInput)){
