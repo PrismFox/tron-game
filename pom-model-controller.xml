@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>edu.cads.bai5.vsp.tron</groupId>
+    <groupId>de.haw.vsp.tron</groupId>
     <artifactId>model-controller</artifactId>
     <packaging>jar</packaging>
     <version>0.1</version>
