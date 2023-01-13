@@ -68,7 +68,7 @@ public class NameServer {
             NameServerRequestObject nameServerRequestObject = marshaler.unmarshalRequest(received);
 
             if ("register".equals(nameServerRequestObject.getMethodType())) {
-                List<String> ip = Arrays.asList(targetIp.getHostAddress(), String.valueOf(targetPort));
+                List<String> ip = Arrays.asList(targetIp.getHostAddress(), nameServerRequestObject.getPort());
                 register(nameServerRequestObject.getMethodName(), ip);
             }
             if ("query".equals(nameServerRequestObject.getMethodType())) {

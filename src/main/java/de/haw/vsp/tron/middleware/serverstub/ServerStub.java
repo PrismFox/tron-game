@@ -31,7 +31,7 @@ public class ServerStub implements IServerStub {
     private final IMarshaler marshaler;
     private final IUnmarshaler unmarshaler;
     private final INameServerMarshaler nameServerMarshaler;
-    private int serverPort = 0;
+    private int serverSocketPort = 0;
 
     @Autowired
     public ServerStub(IMiddlewareConfig middlewareConfig,
@@ -50,12 +50,12 @@ public class ServerStub implements IServerStub {
         try (ServerSocket serverSocketTCP = new ServerSocket(0)) {
             Socket socketTCP;
             log.info("Serverstub start of tcp server socket");
-            serverPort = serverSocketTCP.getLocalPort();
+            serverSocketPort = serverSocketTCP.getLocalPort();
 
             while (true) {
                 socketTCP = serverSocketTCP.accept();
                 log.info("new TCP connection");
-                new Thread(new RunnableTCPWorker(socketTCP, serverPort)).start();
+                new Thread(new RunnableTCPWorker(socketTCP, serverSocketPort)).start();
             }
 
         } catch (IOException exception) {
@@ -217,7 +217,7 @@ public class ServerStub implements IServerStub {
         public void run() {
             try (Socket socket = new Socket(middlewareConfig.getNameServerIP(), middlewareConfig.getNameServerPort())) {
                 DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
-                String marshaledRequest = nameServerMarshaler.marshalRegisterRequest(methodName, serverPort);
+                String marshaledRequest = nameServerMarshaler.marshalRegisterRequest(methodName, serverSocketPort);
                 outputStream.writeBytes(marshaledRequest);
 
             } catch (IOException exception) {
