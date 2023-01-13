@@ -25,7 +25,7 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
                     <version>3.1.0</version>
-                </plugin>
+                </plugin><!--
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
@@ -33,7 +33,7 @@
                     <configuration>
                         <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
                     </configuration>
-                </plugin>
+                </plugin>-->
             </plugins>
         </pluginManagement>
 
@@ -52,7 +52,7 @@
                 </executions>
             </plugin>
             <!-- END SNIPPET: source -->
-            <!-- START SNIPPET: javadoc -->
+            <!-- START SNIPPET: javadoc
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -67,7 +67,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
             <!-- END SNIPPET: javadoc -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -208,13 +208,13 @@
             <artifactId>javafx-fxml</artifactId>
             <version>19</version>
         </dependency>
-        <!-- Javadoc -->
+        <!-- Javadoc 
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
             <version>3.1.1</version>
             <type>maven-plugin</type>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
