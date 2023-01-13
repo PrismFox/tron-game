@@ -122,7 +122,7 @@
                             </annotationProcessors>
                             <annotationProcessorPaths>
                                 <path>
-                                    <groupId>edu.cads.bai5.vsp.tron</groupId>
+                                    <groupId>de.haw.vsp.tron</groupId>
                                     <artifactId>model-controller</artifactId>
                                     <version>0.1</version>
                                 </path>
