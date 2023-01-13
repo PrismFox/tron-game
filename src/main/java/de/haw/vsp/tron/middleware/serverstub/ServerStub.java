@@ -40,22 +40,26 @@ public class ServerStub implements IServerStub {
         this.unmarshaler = unmarshaler;
         this.nameServerMarshaler = nameServerMarshaler;
         System.out.println("Start of Serverstub");
-        new Thread(this::startTCP);
-        new Thread(this::startUDP);
+        new Thread(this::startTCP).start();
+        new Thread(this::startUDP).start();
 
     }
 
     private void startTCP() {
-        try (ServerSocket serverSocketTCP = new ServerSocket()) {
+        try (ServerSocket serverSocketTCP = new ServerSocket(0)) {
             Socket socketTCP;
+            log.info("Serverstub start of tcp server socket");
+            int serverPort = serverSocketTCP.getLocalPort();
 
             while (true) {
                 socketTCP = serverSocketTCP.accept();
-                new Thread(new RunnableTCPWorker(socketTCP)).start();
+                log.info("new TCP connection");
+                new Thread(new RunnableTCPWorker(socketTCP, serverPort)).start();
             }
 
         } catch (IOException exception) {
             log.error("Couldn't create Socket");
+            exception.printStackTrace();
         }
 
     }
@@ -85,9 +89,11 @@ public class ServerStub implements IServerStub {
 
     private class RunnableTCPWorker implements Runnable {
         private Socket socket;
+        private int port;
 
-        public RunnableTCPWorker(Socket socket) {
+        public RunnableTCPWorker(Socket socket, int port) {
             this.socket = socket;
+            this.port = port;
         }
 
         @Override
