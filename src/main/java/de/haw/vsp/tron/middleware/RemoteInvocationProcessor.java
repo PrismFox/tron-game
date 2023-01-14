@@ -145,6 +145,7 @@ public class RemoteInvocationProcessor extends AbstractProcessor {
             out.println("import org.springframework.stereotype.Component;");
             out.println("import org.springframework.beans.factory.annotation.Autowired;");
             out.println("import javax.annotation.PostConstruct;");
+            out.println("import de.haw.vsp.tron.middleware.applicationstub.CastUtils;");
             out.println("import de.haw.vsp.tron.middleware.applicationstub.IImplRegistry;");
             out.println("import de.haw.vsp.tron.Enums.TransportType;");
 
