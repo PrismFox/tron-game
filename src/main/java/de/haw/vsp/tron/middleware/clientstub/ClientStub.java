@@ -156,6 +156,7 @@ public class ClientStub implements IClientStub {
             socket.setSoTimeout(TIMEOUT);
         } catch (IOException excep) {
             log.error(String.format("Couldn't connect to a socket with host: %s and port: %d", host, port));
+            excep.printStackTrace();
         }
         return socket;
     }

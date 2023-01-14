@@ -44,7 +44,7 @@ public class Marshaler implements IMarshaler {
         json.put("arg_types", argTypesArray);
         json.put("msg_id", String.valueOf(messageId));
 
-        return json.toString();
+        return json.toString() + "\n";
     }
 
 
