@@ -28,7 +28,7 @@ public class Marshaler implements IMarshaler {
                     argsArray.put(mMap.getJSONObject());
                     argTypesArray.put(mMap.getType());
                 } else {
-                    argsArray.put(args[i]);
+                    argsArray.put(args[i].toString());
                     argTypesArray.put(args[i].getClass().getSimpleName().toLowerCase(Locale.ROOT));
                 }
             } else {
@@ -82,7 +82,7 @@ public class Marshaler implements IMarshaler {
                 JSONArray furtherDimension = getJSONArray(objects, marshalArray);
                 jsonArray.put(furtherDimension);
             } else {
-                jsonArray.put(object);
+                jsonArray.put(object.toString());
                 marshalArray.setReturnType(object.getClass().getSimpleName().toLowerCase());
 
             }

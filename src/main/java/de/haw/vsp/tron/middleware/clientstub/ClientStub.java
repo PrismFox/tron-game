@@ -217,15 +217,18 @@ public class ClientStub implements IClientStub {
 
 
     private String receiveResponseTCPPacket(BufferedReader inputStream) throws IOException {
-        /* Lies die naechste Anfrage-Zeile (request) vom Client */
-        StringBuilder sbLine = new StringBuilder();
-        String reply = inputStream.readLine();
+        String reply = null;
+        try {
+            log.info("ClientStub: Start of reading packet");
 
-        while (reply != null && !(reply.equals(""))) {
-            sbLine.append(reply).append("\n");
             reply = inputStream.readLine();
+            log.info("ClientStub: Done with reading packet. Buffer result: " + reply);
+        } catch (IOException exception) {
+            log.error("Couldn't read Socket");
+            exception.printStackTrace();
         }
-        return sbLine.toString();
+
+        return reply;
     }
 
 

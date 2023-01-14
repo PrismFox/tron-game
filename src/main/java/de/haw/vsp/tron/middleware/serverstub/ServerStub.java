@@ -133,23 +133,19 @@ public class ServerStub implements IServerStub {
         }
 
         private String receivePacket() {
-            String result = null;
+            String reply = null;
             try {
                 BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                log.info("ServerStub: Start of reading packet");
 
-                StringBuilder sbLine = new StringBuilder();
-                String reply = inputStream.readLine();
-
-                while (!(reply.equals(""))) {
-                    sbLine.append(reply).append("\n");
-                    reply = inputStream.readLine();
-                }
-                result = sbLine.toString();
+                reply = inputStream.readLine();
+                log.info("ServerStub: Done with reading packet. Buffer result: " + reply);
             } catch (IOException exception) {
                 log.error("Couldn't read Socket");
+                exception.printStackTrace();
             }
 
-            return result;
+            return reply;
         }
 
         public void sendPacket(String message) {
