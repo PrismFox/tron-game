@@ -274,6 +274,7 @@ public class RemoteInvocationProcessor extends AbstractProcessor {
                 out.println(";");
                 out.println();
             }
+            out.println("import java.util.Arrays;");
             out.println("import org.springframework.stereotype.Component;");
             out.println("import org.springframework.beans.factory.annotation.Autowired;");
             out.println("import de.haw.vsp.tron.middleware.clientstub.IClientStub;");
@@ -315,9 +316,15 @@ public class RemoteInvocationProcessor extends AbstractProcessor {
 
                 out.print("        ");
                 if(!returnType.equals("void")) {
-                    out.print(returnType);
-                    out.print(" result = (");
-                    out.print(returnType);
+                    if(returnType.contains("[]")) {
+                        out.print("Object[]");
+                        out.print(" result = (");
+                        out.print("Object[]");
+                    } else {
+                        out.print(returnType);
+                        out.print(" result = (");
+                        out.print(returnType);
+                    }
                     out.print(") ");
                 }
 
@@ -355,7 +362,12 @@ public class RemoteInvocationProcessor extends AbstractProcessor {
                 }
                 out.println(");");
 
-                if(!returnType.equals("void")) {
+                if(returnType.contains("[]")) {
+                    out.print("        return Arrays.stream(result).toArray(");
+                    out.print(returnType);
+                    out.println("::new);");
+
+                }else if(!returnType.equals("void")) {
                     out.println("        return result;");
                 }
                 out.println("    }");
