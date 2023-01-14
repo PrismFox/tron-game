@@ -7,6 +7,7 @@ import de.haw.vsp.tron.view.screens.IScreenHandler;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
@@ -93,7 +94,13 @@ public class Board implements IBoard {
 
     @Override
     public void updateView(int screenNumber, Map<Integer, int[][]> bikePos){
-        screenHandler.showGameScreen(bikePos);
+        Map<Integer, Integer[][]> newBikePos = new HashMap<>();
+        for(Map.Entry<Integer, int[][]> entry : bikePos.entrySet()){
+            newBikePos.put(entry.getKey(), Arrays.stream(entry.getValue()).map(elem -> Arrays.stream(elem).boxed().
+                    toArray(Integer[]::new)).toArray(Integer[][]::new));
+        }
+
+        screenHandler.showGameScreen(newBikePos);
     }
 
     @Override

@@ -135,7 +135,7 @@ public class ScreenHandler implements IScreenHandler {
 
 
     @Override
-    public void showGameScreen(Map<Integer, int[][]> bikePos) {
+    public void showGameScreen(Map<Integer, Integer[][]> bikePos) {
 
         //int uebergeben, 1-4. 1 = startscreen etc.
         //switch case, je nach int wird dann
@@ -154,12 +154,12 @@ public class ScreenHandler implements IScreenHandler {
 
     }
 
-    public void drawBikes(Map<Integer, int[][]> bikePos, ITronView view) {
+    public void drawBikes(Map<Integer, Integer[][]> bikePos, ITronView view) {
         //view.clear();
         List<Coordinate> list = new ArrayList<>();
 
         //System.out.println("in draw bikes");
-        for (Map.Entry<Integer, int[][]> entry : bikePos.entrySet()) {
+        for (Map.Entry<Integer, Integer[][]> entry : bikePos.entrySet()) {
             int colorNum = entry.getKey();
             System.out.println("Color num : " + colorNum);
             String color = de.haw.vsp.tron.Enums.Color.values()[colorNum].toString();

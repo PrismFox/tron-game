@@ -132,7 +132,14 @@ public class PlayerManager implements IPlayerManager {
         }
 
 
+        if(obstaclesToRemove.size() == 0){
+            obstaclesToRemove.add(new int[]{});
+        }
+
         int[][] allPositionsArray = obstaclesToRemove.toArray(new int[obstaclesToRemove.size()][]);
+
+
+
         colorPositions.put(0, allPositionsArray);
 
         return colorPositions;
