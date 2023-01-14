@@ -4,10 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.lang.reflect.Array;
+import java.util.*;
 
 
 @Component
@@ -32,9 +30,9 @@ public class Marshaler implements IMarshaler {
                     argTypesArray.put(args[i].getClass().getSimpleName().toLowerCase(Locale.ROOT));
                 }
             } else {
-                MarshalArray marshalArray = new MarshalArray();
-                JSONArray jsonArray = getJSONArray((Object[]) args[i], marshalArray);
-                marshalArray.createCompleteReturnType((Object[]) args[i]);
+                MarshalArray marshalArray = new MarshalArray((Object[])args[i]);
+                JSONArray jsonArray = marshalArray.getJSONArray();
+                marshalArray.createCompleteReturnType();
                 argsArray.put(jsonArray);
                 argTypesArray.put(marshalArray.getReturnType());
             }
@@ -65,9 +63,9 @@ public class Marshaler implements IMarshaler {
             returnJSON.put("return_value", mMap.getJSONObject());
             returnJSON.put("return_type", mMap.getType());
         } else if (returnType.isArray()) {
-            MarshalArray marshalArray = new MarshalArray();
-            JSONArray jsonArray = getJSONArray((Object[]) arg, marshalArray);
-            marshalArray.createCompleteReturnType((Object[]) arg);
+            MarshalArray marshalArray = new MarshalArray((Object[]) arg);
+            JSONArray jsonArray = marshalArray.getJSONArray();
+            marshalArray.createCompleteReturnType();
 
             returnJSON.put("return_type", marshalArray.getReturnType());
             returnJSON.put("return_value", jsonArray);
@@ -80,22 +78,7 @@ public class Marshaler implements IMarshaler {
     }
 
 
-    private JSONArray getJSONArray(Object[] objects, MarshalArray marshalArray) {
-        JSONArray jsonArray = new JSONArray();
 
-        for (Object object : objects) {
-            if (object.getClass().isArray()) {
-                JSONArray furtherDimension = getJSONArray(objects, marshalArray);
-                jsonArray.put(furtherDimension);
-            } else {
-                jsonArray.put(object.toString());
-                marshalArray.setReturnType(object.getClass().getSimpleName().toLowerCase());
-
-            }
-
-        }
-        return jsonArray;
-    }
 
     private class MarshalMap {
         private JSONObject mapJSON;
@@ -144,10 +127,13 @@ public class Marshaler implements IMarshaler {
                 Object v = ((Map.Entry) e).getValue();
 
                 if(v.getClass().isArray()) {
-                    MarshalArray ary = new MarshalArray();
-                    v = getJSONArray((Object[]) v, ary);
-                    ary.createCompleteReturnType((Object[]) k);
+                    MarshalArray ary = new MarshalArray((Object[])v);
+
+                    //v = ary.getJSONArray();
+                    ary.getJSONArray();
+
                     if(valueType == null) {
+                        ary.createCompleteReturnType();
                         valueType = ary.getReturnType();
                     }
                 } else if(v instanceof Map) {
@@ -169,6 +155,11 @@ public class Marshaler implements IMarshaler {
         private String returnType;
         private JSONArray jsonArray;
 
+        private Object[] arry;
+
+        public MarshalArray(Object[] arry){
+            this.arry = arry;
+        }
 
         public String getReturnType() {
             return returnType;
@@ -178,8 +169,35 @@ public class Marshaler implements IMarshaler {
             this.returnType = returnType;
         }
 
-        public JSONArray getJsonArray() {
+
+        private JSONArray getJSONArray(Object[] objects) {
+            JSONArray jsonArray = new JSONArray();
+
+            for (Object object : objects) {
+                if (object.getClass().isArray()) {
+                    if(object.getClass().getComponentType().isPrimitive()){
+                        int arrayLength = Array.getLength(object);
+                        Object[] objectArray = new Object[arrayLength];
+                        for(int i = 0; i < arrayLength; i++){
+                            objectArray[i] = Array.get(object,i);
+                        }
+                        object = objectArray;
+                    }
+
+                    JSONArray furtherDimension = getJSONArray((Object[]) object);
+                    jsonArray.put(furtherDimension);
+                } else {
+                    jsonArray.put(object.toString());
+                    this.setReturnType(object.getClass().getSimpleName().toLowerCase());
+
+                }
+
+            }
             return jsonArray;
+        }
+
+        public JSONArray getJSONArray() {
+            return getJSONArray(arry);
         }
 
         public void setJsonArray(JSONArray jsonArray) {
@@ -192,8 +210,8 @@ public class Marshaler implements IMarshaler {
             this.returnType = returnType + brackets;
         }
 
-        public void createCompleteReturnType(Object[] arr) {
-            int dimensions = countDimensions(arr);
+        public void createCompleteReturnType() {
+            int dimensions = countDimensions(arry);
             addLayers(dimensions);
         }
 
