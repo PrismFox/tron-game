@@ -27,6 +27,7 @@ public class Unmarshaler implements IUnmarshaler {
         }
 
         long messageId = json.getLong("msg_id");
+        System.out.println("unmarshalClientStub: msgID " + messageId + " return value " + returnObject);
         return new ResponseObject(messageId, returnObject);
     }
 
@@ -86,7 +87,12 @@ public class Unmarshaler implements IUnmarshaler {
             case "boolean":
                 returnObject = Boolean.valueOf(value);
                 break;
-
+            case "null":
+                returnObject = null;
+                break;
+            default:
+                System.err.println("- Default case im unmarshalObject -");
+                throw new IllegalArgumentException("unsupported Type " + type + " for object " + value);
         }
         return returnObject;
     }

@@ -1,5 +1,8 @@
 package de.haw.vsp.tron.middleware.pojo;
 
+import lombok.Data;
+
+@Data
 public class ResponseObject {
     private long messageId;
     private Object returnValue;

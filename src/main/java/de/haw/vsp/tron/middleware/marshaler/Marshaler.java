@@ -52,6 +52,12 @@ public class Marshaler implements IMarshaler {
     public String marshalReturnValue(long messageId, Object arg) {
         JSONObject returnJSON = new JSONObject();
         returnJSON.put("msg_id", String.valueOf(messageId));
+        if(arg == null){
+            returnJSON.put("return_value", "null");
+            returnJSON.put("return_type", "null");
+            return returnJSON.toString() + "\n";
+        }
+
         Class<?> returnType = arg.getClass();
 
         if (arg instanceof Map) {

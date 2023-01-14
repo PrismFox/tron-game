@@ -134,7 +134,7 @@ public class ClientStub implements IClientStub {
                     String responseStr = receiveResponseTCPPacket(inputStream);
                     responseObject = unmarshaler.unmarshalClientStub(responseStr);
 
-                    if (responseObject.getMessageId() == Long.getLong(messageId)) {
+                    if (responseObject.getMessageId() == Long.parseLong(messageId)) {
                         rightMessageId = true;
                     }
 
