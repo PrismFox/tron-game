@@ -1,0 +1,5 @@
+#! /bin/bash
+
+./package_nameserver.sh
+./package_controller_model.sh
+./package_view.sh
