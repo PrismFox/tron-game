@@ -18,6 +18,8 @@ import java.util.*;
 @Slf4j
 public class NameServer {
 
+    private final static int TIMEOUT = 111100;
+
     private IMiddlewareConfig middlewareConfig;
 
     private INameServerMarshaler marshaler;
@@ -26,7 +28,7 @@ public class NameServer {
 
 
     @Autowired
-    public NameServer(IMiddlewareConfig middlewareConfig, INameServerMarshaler marshaler){
+    public NameServer(IMiddlewareConfig middlewareConfig, INameServerMarshaler marshaler) {
         this.middlewareConfig = middlewareConfig;
         this.marshaler = marshaler;
         System.out.println("Start of nameserver");
@@ -41,6 +43,7 @@ public class NameServer {
 
             while (running) {
                 socket = serverSocket.accept();
+                socket.setSoTimeout(TIMEOUT);
                 new Thread(new RunnableTCPWorker(socket)).start();
             }
         } catch (IOException e) {
@@ -104,31 +107,19 @@ public class NameServer {
         }
 
         private String receivePacket() {
-            String result = null;
+            String reply = null;
             try {
                 BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-                StringBuilder sbLine = new StringBuilder();
                 log.info("Nameserver: Start of reading packet");
-                //String reply = inputStream.readLine();
-                int buffer ;
-                // System.err.println("Nameserver: First state of reply " + reply);
 
-                while ((buffer = socket.getInputStream().read()) != -1 && buffer != (int) '\n') {
-                    sbLine.append((char) buffer);
-                    //sbLine.append(reply).append("\n");
-                    // reply = inputStream.readLine();
-                    System.out.println("Nameserver: Current state of reply " + sbLine.toString());
-                }
-
-                result = sbLine.toString();
-                log.info("Nameserver: Done with reading packet. Buffer result: " + result);
+                reply = inputStream.readLine();
+                log.info("Nameserver: Done with reading packet. Buffer result: " + reply);
             } catch (IOException exception) {
                 log.error("Couldn't read Socket");
                 exception.printStackTrace();
             }
 
-            return result;
+            return reply;
         }
 
         public void sendPacket(String message) {
