@@ -74,9 +74,12 @@ public class Lobby implements ILobbyGameLogic, IInitLobby {
     }
 
     @Override
-    public void playerJoin(int playerNumber) {
+    public void playerJoin(List<String> playerMapping) {
+
         currentPlayerCount++;
-        playerManager.createPlayer(playerMapping.get(playerNumber), currentPlayerCount);
+        System.out.println("Lobby : playerJoin: playerNumber: " + currentPlayerCount);
+        playerManager.createPlayer(playerMapping, currentPlayerCount);
+        System.out.println("Lobby : playerJoin: playerNumber: " + currentPlayerCount + " create Player ausgefuert");
 
         if (currentPlayerCount == maxPlayer) {
             maxPlayerJoined = true;

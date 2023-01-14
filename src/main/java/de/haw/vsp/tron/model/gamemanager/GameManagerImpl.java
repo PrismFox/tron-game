@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import de.haw.vsp.tron.model.config.IConfig;
 import de.haw.vsp.tron.model.lobby.IInitLobby;
 
+import java.util.List;
+
 @Component
 public class GameManagerImpl implements IGameManager {
 
@@ -22,8 +24,8 @@ public class GameManagerImpl implements IGameManager {
     private IBoard board;
 
     @Override
-    public void playerJoin(int id) {
-        lobbyInitializer.playerJoin(id);
+    public void playerJoin(List<String> playerMapping) {
+        lobbyInitializer.playerJoin(playerMapping);
     }
 
     @Override

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import de.haw.vsp.tron.model.config.IConfig;
 import de.haw.vsp.tron.model.gamemanager.IGameManager;
@@ -21,9 +22,11 @@ public class PlayerControllerOnboardingImpl implements IPlayerController {
 
     private Map<String, Integer> playerIdKeyMap;
 
+    private Map<Integer, List<String>> playerMappings;
+
     public void loadMappings() {
         this.playerIdKeyMap = new HashMap<>();
-        Map<Integer, List<String>> playerMappings = this.config.getPlayerMappings();
+        playerMappings = this.config.getPlayerMappings();
         playerMappings.entrySet().stream().forEach(
                 e -> e.getValue().forEach(
                         v -> this.playerIdKeyMap.put(v, e.getKey())));
@@ -31,10 +34,33 @@ public class PlayerControllerOnboardingImpl implements IPlayerController {
 
     @Override
     public void onKeyPress(String key) {
-        int playerId = this.getPlayerForKey(key);
-        if (playerId != -1) {
-            this.gameManager.playerJoin(playerId);
+
+        //key ist string mit einer taste und prefix davor
+        //prefix rauschneiden
+        //3 andere tasten rausscuhen aus config
+        //prefix wieder ran
+        //playerjoin mit prefix + 4 tasten
+        String[] seperatedPrefix = key.split("|");
+        String prefix;
+        if(seperatedPrefix.length > 1){
+            prefix = seperatedPrefix[0];
+        }else{
+            prefix = "";
         }
+
+        String keyWithoutPrefix = seperatedPrefix[seperatedPrefix.length-1];
+        int playerId = this.getPlayerForKey(keyWithoutPrefix);
+                System.out.println("PlayerControllerOnboardingImpl: OnKeyPress: playerId : " + playerId);
+
+        if (playerId != -1) {
+            List<String> playerKeys = playerMappings.get(playerId);
+            List<String> playerMappingWithPrefix = playerKeys.stream().map(elem -> String.format("%s|%s", prefix, elem)).collect(Collectors.toList());
+
+            this.gameManager.playerJoin(playerMappingWithPrefix);
+            System.out.println("PlayerControllerOnboardingImpl: OnKeyPress: playerId : " + playerId + " wurde playerJoind aufgerufen");
+        }
+
+
 
     }
 
