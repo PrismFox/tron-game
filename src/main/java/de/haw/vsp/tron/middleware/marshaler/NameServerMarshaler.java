@@ -14,7 +14,8 @@ public class NameServerMarshaler implements INameServerMarshaler {
 
     @Override
     public String marshalQueryRequest(String methodName) {
-        return this.marshalNameServerRequest("query", methodName);
+        String queryRequest = this.marshalNameServerRequest("query", methodName);
+        return queryRequest + "\n";
     }
 
     @Override

@@ -20,7 +20,7 @@ import java.util.*;
 @Component
 public class ClientStub implements IClientStub {
     public static final int UDP_PACKET_SIZE = 1024;
-    public static final int TIMEOUT = 150;
+    public static final int TIMEOUT = 1000000;
 
     private final INameServerMarshaler nameServerMarshaler;
     private final IMarshaler marshaler;
@@ -45,7 +45,9 @@ public class ClientStub implements IClientStub {
 
         try {
             if (!knownIps.containsKey(methodName)) {
+                log.info("Lookup");
                 addresses = lookUp(methodName);
+                log.info("lookup done");
                 knownIps.put(methodName, addresses);
             } else {
                 addresses = knownIps.get(methodName);
@@ -218,7 +220,7 @@ public class ClientStub implements IClientStub {
         StringBuilder sbLine = new StringBuilder();
         String reply = inputStream.readLine();
 
-        while (!(reply.equals(""))) {
+        while (reply != null && !(reply.equals(""))) {
             sbLine.append(reply).append("\n");
             reply = inputStream.readLine();
         }

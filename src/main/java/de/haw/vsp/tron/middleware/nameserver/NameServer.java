@@ -109,15 +109,23 @@ public class NameServer {
                 BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
                 StringBuilder sbLine = new StringBuilder();
-                String reply = inputStream.readLine();
+                log.info("Nameserver: Start of reading packet");
+                //String reply = inputStream.readLine();
+                int buffer ;
+                // System.err.println("Nameserver: First state of reply " + reply);
 
-                while (reply != null && !(reply.equals(""))) {
-                    sbLine.append(reply).append("\n");
-                    reply = inputStream.readLine();
+                while ((buffer = socket.getInputStream().read()) != -1 && buffer != (int) '\n') {
+                    sbLine.append((char) buffer);
+                    //sbLine.append(reply).append("\n");
+                    // reply = inputStream.readLine();
+                    System.out.println("Nameserver: Current state of reply " + sbLine.toString());
                 }
+
                 result = sbLine.toString();
+                log.info("Nameserver: Done with reading packet. Buffer result: " + result);
             } catch (IOException exception) {
                 log.error("Couldn't read Socket");
+                exception.printStackTrace();
             }
 
             return result;
@@ -129,6 +137,7 @@ public class NameServer {
                 DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
                 outputStream.write(messageBytes);
             } catch (IOException exception) {
+                log.error("Nameserver couldn't send packet");
                 exception.printStackTrace();
             }
 
