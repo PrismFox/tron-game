@@ -17,6 +17,9 @@ public class PlayerControllerMovementImpl implements IPlayerController {
 
     @Override
     public void onKeyPress(String key) {
+        System.out.println("PlayerControllerMovementImpl: onKeyPress: key = " + key);
+
+
         int playerId = this.getPlayerForKey(key);
         int direction = this.getDirectionForKey(key);
         this.playerManager.setPlayerMove(playerId, direction);
@@ -31,6 +34,7 @@ public class PlayerControllerMovementImpl implements IPlayerController {
         Integer playerId = null;
 
         for (Map.Entry<Integer,List<String>> entry: this.playerMappings.entrySet()){
+            System.out.println("PlayerControllerMovementImpl : Map Key = " + entry.getKey().toString() + " value = " + entry.getValue().toString());
             if (entry.getValue().contains(key)){
                 playerId = entry.getKey();
             }

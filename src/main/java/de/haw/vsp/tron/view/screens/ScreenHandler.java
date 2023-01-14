@@ -169,7 +169,7 @@ public class ScreenHandler implements IScreenHandler {
                 bikeColor = Color.BLUEVIOLET.darker().darker().darker().desaturate();
             }
             List<Coordinate> coordinates = new ArrayList<>();
-            System.out.println("entrty value .length " + entry.getValue().length);
+            //System.out.println("entrty value .length " + entry.getValue().length);
             for (int i = 0; i < entry.getValue().length; i++) {
                 int x = entry.getValue()[i][0];
                 int y = entry.getValue()[i][1];

@@ -74,7 +74,10 @@ public class PlayerManager implements IPlayerManager {
 
     @Override
     public void setIntendedDirection(int playerId, int intendedDirection) {
+        System.out.println("PlayerManager : setIntendedDirection: playerID = " + playerId + " direction = " + intendedDirection);
+        //player ID und direction sind beides -1
         Player player = getPlayerById(playerId);
+
         player.setIntendedDirection(intendedDirection);
         System.out.println("Player " + playerId + " Direction " + intendedDirection);
     }

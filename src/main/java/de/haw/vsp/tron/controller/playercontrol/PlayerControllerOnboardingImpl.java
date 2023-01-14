@@ -35,18 +35,15 @@ public class PlayerControllerOnboardingImpl implements IPlayerController {
     @Override
     public void onKeyPress(String key) {
 
-        //key ist string mit einer taste und prefix davor
-        //prefix rauschneiden
-        //3 andere tasten rausscuhen aus config
-        //prefix wieder ran
-        //playerjoin mit prefix + 4 tasten
-        String[] seperatedPrefix = key.split("|");
+        System.out.println("{DEBUG} PlayerControllerOnbaordingImpl onKeyPress : key = " + key);
+        String[] seperatedPrefix = key.split("\\|");
         String prefix;
         if(seperatedPrefix.length > 1){
             prefix = seperatedPrefix[0];
         }else{
             prefix = "";
         }
+        System.out.println("{DEBUG} PlayerControllerOnbaordingImpl onKeyPress : prefix = " + prefix);
 
         String keyWithoutPrefix = seperatedPrefix[seperatedPrefix.length-1];
         int playerId = this.getPlayerForKey(keyWithoutPrefix);

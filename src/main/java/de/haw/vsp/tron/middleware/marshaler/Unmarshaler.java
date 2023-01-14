@@ -41,15 +41,16 @@ public class Unmarshaler implements IUnmarshaler {
         Object[] objects = new Object[args.length()];
         for (int i = 0; i < args.length(); i++) {
             String argType = argTypes.getString(i);
-            if (argType.contains("[]")) {
+
+
+            if (argType.contains("<")) { // Map case
+                objects[i] = unmarshalMap(args.getJSONObject(i), argType);
+            }else if(argType.contains("[]")) {
                 String nonBracketType = argType.replaceFirst("\\[]", "");
                 objects[i] = unmarshalArray(nonBracketType, args.getJSONArray(i));
+            }else {
+                objects[i] = unmarshalObject(argTypes.getString(i), args.getString(i));
             }
-
-            if (argTypes.get(i).toString().contains("<")) { // Map case
-                objects[i] = unmarshalMap(args.getJSONObject(i), argType);
-            }
-            objects[i] = unmarshalObject(argTypes.getString(i), args.getString(i));
         }
 
         long messageId = json.getLong("msg_id");
@@ -100,11 +101,15 @@ public class Unmarshaler implements IUnmarshaler {
     private Object[] unmarshalArray(String contentType, JSONArray ary) {
         Object[] resultAry = new Object[ary.length()];
         if (contentType.contains("[]")) {
+            System.out.println("{-DEBUG-} Unmarshaler unmarshalArray : contentType before = " + contentType);
             String nextDepthType = contentType.replaceFirst("\\[]", "");
+            System.out.println("{-DEBUG-} Unmarshaler unmarshalArray : contentType after = " + nextDepthType);
             for (int i = 0; i < ary.length(); i++) {
                 resultAry[i] = unmarshalArray(nextDepthType, ary.getJSONArray(i));
             }
         } else {
+            System.out.println("{-DEBUG-} Unmarshaler unmarshalArray : contentType im else = " + contentType);
+
             for (int i = 0; i < ary.length(); i++) {
                 resultAry[i] = unmarshalObject(contentType, ary.getString(i));
             }
@@ -116,7 +121,7 @@ public class Unmarshaler implements IUnmarshaler {
         Map resultMap = new HashMap();
         String identifier = null;
 
-        String subType = type.substring(1, type.length() - 2);
+        String subType = type.substring(1, type.length() - 1);
         String[] splitSubType = subType.split(",", 2);
 
 

@@ -60,6 +60,7 @@ public class Marshaler implements IMarshaler {
 
         if (arg instanceof Map) {
             MarshalMap mMap = new MarshalMap((Map) arg);
+            System.out.println("{-DEBUG-} Marshaler marshalReturnValue map.getJSONObject = " + mMap.getJSONObject());
             returnJSON.put("return_value", mMap.getJSONObject());
             returnJSON.put("return_type", mMap.getType());
         } else if (returnType.isArray()) {
@@ -129,8 +130,8 @@ public class Marshaler implements IMarshaler {
                 if(v.getClass().isArray()) {
                     MarshalArray ary = new MarshalArray((Object[])v);
 
-                    //v = ary.getJSONArray();
-                    ary.getJSONArray();
+                    v = ary.getJSONArray();
+                    //ary.getJSONArray();
 
                     if(valueType == null) {
                         ary.createCompleteReturnType();
@@ -142,12 +143,15 @@ public class Marshaler implements IMarshaler {
                     if(valueType == null) {
                         valueType = mMap.getType();
                     }
-                } else if(valueType == null) {
-                    valueType = v.getClass().getSimpleName().toLowerCase();
+                } else {
+                    v = v.toString();
+                    if(valueType == null) {
+                        valueType = v.getClass().getSimpleName().toLowerCase();
+                    }
                 }
-                
                 obj.put(k.toString(), v);
             });
+            mapJSON = obj;
         }
     }
 
@@ -162,6 +166,7 @@ public class Marshaler implements IMarshaler {
         }
 
         public String getReturnType() {
+            System.out.println("{-DEBUG-} Marshaler marshalArray returnType = " + returnType);
             return returnType;
         }
 
@@ -183,16 +188,19 @@ public class Marshaler implements IMarshaler {
                         }
                         object = objectArray;
                     }
-
+                    System.out.println("{DEBUG} Marshaler getJSONArray Object = " + object);
                     JSONArray furtherDimension = getJSONArray((Object[]) object);
+
+
                     jsonArray.put(furtherDimension);
                 } else {
+                    System.out.println("{-DEBUG-} Marshaler getJSONArray else teil: type = " + object.getClass().getSimpleName().toLowerCase());
                     jsonArray.put(object.toString());
-                    this.setReturnType(object.getClass().getSimpleName().toLowerCase());
-
+                    //this.setReturnType(object.getClass().getSimpleName().toLowerCase());
                 }
 
             }
+            System.out.println("{DEBUG} Marshaler getJSONArray jsonArray = " + jsonArray.toString());
             return jsonArray;
         }
 
@@ -223,6 +231,18 @@ public class Marshaler implements IMarshaler {
                 c = c.getComponentType(); // returns the class denoting the component type of the array
                 dimensionCount++;
             }
+            String type = c.getSimpleName().toLowerCase();
+            switch(type){
+                case "int":
+                    type="integer";
+                    break;
+                case "char":
+                    type = "character";
+                    break;
+            }
+
+            this.setReturnType(type);
+
             return dimensionCount;
         }
     }

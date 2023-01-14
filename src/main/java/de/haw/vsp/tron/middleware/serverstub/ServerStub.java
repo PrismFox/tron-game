@@ -110,9 +110,9 @@ public class ServerStub implements IServerStub {
                 if (implCaller.isPrefixedArg(requestObject.getMethodName(), i)) {
                     InetSocketAddress targetInetSocketAddress = (InetSocketAddress) socket.getRemoteSocketAddress();
                     String targetIp = targetInetSocketAddress.getAddress().getHostAddress();
-                    String targetPort = String.valueOf(targetInetSocketAddress.getPort());
+                    //String targetPort = String.valueOf(targetInetSocketAddress.getPort());
 
-                    String prefixedObject = String.format("%s:%s|%s", targetIp, targetPort, objects[i].toString());
+                    String prefixedObject = String.format("%s|%s", targetIp, objects[i].toString());
                     objects[i] = prefixedObject;
                 }
             }
