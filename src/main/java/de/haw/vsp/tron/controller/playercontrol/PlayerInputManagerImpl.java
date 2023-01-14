@@ -36,8 +36,8 @@ public class PlayerInputManagerImpl implements IPlayerInputManager {
     }
 
     @Override
-    public List<String> getValidKeys() {
-        return playerController.getValidKeys();
+    public String[] getValidKeys() {
+        return playerController.getValidKeys().toArray(new String[0]);
     }
 
     //disabled -> onboarding

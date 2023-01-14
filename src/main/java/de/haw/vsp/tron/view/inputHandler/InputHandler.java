@@ -7,6 +7,7 @@ import javafx.scene.input.KeyEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,7 +46,7 @@ class InputHandler implements EventHandler<KeyEvent>, IInputHandler {
         //user input is one of the valid keys
         
         if(keyMapping == null) {
-            keyMapping = playerController.getValidKeys().stream().map(k -> {
+            keyMapping = Arrays.asList(playerController.getValidKeys()).stream().map(k -> {
                 String[] seperatedPrefix = k.split("|");
                 return seperatedPrefix[seperatedPrefix.length];
             }).collect(Collectors.toList());

@@ -10,5 +10,5 @@ import de.haw.vsp.tron.middleware.annotation.RemoteInterface;
 public interface IPlayerInputManager {
     public void onKeyPress(@Prefix String key);
 
-    public List<String> getValidKeys();
+    public String[] getValidKeys();
 }
