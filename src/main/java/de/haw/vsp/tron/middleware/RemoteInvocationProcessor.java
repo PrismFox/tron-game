@@ -189,7 +189,8 @@ public class RemoteInvocationProcessor extends AbstractProcessor {
                     out.print(type);
                     out.print(")");
                     if(type.contains("Map") && (type.contains("List") || type.contains("[]"))) {
-                        out.printf("CastUtils.convertMapToCorrectType((java.util.Map<?,Object[]>) args[%d], %s.class)", i, type);
+                        String valueType = type.split(",")[1].split(">")[0];
+                        out.printf("CastUtils.convertMapToCorrectType((java.util.Map<?,Object[]>) args[%d], %s.class)", i, valueType);
                     }  else {
                         out.printf("args[%d]", i);
                     }
