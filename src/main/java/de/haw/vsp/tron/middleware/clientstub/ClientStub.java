@@ -72,8 +72,10 @@ public class ClientStub implements IClientStub {
             exception.printStackTrace();
             return invokeSynchronously(methodName, args);
         }
-
-        return result;
+        if(result == null){
+            return null;
+        }
+        return result.getReturnValue();
     }
 
 

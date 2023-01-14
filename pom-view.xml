@@ -199,6 +199,7 @@
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.openjfx/javafx -->
         <dependency>
+           <!--wenn man M series Mac nutzt, dann das auskommentieren-->
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>19</version>
@@ -275,7 +276,7 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>18.0.2</version>
-            <!--<classifier>mac-aarch64</classifier>-->
+            <classifier>mac-aarch64</classifier>
         </dependency>
     </dependencies>
 </project>
