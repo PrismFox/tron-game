@@ -60,6 +60,7 @@ public class ClientStub implements IClientStub {
                 long messageId = messageIdInc++;
 
                 String rpcMessage = marshaler.marshal(methodName, messageId, args);
+                log.info("Clienstub: Message that will be send {}", rpcMessage);
                 byte[] rpcMessageBytes = rpcMessage.getBytes();
 
                 result = invokeTCP(ip, port, rpcMessageBytes, String.valueOf(messageId), true);
@@ -128,7 +129,7 @@ public class ClientStub implements IClientStub {
         try (Socket socket = initTCPSocket(targetIp, targetPort)) {
             BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
-            log.info("IpAddress: {} with message: {}", socket.getLocalAddress(), message);
+            log.info("IpAddress: {}",socket.getLocalAddress());
             sendTCPPacket(message, outputStream);
 
 
