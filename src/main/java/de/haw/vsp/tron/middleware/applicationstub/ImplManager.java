@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import de.haw.vsp.tron.Enums.TransportType;
 import de.haw.vsp.tron.middleware.serverstub.IServerStub;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -28,7 +29,7 @@ public class ImplManager implements IImplRegistry, IImplCaller {
     }
 
     @Override
-    public void registerAsyncImplementation(String methodId, Function<Object[], Object> methodReference, boolean[] prefixedArgs) {
+    public void registerAsyncImplementation(String methodId, Function<Object[], Object> methodReference, TransportType transportType, boolean[] prefixedArgs) {
         referenceMap.put(methodId, methodReference);
         paramPrefixMap.put(methodId, prefixedArgs);
         asyncMethodMap.put(methodId, true);
