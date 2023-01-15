@@ -22,6 +22,7 @@ public class Config implements IConfig {
     private int playerCount = 6;
     private int[] boardSize = new int[]{16, 16};
     private int cellSize = 5;
+    private int gameTick = 1000;
 
     public Config() {
         String configPath = System.getenv().getOrDefault(ENVVAR_NAME, DEFAULT_PATH);
@@ -33,12 +34,14 @@ public class Config implements IConfig {
         playerCount = 6;
         boardSize = new int[]{16, 16};
         cellSize = 5;
+        gameTick=1000;
 
         Properties prop = new Properties();
         try (FileInputStream input = new FileInputStream(path)) {
             prop.load(input);
             this.lobbyTimerDuration = Integer.parseInt(prop.getProperty("lobbyTimer", "30"));
             this.playerCount = Integer.parseInt(prop.getProperty("playerCount", "6"));
+            this.gameTick = Integer.parseInt(prop.getProperty("gameTick", "1000"));
             String boardValue = prop.getProperty("boardSize", "16, 16");
             String[] boardArray = boardValue.split(",");
             if (boardArray.length != 2) {
@@ -86,6 +89,11 @@ public class Config implements IConfig {
     @Override
     public int getCellSize() {
         return this.cellSize;
+    }
+
+    @Override
+    public int getGameTick() {
+        return this.gameTick;
     }
 
     @Override

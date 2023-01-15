@@ -15,4 +15,6 @@ public interface IConfig {
     public int[] getBoardSize();
 
     public int getCellSize();
+
+    public int getGameTick();
 }
