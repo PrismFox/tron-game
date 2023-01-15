@@ -1,5 +1,6 @@
 package de.haw.vsp.tron.view.screens;
 
+import de.haw.vsp.tron.middleware.annotation.AsyncCall;
 import de.haw.vsp.tron.middleware.annotation.RemoteImplementation;
 import javafx.stage.Stage;
 
@@ -16,6 +17,7 @@ public interface IScreenHandler {
      *
      * @author Dominik Martin
      */
+    @AsyncCall
     public void showStartScreen();
 
 
@@ -28,6 +30,7 @@ public interface IScreenHandler {
          *
          * @author Dominik Martin
          */
+    @AsyncCall
     public void showLobbyScreens(int screenNumber, int winningNumber) ;
 
     /**
@@ -39,6 +42,7 @@ public interface IScreenHandler {
      *
      * @author Dominik Martin
      */
+    @AsyncCall
     public void showGameScreen(Map<Integer, Integer[][]> bikePos);
 
     //public void init(Stage primaryStage);

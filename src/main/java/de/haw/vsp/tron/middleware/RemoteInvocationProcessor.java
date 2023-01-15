@@ -337,7 +337,7 @@ public class RemoteInvocationProcessor extends AbstractProcessor {
                 }
 
                 if(methodAsyncMap.get(methodName) != null) {
-                    out.print("clientStub.invokeAsynchronously(");
+                    out.print("clientStub.invokeAsynchronously(\"");
                 } else {
                     out.print("clientStub.invokeSynchronously(\"");
                 }
