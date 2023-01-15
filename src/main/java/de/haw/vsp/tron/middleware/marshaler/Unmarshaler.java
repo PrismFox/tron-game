@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,12 +46,16 @@ public class Unmarshaler implements IUnmarshaler {
 
             if (argType.contains("<")) { // Map case
                 objects[i] = unmarshalMap(args.getJSONObject(i), argType);
+
             }else if(argType.contains("[]")) {
-                String nonBracketType = argType.replaceFirst("\\[]", "");
-                objects[i] = unmarshalArray(nonBracketType, args.getJSONArray(i));
+                //String nonBracketType = argType.replaceFirst("\\[]", "");
+                objects[i] = unmarshalArray(argType, args.getJSONArray(i));
+
+
             }else {
                 objects[i] = unmarshalObject(argTypes.getString(i), args.getString(i));
             }
+
         }
 
         long messageId = json.getLong("msg_id");
@@ -105,16 +110,20 @@ public class Unmarshaler implements IUnmarshaler {
             String nextDepthType = contentType.replaceFirst("\\[]", "");
             System.out.println("{-DEBUG-} Unmarshaler unmarshalArray : contentType after = " + nextDepthType);
             for (int i = 0; i < ary.length(); i++) {
+                System.out.println("{-DEBUG-} Unmarshaler unmarshalArray : resultAry[i] = " + ary.getJSONArray(i));
+
                 resultAry[i] = unmarshalArray(nextDepthType, ary.getJSONArray(i));
             }
         } else {
             System.out.println("{-DEBUG-} Unmarshaler unmarshalArray : contentType im else = " + contentType);
 
             for (int i = 0; i < ary.length(); i++) {
+                System.out.println("{-DEBUG-} Unmarshaler unmarshalArray : resultAry[i] im else = " + ary.getString(i));
                 resultAry[i] = unmarshalObject(contentType, ary.getString(i));
             }
         }
         return resultAry;
+
     }
 
     private Map unmarshalMap(JSONObject jsonObject, String type) {
@@ -145,6 +154,7 @@ public class Unmarshaler implements IUnmarshaler {
             else if (identifier.equals("List")){
                 String nonBracketType = splitSubType[1].replaceFirst("\\[]", "");
                 value = unmarshalArray(nonBracketType,jsonObject.getJSONArray(key));
+                System.out.println("{-DEBUG-} unmarshalMap: value = " +Arrays.deepToString((Object[]) value));
             }
             else if (identifier.equals("Primitive")){
                 value = unmarshalObject(splitSubType[1], jsonObject.getString(key));
