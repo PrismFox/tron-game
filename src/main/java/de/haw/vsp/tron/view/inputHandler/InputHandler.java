@@ -47,7 +47,7 @@ class InputHandler implements EventHandler<KeyEvent>, IInputHandler {
         
         if(keyMapping == null) {
             keyMapping = Arrays.asList(playerController.getValidKeys()).stream().map(k -> {
-                String[] seperatedPrefix = k.split("|");
+                String[] seperatedPrefix = k.split("\\|");
                 return seperatedPrefix[seperatedPrefix.length -1];
             }).collect(Collectors.toList());
         }
