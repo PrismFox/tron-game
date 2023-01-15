@@ -15,6 +15,7 @@ public class MiddlwareConfig implements IMiddlewareConfig {
 
     private String nameServerIP = "127.0.0.1";
     private int nameServerPort = 5505;
+    private int socketTimeout = 200;
 
     public MiddlwareConfig() {
         String configPath = System.getenv().getOrDefault(ENVVAR_NAME, DEFAULT_PATH);
@@ -24,12 +25,14 @@ public class MiddlwareConfig implements IMiddlewareConfig {
     private void loadConfigFile(String path) {
         nameServerIP = "127.0.0.1";
         nameServerPort = 5505;
+        socketTimeout = 200;
 
         Properties prop = new Properties();
         try (FileInputStream input = new FileInputStream(path)) {
             prop.load(input);
             this.nameServerIP = prop.getProperty("nameServerIP", nameServerIP);
             this.nameServerPort = Integer.parseInt(prop.getProperty("nameServerPort", String.valueOf(nameServerPort)));
+            this.socketTimeout = Integer.parseInt(prop.getProperty("socketTimeout", "200"));
 
         } catch (IOException ex) {
             ex.printStackTrace();

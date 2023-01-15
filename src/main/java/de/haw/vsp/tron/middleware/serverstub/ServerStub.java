@@ -22,7 +22,6 @@ import java.net.*;
 public class ServerStub implements IServerStub {
 
     public static final int UDP_PACKET_SIZE = 1024;
-    private final static int TIMEOUT = 111100;
 
     private final IMiddlewareConfig middlewareConfig;
 
@@ -55,7 +54,7 @@ public class ServerStub implements IServerStub {
 
             while (true) {
                 socketTCP = serverSocketTCP.accept();
-                socketTCP.setSoTimeout(TIMEOUT);
+                socketTCP.setSoTimeout(middlewareConfig.getSocketTimeout());
                 log.info("new TCP connection");
                 new Thread(new RunnableTCPWorker(socketTCP, serverSocketPort)).start();
             }
