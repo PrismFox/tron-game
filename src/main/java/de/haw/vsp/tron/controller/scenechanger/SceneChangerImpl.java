@@ -36,11 +36,10 @@ public class SceneChangerImpl implements ISceneChanger, ISceneCallbackRegistry {
         this.currentScene = new StartScene(this.gameManager, this.config, this.timer, (ISceneChanger) this);
 
         Runnable gameRunnable = () -> {
-            timer.startLobbyTimer(3000, () -> {
-                gameLogic.removePlayers();
-                gameManager.endGame();
-                init();
-            });
+            gameLogic.removePlayers();
+            gameManager.endGame();
+            init();
+
         };
         Runnable lobbyRunnable = () -> {
             registerNextSceneCallback(gameRunnable);
