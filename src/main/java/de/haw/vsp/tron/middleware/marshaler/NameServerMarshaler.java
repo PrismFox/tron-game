@@ -30,8 +30,9 @@ public class NameServerMarshaler implements INameServerMarshaler {
     public String marshalQueryResponse(List<List<String>> ipLists) {
         JSONObject ipResponse = new JSONObject();
         JSONArray jsonArray = new JSONArray();
-
+        System.out.println("{--DEBUG} NameServerMarshaler: ipLists = " + ipLists);
         for (List<String> ipList : ipLists) {
+            System.out.println("{--DEBUG} NameServerMarshaler: ipList elem = " + ipList);
             JSONObject tempObject = new JSONObject();
             tempObject.put("ip", ipList.get(0));
             tempObject.put("port", ipList.get(1));

@@ -40,7 +40,7 @@ public class NameServer {
         try (ServerSocket serverSocket = new ServerSocket(middlewareConfig.getNameServerPort())) {
             Socket socket;
             log.info("NameServer started");
-
+            log.info("NameServer Server Socket IP addresse = " + serverSocket.getLocalSocketAddress());
             while (running) {
                 socket = serverSocket.accept();
                 socket.setSoTimeout(TIMEOUT);
@@ -88,6 +88,7 @@ public class NameServer {
 
         private void register(String methodName, List<String> ip) {
             List<List<String>> value;
+            log.info("NameServer register ip = " + ip);
             if (!methodIps.containsKey(methodName)) {
                 value = new ArrayList<>();
 

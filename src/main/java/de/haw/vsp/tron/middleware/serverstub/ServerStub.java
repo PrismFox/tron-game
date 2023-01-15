@@ -139,7 +139,7 @@ public class ServerStub implements IServerStub {
                 log.info("ServerStub: Start of reading packet");
 
                 reply = inputStream.readLine();
-                log.info("ServerStub: Done with reading packet. Buffer result: " + reply);
+                log.info("ServerStub: Done with reading packet. Buffer result: " + reply + " Remote Socket Adresse = " + socket.getRemoteSocketAddress());
             } catch (IOException exception) {
                 log.error("Couldn't read Socket");
                 exception.printStackTrace();
