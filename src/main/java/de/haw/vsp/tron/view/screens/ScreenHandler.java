@@ -171,6 +171,9 @@ public class ScreenHandler implements IScreenHandler {
             List<Coordinate> coordinates = new ArrayList<>();
             //System.out.println("entrty value .length " + entry.getValue().length);
             for (int i = 0; i < entry.getValue().length; i++) {
+                if(entry.getValue()[i].length == 0 ){
+                    continue;
+                }
                 int x = entry.getValue()[i][0];
                 int y = entry.getValue()[i][1];
                 if (x < 0 || y < 0 || x >= view.getCOLUMNS() || y >= view.getROWS()) {
