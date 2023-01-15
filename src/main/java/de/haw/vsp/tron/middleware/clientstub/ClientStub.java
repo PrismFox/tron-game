@@ -128,6 +128,7 @@ public class ClientStub implements IClientStub {
         try (Socket socket = initTCPSocket(targetIp, targetPort)) {
             BufferedReader inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
+            log.info("IpAddress: {} with message: {}", socket.getLocalAddress(), message);
             sendTCPPacket(message, outputStream);
 
 
