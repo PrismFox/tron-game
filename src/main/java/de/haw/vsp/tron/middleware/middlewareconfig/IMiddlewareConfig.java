@@ -5,4 +5,6 @@ public interface IMiddlewareConfig {
     String getNameServerIP();
 
     int getNameServerPort();
+
+    int getSocketTimeout();
 }
