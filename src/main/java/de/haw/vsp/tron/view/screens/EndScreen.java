@@ -3,6 +3,7 @@ package de.haw.vsp.tron.view.screens;
 import de.haw.vsp.tron.controller.scenechanger.ISceneChanger;
 import edu.cads.bai5.vsp.tron.view.ViewUtility;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -12,6 +13,8 @@ public class EndScreen extends VBox {
     private ISceneChanger iSceneChanger;
 
     private Label winningLabel;
+
+    private Button btnStart;
 
     public EndScreen(String stylesheet, int winningNumber, ISceneChanger sceneChanger) {
         super(20.0);
@@ -47,7 +50,15 @@ public class EndScreen extends VBox {
         winningLabel.setStyle("-fx-text-fill: " + ViewUtility.getHexTriplet(Color.PAPAYAWHIP.brighter()) + ";" + "-fx-font-size: 12pt; -fx-font-family: 'Arial';");
         this.getChildren().add(winningLabel);
 
-        iSceneChanger.changeToNextScene();
+        btnStart = new Button("New Game");
+        btnStart.setOnAction(event -> {
+            System.out.println("click!");
+            //view.hideOverlays();
+
+            iSceneChanger.changeToNextScene();
+        });
+        this.getChildren().add(btnStart);
+        //iSceneChanger.changeToNextScene();
 
     }
 }
