@@ -55,7 +55,7 @@ public class SceneChangerImpl implements ISceneChanger, ISceneCallbackRegistry {
                     gameManager.startGame();
                     gameLogic.startGame();
                     changeToNextScene();
-                    timer.startGameTimer(1000, () -> {
+                    timer.startGameTimer(config.getGameTick(), () -> {
                         updateTick();
                     });
                 } else {
