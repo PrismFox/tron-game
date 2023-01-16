@@ -28,13 +28,13 @@ mvn -DskipTests install
 # Creates the jars for the view, model/controller and nameserver
 ./script_packages_creation
 
-# It is also required that someone, even the person who started model/controller, starts the nameserver
+# It's required that someone starts the nameserver
 java -jar nameserver-0.1-jar-with-dependencies.jar
 
-# One person must star the model/controller
+# One person must start the model/controller. It could be even the person who started the nameserver 
 java -jar model-controller-0.1-jar-with-dependencies.jar
 
-# Every player on a diffrent host needs to start the view
+# Every host needs to start the view in order to participate 
 java -jar view-library-0.1-jar-with-dependencies.jar
 ```
 
