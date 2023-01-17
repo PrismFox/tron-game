@@ -18,6 +18,8 @@ import java.util.*;
 @Slf4j
 public class NameServer {
 
+    private final static int TIMEOUT = 111100;
+
     private IMiddlewareConfig middlewareConfig;
 
     private INameServerMarshaler marshaler;
@@ -41,7 +43,7 @@ public class NameServer {
             log.info("NameServer Server Socket IP addresse = " + serverSocket.getLocalSocketAddress());
             while (running) {
                 socket = serverSocket.accept();
-                socket.setSoTimeout(middlewareConfig.getSocketTimeout());
+                socket.setSoTimeout(TIMEOUT);
                 new Thread(new RunnableTCPWorker(socket)).start();
             }
         } catch (IOException e) {

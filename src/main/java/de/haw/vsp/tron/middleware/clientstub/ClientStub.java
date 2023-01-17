@@ -20,6 +20,7 @@ import java.util.*;
 @Component
 public class ClientStub implements IClientStub {
     public static final int UDP_PACKET_SIZE = 1024;
+    public static final int TIMEOUT = 1000000;
 
     private final INameServerMarshaler nameServerMarshaler;
     private final IMarshaler marshaler;
@@ -156,7 +157,7 @@ public class ClientStub implements IClientStub {
         Socket socket = null;
         try {
             socket = new Socket(host, port);
-            socket.setSoTimeout(middlewareConfig.getSocketTimeout());
+            socket.setSoTimeout(TIMEOUT);
         } catch (IOException excep) {
             log.error(String.format("Couldn't connect to a socket with host: %s and port: %d", host, port));
             excep.printStackTrace();
