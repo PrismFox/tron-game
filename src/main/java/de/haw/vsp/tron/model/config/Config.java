@@ -48,6 +48,7 @@ public class Config implements IConfig {
                 //TODO: handle error
             }
             this.boardSize = Arrays.asList(boardArray).stream().map(c -> Integer.parseInt(c.strip())).mapToInt(c -> c).toArray();
+            this.cellSize = Integer.parseInt(prop.getProperty("cellSize", "5"));
             for (int i = 1; i <= this.playerCount; i++) {
                 String keys = prop.getProperty(String.format("player%dKeys", i));
                 if (keys == null) {
